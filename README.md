@@ -32,8 +32,8 @@
 <a href="https://docs.decepticon.red">
   <img src="https://img.shields.io/badge/Docs-docs.decepticon.red-8B5CF6?logo=bookstack&logoColor=white&style=for-the-badge" alt="Documentation">
 </a>
-<a href="https://app.decepticon.red">
-  <img src="https://img.shields.io/badge/Live%20App-app.decepticon.red-FF2D55?logo=rocket&logoColor=white&style=for-the-badge" alt="Live hosted app">
+<a href="https://github.com/karishmaram-tech/AegisCore">
+  <img src="https://img.shields.io/badge/Live%20App-github.com/karishmaram-tech/AegisCore-FF2D55?logo=rocket&logoColor=white&style=for-the-badge" alt="Live hosted app">
 </a>
 
 </div>
@@ -50,8 +50,8 @@
 
 Skip the Docker setup — run autonomous red-team engagements right from your browser.
 
-<a href="https://app.decepticon.red">
-  <img src="https://img.shields.io/badge/Launch%20the%20Live%20App-app.decepticon.red-FF2D55?logo=rocket&logoColor=white&style=for-the-badge" alt="Launch the live app at app.decepticon.red">
+<a href="https://github.com/karishmaram-tech/AegisCore">
+  <img src="https://img.shields.io/badge/Launch%20the%20Live%20App-github.com/karishmaram-tech/AegisCore-FF2D55?logo=rocket&logoColor=white&style=for-the-badge" alt="Launch the live app at github.com/karishmaram-tech/AegisCore">
 </a>
 
 </div>
