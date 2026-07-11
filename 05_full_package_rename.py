@@ -190,16 +190,29 @@ def iter_text_files(root: Path):
 # Step 1: directory renames
 # ---------------------------------------------------------------------------
 def plan_directory_renames(root: Path):
+    """Simulates the sequence: later entries often live under a path that
+    only exists after an earlier entry in this same list has been applied.
+    We track which renames are 'virtually done' so far and resolve each
+    entry's real on-disk path accordingly, instead of checking every entry
+    against the untouched starting filesystem."""
     plan = []
+    applied = []  # [(old_rel, new_rel), ...] simulated as done, in order
     for old_rel, new_rel in DIRECTORY_RENAMES:
-        old_path = root / old_rel
+        real_old_rel = old_rel
+        for prev_old, prev_new in applied:
+            if real_old_rel == prev_new or real_old_rel.startswith(prev_new + "/"):
+                real_old_rel = prev_old + real_old_rel[len(prev_new):]
+                break
+        old_path = root / real_old_rel
         new_path = root / new_rel
         if old_path.exists():
-            plan.append((old_rel, new_rel, "WILL RENAME"))
+            plan.append((old_rel, new_rel, real_old_rel, "WILL RENAME"))
+            applied.append((old_rel, new_rel))
         elif new_path.exists():
-            plan.append((old_rel, new_rel, "already done - skip"))
+            plan.append((old_rel, new_rel, real_old_rel, "already done - skip"))
+            applied.append((old_rel, new_rel))
         else:
-            plan.append((old_rel, new_rel, "MISSING - neither path exists!"))
+            plan.append((old_rel, new_rel, real_old_rel, "MISSING - neither path exists!"))
     return plan
 
 
@@ -288,10 +301,11 @@ def main():
 
     print("\n--- Directory rename plan ---")
     plan = plan_directory_renames(PROJECT_DIR)
-    for old_rel, new_rel, status in plan:
-        print(f"  [{status:30}] {old_rel}  ->  {new_rel}")
+    for old_rel, new_rel, real_old_rel, status in plan:
+        resolved_note = f"  (resolves to: {real_old_rel})" if real_old_rel != old_rel else ""
+        print(f"  [{status:30}] {old_rel}  ->  {new_rel}{resolved_note}")
 
-    missing = [p for p in plan if "MISSING" in p[2]]
+    missing = [p for p in plan if "MISSING" in p[3]]
     if missing:
         print(f"\n[error] {len(missing)} planned rename(s) have neither source nor "
               f"destination path — the directory layout may have changed since this "
