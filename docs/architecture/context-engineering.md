@@ -1,6 +1,6 @@
-# Decepticon Context Engineering Architecture
+# Aegiscore Context Engineering Architecture
 
-> Decepticon 에이전트 프레임워크의 컨텍스트 엔지니어링 설계 문서.
+> Aegiscore 에이전트 프레임워크의 컨텍스트 엔지니어링 설계 문서.
 > 적용 스킬: context-fundamentals, context-optimization, context-compression,
 > tool-design, filesystem-context, deep-agents-core, deep-agents-memory
 

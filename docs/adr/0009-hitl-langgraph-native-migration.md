@@ -9,14 +9,14 @@
   HITL surface); [ADR-0006](0006-agent-driven-container-lifecycle.md)
   (also requires the canonical HITL surface for `ops_start` /
   `ops_stop` gating); PR #459 (Defender agent — closed pending this
-  migration); existing `HumanInTheLoopMiddleware` (Decepticon
+  migration); existing `HumanInTheLoopMiddleware` (Aegiscore
   `middleware/hitl.py`) and the file-backed `requests.jsonl` /
   `decisions.jsonl` web bridge
 
 ## Context
 
-Decepticon's current HITL surface — `HITLApprovalMiddleware`
-(`packages/decepticon/decepticon/middleware/hitl.py`) — predates a
+Aegiscore's current HITL surface — `HITLApprovalMiddleware`
+(`packages/aegiscore/aegiscore/middleware/hitl.py`) — predates a
 clean read of the LangChain `HumanInTheLoopMiddleware` and the
 LangGraph `interrupt()` / `Command(resume=...)` primitives and ended
 up implementing its own pause/resume machinery on top of a file-backed
@@ -56,7 +56,7 @@ approval gate exists to defend, four primitives are misaligned:
    (`langgraph dev`, `langgraph up`, LangGraph Platform / Cloud) is
    already wired to surface through `__interrupt__` in the run result
    and through the SDK's `threads.getState` / `runs.create({command:
-   {resume: ...}})`. Decepticon currently ships its own transport
+   {resume: ...}})`. Aegiscore currently ships its own transport
    layer that re-implements the surfacing.
 
 3. **No checkpointer means no time-travel, no replay, no durable
@@ -65,7 +65,7 @@ approval gate exists to defend, four primitives are misaligned:
    process restarts, so `get_state_history` can list the points where
    the agent paused for review, and so an operator can fork a decision
    ("what would have happened if I had approved instead of denied?").
-   Decepticon's current HITL middleware works without one because it
+   Aegiscore's current HITL middleware works without one because it
    blocks the thread, but the price is that none of those native
    capabilities are reachable. The LangGraph Platform runtime already
    provisions a `PostgresSaver` automatically; *not* using it leaves
@@ -251,7 +251,7 @@ The previous version's references to `requests.jsonl` /
     happens to match `^(sigma_to|yara_to)_`) cannot occur.
   - LangChain ecosystem alignment: third-party tools and middleware
     that assume the canonical `interrupt_on={...}` shape work without
-    Decepticon-specific adapters.
+    Aegiscore-specific adapters.
 - **Harder**
   - The web dashboard takes a runtime dependency on
     `@langchain/langgraph-sdk` and the LangGraph server URL.
@@ -305,7 +305,7 @@ The previous version's references to `requests.jsonl` /
   `DECEPTICON_HITL__ENABLED` is unset.** Rejected. Addresses the
   fifth issue (advertising mismatch) but leaves the four
   architectural issues (regex, custom transport, no checkpointer,
-  data-model coupling) intact. Also keeps Decepticon out of the
+  data-model coupling) intact. Also keeps Aegiscore out of the
   LangChain/LangGraph ecosystem.
 
 - **(M2) Replace the regex with explicit tool-name sets but keep the
@@ -329,7 +329,7 @@ The previous version's references to `requests.jsonl` /
   refactor indefinitely.** Rejected. The pause/resume mechanism is
   the load-bearing piece — the checkpointer requirement, the
   time-travel capability, the LangChain ecosystem alignment all flow
-  from `interrupt()` adoption. Deferring it leaves Decepticon at risk
+  from `interrupt()` adoption. Deferring it leaves Aegiscore at risk
   of further divergence as LangChain canonical evolves.
 
 - **(M5) Move HITL out of the agent process entirely — implement it

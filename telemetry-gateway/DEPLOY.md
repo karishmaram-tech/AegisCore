@@ -29,7 +29,7 @@ npx wrangler deploy
 ```
 
 `deploy` prints the public URL, e.g.
-`https://decepticon-telemetry-gateway.<account>.workers.dev`.
+`https://aegiscore-telemetry-gateway.<account>.workers.dev`.
 
 > Wrangler v3 warns the bundled runtime caps the compatibility date — harmless.
 > `npm i -D wrangler@4` removes the warning if you prefer.
@@ -37,10 +37,10 @@ npx wrangler deploy
 ## 3. Verify the live gateway
 
 ```bash
-URL=https://decepticon-telemetry-gateway.<account>.workers.dev
+URL=https://aegiscore-telemetry-gateway.<account>.workers.dev
 
 # health
-curl -s "$URL/"            # -> {"service":"decepticon-telemetry-gateway","ok":true}
+curl -s "$URL/"            # -> {"service":"aegiscore-telemetry-gateway","ok":true}
 
 # a clean masked event is accepted (202) and lands in PostHog
 curl -s -o /dev/null -w '%{http_code}\n' -X POST "$URL/v1/telemetry" \
@@ -63,7 +63,7 @@ Set the deployed URL as the default endpoint so the next release collects from
 opted-in users. In `clients/launcher/internal/config/env.example`:
 
 ```ini
-DECEPTICON_TELEMETRY_ENDPOINT=https://decepticon-telemetry-gateway.<account>.workers.dev/v1/telemetry
+DECEPTICON_TELEMETRY_ENDPOINT=https://aegiscore-telemetry-gateway.<account>.workers.dev/v1/telemetry
 ```
 
 (Leave `DECEPTICON_TELEMETRY=off` — users opt in via the onboard wizard.) Commit,

@@ -1,8 +1,8 @@
-# Decepticon Core Direction: Single Bash Tool + Graph DB Memory
+# Aegiscore Core Direction: Single Bash Tool + Graph DB Memory
 
 ## Why "single bash tool"
 
-Decepticon's offensive execution surface should mirror real operators:
+Aegiscore's offensive execution surface should mirror real operators:
 
 - One command execution primitive (`bash`)
 - Real attacker tradecraft expressed as shell command sequences
@@ -45,7 +45,7 @@ switches persistence backend under the `kg_*` tools.
 
 ## Differentiating edge (security-focused AGI direction)
 
-Decepticon's unique direction is not "chat UX" — it is **autonomous adversary
+Aegiscore's unique direction is not "chat UX" — it is **autonomous adversary
 execution under constraints**:
 
 1. **Realistic execution substrate**: commands run in isolated Kali sandbox,
@@ -57,5 +57,5 @@ execution under constraints**:
 4. **Operational guardrails**: scope/RoE + objective tracking enforce safer,
    auditable autonomy.
 
-This combination moves Decepticon toward a security AGI operator that behaves
+This combination moves Aegiscore toward a security AGI operator that behaves
 closer to real red teams than generic coding assistants.

@@ -1,19 +1,19 @@
 # GitHub Actions Integration
 
-> Run Decepticon security scans on every pull request, upload SARIF to
+> Run Aegiscore security scans on every pull request, upload SARIF to
 > Code Scanning, gate merges by severity.
 
 ## The composite action
 
-Decepticon ships a composite action at
-[`.github/actions/decepticon-scan`](../../.github/actions/decepticon-scan)
+Aegiscore ships a composite action at
+[`.github/actions/aegiscore-scan`](../../.github/actions/aegiscore-scan)
 that orchestrates: stack boot → scan → SARIF emit → Code Scanning upload
 → stack teardown.
 
 ## Minimal workflow
 
 ```yaml
-name: decepticon
+name: aegiscore
 on:
   pull_request:
 permissions:
@@ -25,7 +25,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with: { fetch-depth: 0 }
-      - uses: PurpleAILAB/Decepticon/.github/actions/decepticon-scan@main
+      - uses: PurpleAILAB/Aegiscore/.github/actions/aegiscore-scan@main
         with:
           fail-on: high
         env:
@@ -41,12 +41,12 @@ jobs:
 | `scope-mode` | `diff` | `full` (whole target) or `diff` (changed files only). |
 | `diff-base` | `origin/main` | Git ref for diff-scope. |
 | `fail-on` | `high` | Threshold severity for non-zero exit. |
-| `sarif-output` | `decepticon.sarif` | Where to write SARIF. |
+| `sarif-output` | `aegiscore.sarif` | Where to write SARIF. |
 | `upload-sarif` | `true` | Upload to GitHub Code Scanning. |
 | `instruction` | `""` | Free-form scope/focus note. |
 | `instruction-file` | `""` | Path to a RoE/scope file. |
 | `langgraph-url` | `""` | Remote LangGraph URL; empty → boot local stack. |
-| `decepticon-version` | `latest` | Container tag when booting local stack. |
+| `aegiscore-version` | `latest` | Container tag when booting local stack. |
 
 ## Outputs
 
@@ -59,7 +59,7 @@ jobs:
 ## Secrets required
 
 At minimum one model-provider API key in repo secrets (the same set
-supported by `decepticon onboard`):
+supported by `aegiscore onboard`):
 
 - `ANTHROPIC_API_KEY` *(recommended for the orchestrator tier)*
 - `OPENAI_API_KEY`
@@ -82,7 +82,7 @@ this for you) and findings will appear:
 
 ## Diff-scoped scans
 
-When `scope-mode: diff` and `fetch-depth: 0` on checkout, Decepticon
+When `scope-mode: diff` and `fetch-depth: 0` on checkout, Aegiscore
 runs `git diff --name-only "<diff-base>...HEAD"` and limits the scan to
 those files. This drops PR-time scan times from minutes to tens of seconds
 for typical PRs. Falls back to full scope when the git diff fails (no

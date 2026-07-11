@@ -5,7 +5,7 @@
 >
 > Implementation notes (2026-06-12):
 > - **Layer 1** (parser fail-closed) shipped: `_extract_token_hosts` in
->   [`_command_targets.py`](../../packages/decepticon/decepticon/middleware/_command_targets.py)
+>   [`_command_targets.py`](../../packages/aegiscore/aegiscore/middleware/_command_targets.py)
 >   runs as the `not matched_tool` fallback; the bare-hostname matrix
 >   below is covered by `test_command_targets_scope_bypass.py`.
 > - **Rename** shipped: `RoEEnforcementMiddleware` →
@@ -38,7 +38,7 @@ in-scope by **extracting target hosts/IPs from the command string with
 regexes**, then evaluating each extracted target against the allowlist /
 denylist. That extraction depends on a **hardcoded verb allowlist**
 (`_HOSTNAME_AFTER_VERB_RE` in
-[`_command_targets.py`](../../packages/decepticon/decepticon/middleware/_command_targets.py)).
+[`_command_targets.py`](../../packages/aegiscore/aegiscore/middleware/_command_targets.py)).
 Any network tool **not** on that list, invoked with a **bare hostname**,
 extracts **zero targets** — so the scope check has nothing to evaluate
 and the command is **allowed by default**.
@@ -246,10 +246,10 @@ class name, `MiddlewareSlot.ROE_ENFORCEMENT` →
 
 | Path | Change |
 |---|---|
-| `packages/decepticon/decepticon/middleware/_command_targets.py` | Layer 1 — add `_extract_token_hosts`, wire as `not matched_tool` fallback in `extract_targets`. |
-| `packages/decepticon/tests/unit/middleware/test_command_targets_scope_bypass.py` | Add the bare-hostname fail-open matrix; assert fail-closed. |
-| `packages/decepticon/decepticon/middleware/roe.py` | Layer 2 — class rename; integrate egress provisioning hook. |
-| `packages/decepticon-core/decepticon_core/contracts/slots.py` | `ROE_ENFORCEMENT` → `ROE_GUARDRAIL` (keep safety-critical). |
+| `packages/aegiscore/aegiscore/middleware/_command_targets.py` | Layer 1 — add `_extract_token_hosts`, wire as `not matched_tool` fallback in `extract_targets`. |
+| `packages/aegiscore/tests/unit/middleware/test_command_targets_scope_bypass.py` | Add the bare-hostname fail-open matrix; assert fail-closed. |
+| `packages/aegiscore/aegiscore/middleware/roe.py` | Layer 2 — class rename; integrate egress provisioning hook. |
+| `packages/aegiscore-core/decepticon_core/contracts/slots.py` | `ROE_ENFORCEMENT` → `ROE_GUARDRAIL` (keep safety-critical). |
 | sandbox backend / workspace provisioning | Layer 2 — compile `machine_enforcement` → DNS + nftables/proxy config. |
 | `docs/security/roe-machine-enforcement.md` | Correct the "false-positive-safe" claim; document the two enforcement points. |
 

@@ -1,6 +1,6 @@
-# decepticon-sdk
+# aegiscore-sdk
 
-The Decepticon plugin author entrypoint. Re-exports the `decepticon-core`
+The Aegiscore plugin author entrypoint. Re-exports the `aegiscore-core`
 contracts, ships pytest fixtures, and provides a scaffolding CLI for
 creating new plugin packages.
 
@@ -13,12 +13,12 @@ See the umbrella [`README.md`](../../README.md) and the design spec at
 ## Install
 
 ```bash
-pip install decepticon-sdk
+pip install aegiscore-sdk
 ```
 
 For test fixtures and scaffolding:
 
 ```bash
-pip install "decepticon-sdk[testing]"      # FakeBackend / FakeLLM
-pip install "decepticon-sdk[fixtures]"     # live framework-backed fixtures
+pip install "aegiscore-sdk[testing]"      # FakeBackend / FakeLLM
+pip install "aegiscore-sdk[fixtures]"     # live framework-backed fixtures
 ```

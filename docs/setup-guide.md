@@ -45,19 +45,19 @@ OSS install targets and what we test against:
 | **Linux amd64** (Ubuntu, Debian, Fedora, Kali) | `linux/amd64` | Native. |
 | **Linux arm64** (Raspberry Pi 5, Ampere, AWS Graviton, Asahi) | `linux/arm64` | Native — same multi-arch images as Apple Silicon. |
 | **WSL2** (Windows + Ubuntu/Kali on WSL2) | `linux/amd64` | Use Docker Desktop with the WSL2 backend, or install Docker natively inside the WSL distro. See [WSL2 notes](#wsl2-notes) below. |
-| **Windows amd64** (Windows 10/11, native) | `windows/amd64` | Native. Install via `irm https://decepticon.red/install.ps1 \| iex` in PowerShell. Requires Docker Desktop. |
+| **Windows amd64** (Windows 10/11, native) | `windows/amd64` | Native. Install via `irm https://aegiscore.red/install.ps1 \| iex` in PowerShell. Requires Docker Desktop. |
 | **Windows arm64** (Surface Pro X, ARM laptops) | `windows/arm64` | Native. Same PowerShell installer. |
 
-Native Windows is supported alongside WSL2 — choose whichever fits your toolchain. The Go launcher detects the OS during `decepticon onboard` and adapts its remediation hints (Docker Desktop install URL, daemon-not-running fix, missing Compose v2).
+Native Windows is supported alongside WSL2 — choose whichever fits your toolchain. The Go launcher detects the OS during `aegiscore onboard` and adapts its remediation hints (Docker Desktop install URL, daemon-not-running fix, missing Compose v2).
 
 ### WSL2 notes
 
-Decepticon runs end-to-end on WSL2 with two valid Docker setups:
+Aegiscore runs end-to-end on WSL2 with two valid Docker setups:
 
 1. **Docker Desktop with WSL2 backend** (the common path) — Docker Desktop registers `host.docker.internal` automatically.
-2. **Native Docker inside the WSL distro** (no Docker Desktop) — Decepticon's `docker-compose.yml` adds the `host.docker.internal:host-gateway` mapping itself, so containers reach the host either way.
+2. **Native Docker inside the WSL distro** (no Docker Desktop) — Aegiscore's `docker-compose.yml` adds the `host.docker.internal:host-gateway` mapping itself, so containers reach the host either way.
 
-The default `OLLAMA_API_BASE=http://host.docker.internal:11434` is the right value in **all** environments — including the case where Ollama runs *inside* the same WSL distro as Decepticon. From inside a container, `localhost` is the container itself, so it can never reach Ollama on the host. Use `host.docker.internal`.
+The default `OLLAMA_API_BASE=http://host.docker.internal:11434` is the right value in **all** environments — including the case where Ollama runs *inside* the same WSL distro as Aegiscore. From inside a container, `localhost` is the container itself, so it can never reach Ollama on the host. Use `host.docker.internal`.
 
 Ollama must additionally listen on all interfaces — the default `127.0.0.1` binding is invisible to containers. Launch it with:
 
@@ -66,14 +66,14 @@ OLLAMA_HOST=0.0.0.0:11434 ollama serve
 ```
 
 Other WSL caveats:
-- Install Decepticon under your WSL home (`~/.decepticon`), not on a Windows-mounted drive (`/mnt/c/...`) — bind-mounted I/O across the boundary is much slower.
+- Install Aegiscore under your WSL home (`~/.aegiscore`), not on a Windows-mounted drive (`/mnt/c/...`) — bind-mounted I/O across the boundary is much slower.
 - WSL2 mirrored networking (Windows 11 22H2+) collapses the *Windows host ↔ WSL distro* split, but Docker bridge networks remain isolated. The `host.docker.internal` requirement still applies.
 
 #### WSL2 + Ollama troubleshooting flowchart
 
 If `OLLAMA_API_BASE=http://host.docker.internal:11434` is failing
 from the litellm container on WSL2, work through these checks in
-order. The `[decepticon ollama]` log lines in `decepticon logs
+order. The `[aegiscore ollama]` log lines in `aegiscore logs
 litellm` will identify which class of failure you're hitting; this
 section names each class and its fix.
 
@@ -109,7 +109,7 @@ override).
 
 Verify from inside the container:
 ```bash
-decepticon exec litellm getent hosts host.docker.internal
+aegiscore exec litellm getent hosts host.docker.internal
 # Expected: 172.x.x.1  host.docker.internal
 # Wrong:    (no output)
 ```
@@ -122,7 +122,7 @@ Fix: confirm `docker-compose.yml` litellm service has:
 Workaround (if your override removed it): pin WSL distro IP in `.env`:
 ```bash
 WSL_IP=$(ip -4 addr show eth0 | awk '/inet / {print $2}' | cut -d/ -f1)
-echo "OLLAMA_API_BASE=http://$WSL_IP:11434" >> ~/.decepticon/.env
+echo "OLLAMA_API_BASE=http://$WSL_IP:11434" >> ~/.aegiscore/.env
 ```
 Note: the WSL IP changes across reboots. Prefer fixing the bridge
 resolution.
@@ -185,20 +185,20 @@ emits WSL2-specific guidance for every error class.
 ### One-Line Install
 
 ```bash
-curl -fsSL https://decepticon.red/install | bash
+curl -fsSL https://aegiscore.red/install | bash
 ```
 
-This downloads the `decepticon` CLI binary for your platform and places it in your PATH.
+This downloads the `aegiscore` CLI binary for your platform and places it in your PATH.
 
 ### Using Podman instead of Docker
 
-Decepticon detects Podman 4.4+ automatically. The launcher prefers Docker when both are available; set `DECEPTICON_CONTAINER_RUNTIME=podman` to force Podman:
+Aegiscore detects Podman 4.4+ automatically. The launcher prefers Docker when both are available; set `DECEPTICON_CONTAINER_RUNTIME=podman` to force Podman:
 
 ```bash
 # Linux (rootless Podman, recommended)
 systemctl --user enable --now podman.socket          # enable the API socket
 export DECEPTICON_CONTAINER_RUNTIME=podman           # force Podman selection
-decepticon start                                      # launcher detects + uses podman compose
+aegiscore start                                      # launcher detects + uses podman compose
 ```
 
 What the launcher handles for you:
@@ -214,7 +214,7 @@ Rootless Podman caveats:
 
 ```bash
 export DECEPTICON_CONTAINER_RUNTIME=nerdctl
-decepticon start
+aegiscore start
 ```
 
 Requires nerdctl ≥ 0.16 (built-in compose) and a running containerd (`containerd` or `Rancher Desktop` with the containerd engine).
@@ -226,38 +226,38 @@ Requires nerdctl ≥ 0.16 (built-in compose) and a running containerd (`containe
 and the CLI all execute exactly as the `curl | bash` install path. The
 launcher and every service image come from the current checkout (tag
 `:dev`), with an isolated `$DECEPTICON_HOME` under `.dogfood/` so your
-real `~/.decepticon` is untouched.
+real `~/.aegiscore` is untouched.
 
 ```bash
-git clone https://github.com/PurpleAILAB/Decepticon.git
-cd Decepticon
+git clone https://github.com/PurpleAILAB/Aegiscore.git
+cd Aegiscore
 make dogfood
 ```
 
 ### Verify Installation
 
 ```bash
-decepticon version
+aegiscore version
 ```
 
 ---
 
 ## Authentication Methods
 
-Decepticon supports three authentication modes. Choose one during `decepticon onboard`.
+Aegiscore supports three authentication modes. Choose one during `aegiscore onboard`.
 
 ### API Keys
 
 Standard pay-per-token access through provider APIs. Set the appropriate environment variable for your provider.
 
 ```bash
-decepticon onboard
+aegiscore onboard
 # Select: API Key
 # Select: Your provider
 # Enter: Your API key
 ```
 
-Or edit `~/.decepticon/.env` directly:
+Or edit `~/.aegiscore/.env` directly:
 
 ```bash
 DECEPTICON_AUTH_PRIORITY=anthropic_api,openai_api
@@ -333,13 +333,13 @@ default fallback chain; pick a specific route at runtime with `/model`
 
 ### Local LLM (Ollama)
 
-Run Decepticon offline against a local Ollama server — no cloud API
+Run Aegiscore offline against a local Ollama server — no cloud API
 billing, no key.
 
 **Setup:**
 
 1. Install Ollama on your host: <https://ollama.com/download>.
-2. Pull a tool-capable model — Decepticon agents always call tools, so
+2. Pull a tool-capable model — Aegiscore agents always call tools, so
    the chosen model **must** advertise the `tools` capability. Known
    working families: Qwen3-Coder, Llama 3.3, DeepSeek-R1, Mistral
    Small 3, Hermes-3:
@@ -347,7 +347,7 @@ billing, no key.
    ollama pull qwen3-coder:30b
    ollama show qwen3-coder:30b   # capabilities should include "tools"
    ```
-3. Start the Ollama server bound to all interfaces so the Decepticon
+3. Start the Ollama server bound to all interfaces so the Aegiscore
    container can reach it (the default `127.0.0.1` binding only accepts
    host-side connections):
    ```bash
@@ -355,7 +355,7 @@ billing, no key.
    ```
    On systems where Ollama runs as a service (e.g. systemd), set
    `Environment=OLLAMA_HOST=0.0.0.0:11434` in the unit and restart it.
-4. Run `decepticon onboard` and pick **"Local LLM (Ollama)"**. The
+4. Run `aegiscore onboard` and pick **"Local LLM (Ollama)"**. The
    wizard prompts for:
    - `OLLAMA_API_BASE` — leave the default `http://host.docker.internal:11434`.
      This works on macOS, Linux, and WSL2 (with or without Docker
@@ -366,17 +366,17 @@ billing, no key.
    - `OLLAMA_MODEL` — the wizard probes your running Ollama at the
      default URL, lists every pulled model whose `/api/show`
      capabilities include `tools`, and presents that filtered list as
-     the only valid choice. You cannot type a tag manually: Decepticon
+     the only valid choice. You cannot type a tag manually: Aegiscore
      agents always emit tool calls, so a non-tool-capable model would
      break on the first request. If the wizard finds nothing
      tool-capable (or cannot reach Ollama), it refuses to write `.env`
      and prints the exact remediation steps.
-5. Run `decepticon`. A second probe inside the litellm container
+5. Run `aegiscore`. A second probe inside the litellm container
    re-verifies reachability and tool-capability after the stack starts
    — the in-wizard host probe can't tell whether Ollama is bound to
    `0.0.0.0` (visible to the container) versus `127.0.0.1` only
    (invisible). Either probe failing prints a clear diagnostic in
-   `decepticon logs litellm`.
+   `aegiscore logs litellm`.
 
 **How it works:**
 
@@ -384,7 +384,7 @@ billing, no key.
   startup (`config/litellm_dynamic_config.py`). No yaml edit needed.
 - `ollama_chat/` (not `ollama/`) routes to Ollama's `/api/chat`
   endpoint — the only one that supports tool/function calling, which
-  every Decepticon agent depends on.
+  every Aegiscore agent depends on.
 - The `ollama_local` AuthMethod collapses HIGH/MID/LOW tiers to the
   same model — local hardware can't usually run three different models
   in parallel. Mix with cloud providers if you want tier degradation:
@@ -437,16 +437,16 @@ cat ~/.claude/.credentials.json
 # Should contain claudeAiOauth.accessToken starting with sk-ant-oat01-
 ```
 
-3. Configure Decepticon to use OAuth:
+3. Configure Aegiscore to use OAuth:
 
 ```bash
-decepticon onboard
+aegiscore onboard
 # Select: Claude Sub
 # Select: Claude Code
 # Select: Profile (eco/max/test)
 ```
 
-Or edit `~/.decepticon/.env`:
+Or edit `~/.aegiscore/.env`:
 
 ```bash
 DECEPTICON_AUTH_PRIORITY=anthropic_oauth,anthropic_api
@@ -457,7 +457,7 @@ DECEPTICON_MODEL_PROFILE=eco
 4. Launch:
 
 ```bash
-decepticon
+aegiscore
 ```
 
 **How it works:**
@@ -497,15 +497,15 @@ Use your ChatGPT Pro, Plus, or Team subscription instead of OpenAI API billing.
 
 **Setup:**
 
-1. Configure Decepticon:
+1. Configure Aegiscore:
 
 ```bash
-decepticon onboard
+aegiscore onboard
 # Select: ChatGPT
 # Select: Profile (eco/max/test)
 ```
 
-Or edit `~/.decepticon/.env`:
+Or edit `~/.aegiscore/.env`:
 
 ```bash
 DECEPTICON_AUTH_CHATGPT=true
@@ -514,14 +514,14 @@ DECEPTICON_AUTH_CHATGPT=true
 2. Launch:
 
 ```bash
-decepticon
+aegiscore
 ```
 
 **How it works:**
 
-- Decepticon exposes ChatGPT subscription models as `auth/gpt-5.5`
+- Aegiscore exposes ChatGPT subscription models as `auth/gpt-5.5`
   and `auth/gpt-5.4`.
-- LiteLLM dynamic config maps those aliases through Decepticon's custom
+- LiteLLM dynamic config maps those aliases through Aegiscore's custom
   `auth/` handler (`codex_chatgpt_handler`) only when
   `DECEPTICON_AUTH_CHATGPT=true`.
 - `docker-compose.yml` mounts the host's Codex CLI credential file
@@ -663,7 +663,7 @@ Complete list of all supported LLM providers and their pre-configured models:
 
 **Adding models not in the static config:**
 
-Set `DECEPTICON_MODEL` or `DECEPTICON_LITELLM_MODELS` and Decepticon auto-generates the LiteLLM route at container startup:
+Set `DECEPTICON_MODEL` or `DECEPTICON_LITELLM_MODELS` and Aegiscore auto-generates the LiteLLM route at container startup:
 
 ```bash
 DECEPTICON_MODEL_PROFILE=custom
@@ -682,7 +682,7 @@ DECEPTICON_LITELLM_MODELS=groq/llama-3.3-70b-versatile,together/deepseek-ai/Deep
 | `test` | Development and CI — Haiku only | $ |
 | `custom` | Bring your own model via `DECEPTICON_MODEL` | Varies |
 
-Set in `~/.decepticon/.env`:
+Set in `~/.aegiscore/.env`:
 
 ```bash
 DECEPTICON_MODEL_PROFILE=eco
@@ -702,7 +702,7 @@ See [Models](models.md) for the full role-to-model mapping.
 
 ## Web Dashboard
 
-The web dashboard starts automatically with `decepticon` and is accessible at:
+The web dashboard starts automatically with `aegiscore` and is accessible at:
 
 ```
 http://localhost:3000
@@ -719,7 +719,7 @@ http://localhost:3000
 **Custom port:**
 
 ```bash
-# In ~/.decepticon/.env
+# In ~/.aegiscore/.env
 WEB_PORT=8080
 ```
 
@@ -732,24 +732,24 @@ See [Web Dashboard](web-dashboard.md) for the full feature reference.
 ### Core Commands
 
 ```bash
-decepticon                  # Launch platform (all services + interactive CLI)
-decepticon onboard          # Setup wizard (auth, provider, profile)
-decepticon onboard --reset  # Re-run setup from scratch
-decepticon stop             # Stop all services, keep data
-decepticon status           # Show running services
-decepticon logs [service]   # Follow service logs
-decepticon update           # Explicitly refresh config/images and upgrade when available
-decepticon remove           # Uninstall Decepticon completely
-decepticon --version        # Show installed version
+aegiscore                  # Launch platform (all services + interactive CLI)
+aegiscore onboard          # Setup wizard (auth, provider, profile)
+aegiscore onboard --reset  # Re-run setup from scratch
+aegiscore stop             # Stop all services, keep data
+aegiscore status           # Show running services
+aegiscore logs [service]   # Follow service logs
+aegiscore update           # Explicitly refresh config/images and upgrade when available
+aegiscore remove           # Uninstall Aegiscore completely
+aegiscore --version        # Show installed version
 ```
 
 ### Service Management
 
 ```bash
-decepticon logs litellm     # LiteLLM proxy logs
-decepticon logs langgraph   # LangGraph agent logs
-decepticon logs neo4j       # Knowledge graph logs
-decepticon kg-health        # Neo4j connection diagnostics
+aegiscore logs litellm     # LiteLLM proxy logs
+aegiscore logs langgraph   # LangGraph agent logs
+aegiscore logs neo4j       # Knowledge graph logs
+aegiscore kg-health        # Neo4j connection diagnostics
 ```
 
 See [CLI Reference](cli-reference.md) for the complete command list.
@@ -764,24 +764,24 @@ Complete walkthrough from zero to a running autonomous engagement, covering ever
 
 ```bash
 # One-line install (Linux/macOS)
-curl -fsSL https://decepticon.red/install | bash
+curl -fsSL https://aegiscore.red/install | bash
 
 # Or from source
-git clone https://github.com/PurpleAILAB/Decepticon.git
-cd Decepticon
+git clone https://github.com/PurpleAILAB/Aegiscore.git
+cd Aegiscore
 make install
 ```
 
 Verify:
 
 ```bash
-decepticon version
+aegiscore version
 ```
 
 ### Step 2: Run the Setup Wizard
 
 ```bash
-decepticon onboard
+aegiscore onboard
 ```
 
 The wizard walks through 6 screens:
@@ -795,12 +795,12 @@ The wizard walks through 6 screens:
 | 5 | Profile | `eco` (balanced), `max` (performance), `test` (dev), `custom` (any model) |
 | 6 | Observability | Optional LangSmith tracing |
 
-Configuration saves to `~/.decepticon/.env`. Re-run anytime with `decepticon onboard --reset`.
+Configuration saves to `~/.aegiscore/.env`. Re-run anytime with `aegiscore onboard --reset`.
 
 ### Step 3: Launch the Platform
 
 ```bash
-decepticon
+aegiscore
 ```
 
 This single command:
@@ -832,7 +832,7 @@ Once running, you have:
 **Option A — Terminal CLI:**
 
 ```bash
-# Decepticon shows the engagement picker after launch
+# Aegiscore shows the engagement picker after launch
 # Select "New engagement" → type a slug → Soundwave starts interviewing you
 ```
 
@@ -876,10 +876,10 @@ mapping) from the bundle — Soundwave does not write it.
 
 ### Step 7: Autonomous Execution
 
-After you approve the OPPLAN, Decepticon takes over:
+After you approve the OPPLAN, Aegiscore takes over:
 
 ```
-Decepticon (Orchestrator)
+Aegiscore (Orchestrator)
 ├── Reads OPPLAN objectives
 ├── Dispatches to specialist agents:
 │   ├── Recon → port scan, service enum, OSINT
@@ -913,19 +913,19 @@ All commands execute inside the **sandboxed Kali container** — zero host expos
 
 ```bash
 # View findings
-ls ~/.decepticon/workspace/<engagement>/findings/
+ls ~/.aegiscore/workspace/<engagement>/findings/
 
 # View generated documents
-ls ~/.decepticon/workspace/<engagement>/plan/
+ls ~/.aegiscore/workspace/<engagement>/plan/
 
 # Export knowledge graph
-decepticon logs neo4j
+aegiscore logs neo4j
 
 # Stop services (preserves data)
-decepticon stop
+aegiscore stop
 
 # Full reset (removes all data)
-cd ~/.decepticon && docker compose down -v
+cd ~/.aegiscore && docker compose down -v
 ```
 
 ### Quick Reference — Common Workflows
@@ -933,32 +933,32 @@ cd ~/.decepticon && docker compose down -v
 **Resume a previous engagement:**
 
 ```bash
-decepticon           # Shows engagement picker → select existing
+aegiscore           # Shows engagement picker → select existing
 # Or from CLI: /resume → select from session list
 ```
 
 **Switch model provider mid-session:**
 
 ```bash
-decepticon stop
-# Edit ~/.decepticon/.env → change DECEPTICON_AUTH_PRIORITY, DECEPTICON_AUTH_* toggles, or API keys
-decepticon
+aegiscore stop
+# Edit ~/.aegiscore/.env → change DECEPTICON_AUTH_PRIORITY, DECEPTICON_AUTH_* toggles, or API keys
+aegiscore
 ```
 
 **Check service health:**
 
 ```bash
-decepticon status       # Container status (docker compose ps)
-decepticon kg-health    # Knowledge graph diagnostics (LangGraph + Neo4j connection)
+aegiscore status       # Container status (docker compose ps)
+aegiscore kg-health    # Knowledge graph diagnostics (LangGraph + Neo4j connection)
 ```
 
 **View logs for specific service:**
 
 ```bash
-decepticon logs              # LangGraph (default)
-decepticon logs litellm      # LLM proxy
-decepticon logs neo4j        # Knowledge graph
-decepticon logs web          # Web dashboard
+aegiscore logs              # LangGraph (default)
+aegiscore logs litellm      # LLM proxy
+aegiscore logs neo4j        # Knowledge graph
+aegiscore logs web          # Web dashboard
 ```
 
 ---
@@ -993,7 +993,7 @@ GEMINI_API_KEY=AIza...                # Fallback: Gemini via API key
 ```bash
 LANGSMITH_TRACING=true
 LANGSMITH_API_KEY=lsv2_...
-LANGSMITH_PROJECT=decepticon
+LANGSMITH_PROJECT=aegiscore
 ```
 
 ### Custom Ports
@@ -1029,7 +1029,7 @@ cat ~/.claude/.credentials.json | python3 -c "import sys,json; d=json.load(sys.s
 
 **ChatGPT OAuth: missing or expired auth**
 
-The Decepticon `auth/` ChatGPT handler reads the Codex CLI credential
+The Aegiscore `auth/` ChatGPT handler reads the Codex CLI credential
 store at `~/.codex/auth.json`. If the file is missing or the refresh
 token is rejected, run `codex login` on the host and retry. The handler
 picks up the refreshed file automatically (no container restart needed).
@@ -1038,7 +1038,7 @@ picks up the refreshed file automatically (no container restart needed).
 
 ```bash
 # Verify key format
-grep _API_KEY ~/.decepticon/.env | head -5
+grep _API_KEY ~/.aegiscore/.env | head -5
 
 # Test directly
 curl -s https://api.anthropic.com/v1/messages \
@@ -1056,16 +1056,16 @@ Every container image is published multi-arch (linux/amd64 + linux/arm64), so th
 **Solution:** pull the latest config files:
 
 ```bash
-decepticon update
+aegiscore update
 ```
 
-If your host arch is *not* amd64 or arm64 (rare — armv7, ppc64le, ...), the manifest list won't match. Force the amd64 fallback by adding `platform: linux/amd64` under the `sandbox:` and `c2-sliver:` services in `~/.decepticon/docker-compose.yml` and enable "Use Rosetta for x86_64/amd64 emulation" in Docker Desktop settings (or QEMU on Linux).
+If your host arch is *not* amd64 or arm64 (rare — armv7, ppc64le, ...), the manifest list won't match. Force the amd64 fallback by adding `platform: linux/amd64` under the `sandbox:` and `c2-sliver:` services in `~/.aegiscore/docker-compose.yml` and enable "Use Rosetta for x86_64/amd64 emulation" in Docker Desktop settings (or QEMU on Linux).
 
 **Services won't start:**
 
 ```bash
-decepticon status          # Which services are down?
-decepticon logs litellm    # Check LiteLLM for config errors
+aegiscore status          # Which services are down?
+aegiscore logs litellm    # Check LiteLLM for config errors
 docker compose ps          # Raw container status
 ```
 
@@ -1079,14 +1079,14 @@ docker compose exec litellm curl -s https://api.anthropic.com/v1/messages -I
 **Neo4j connection refused:**
 
 ```bash
-decepticon kg-health
+aegiscore kg-health
 ```
 
 ### Reset Everything
 
 ```bash
-decepticon stop
-cd ~/.decepticon && docker compose down -v   # Remove all volumes
-decepticon onboard --reset                    # Re-run setup
-decepticon                                    # Fresh start
+aegiscore stop
+cd ~/.aegiscore && docker compose down -v   # Remove all volumes
+aegiscore onboard --reset                    # Re-run setup
+aegiscore                                    # Fresh start
 ```

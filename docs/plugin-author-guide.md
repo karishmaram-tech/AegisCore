@@ -1,30 +1,30 @@
 # Plugin Author Guide
 
-Audience: someone shipping a `pip install`-able Decepticon plugin —
+Audience: someone shipping a `pip install`-able Aegiscore plugin —
 custom tools, middleware, agents, callbacks, skills, or prompt
 fragments.
 
-The Decepticon framework is built around an extensible contract layer
-(`decepticon-core`) and an opinionated runtime (`decepticon`). Plugin
-authors interact only with the SDK package (`decepticon-sdk`), which
+The Aegiscore framework is built around an extensible contract layer
+(`aegiscore-core`) and an opinionated runtime (`aegiscore`). Plugin
+authors interact only with the SDK package (`aegiscore-sdk`), which
 re-exports the contract layer and ships scaffolding + test fakes.
 
 ## 1. Install the SDK
 
 ```bash
-pip install decepticon-sdk
+pip install aegiscore-sdk
 ```
 
 Add test fixtures + scaffolding for development:
 
 ```bash
-pip install "decepticon-sdk[testing]"
+pip install "aegiscore-sdk[testing]"
 ```
 
 ## 2. Scaffold the plugin
 
 ```bash
-decepticon-sdk plugin new \
+aegiscore-sdk plugin new \
     --kind=middleware \
     --name=my-plugin \
     --path=./my-plugin
@@ -64,7 +64,7 @@ def get_tools(role: str | None = None, **_: object) -> list[ToolProtocol]:
 `pyproject.toml`:
 
 ```toml
-[project.entry-points."decepticon.tools"]
+[project.entry-points."aegiscore.tools"]
 whoami = "my_plugin:get_tools"
 ```
 
@@ -85,7 +85,7 @@ class AuditLoggingMiddleware:
 ```
 
 ```toml
-[project.entry-points."decepticon.middleware"]
+[project.entry-points."aegiscore.middleware"]
 audit-log = "my_plugin:get_middleware"
 ```
 
@@ -100,14 +100,14 @@ SUBAGENT_SPEC = SubAgentSpec(
     name="my_specialist",
     description="...",
     factory=create_agent,
-    parent_agents=("decepticon",),
+    parent_agents=("aegiscore",),
     bundle="my-plugin",
     priority=50,
 )
 ```
 
 ```toml
-[project.entry-points."decepticon.subagents"]
+[project.entry-points."aegiscore.subagents"]
 my_specialist = "my_plugin:SUBAGENT_SPEC"
 ```
 
@@ -119,7 +119,7 @@ def get_skill_sources(role: str | None = None) -> list[str]:
 ```
 
 ```toml
-[project.entry-points."decepticon.skills"]
+[project.entry-points."aegiscore.skills"]
 my-plugin = "my_plugin:get_skill_sources"
 ```
 
@@ -146,14 +146,14 @@ def get_contribution() -> PromptContribution:
 ```
 
 ```toml
-[project.entry-points."decepticon.prompts"]
+[project.entry-points."aegiscore.prompts"]
 audit-policy = "my_plugin:get_contribution"
 ```
 
 ## 4. Bundle and safety gates
 
 Bundle activation is controlled by `DECEPTICON_PLUGINS` (or the
-`[tool.decepticon.plugins]` config section). Set `bundle="..."` on
+`[tool.aegiscore.plugins]` config section). Set `bundle="..."` on
 your contribution so end users can opt in deliberately:
 
 ```python
@@ -169,14 +169,14 @@ def get_bundle() -> PluginBundle:
 ```
 
 ```toml
-[project.entry-points."decepticon.bundles"]
+[project.entry-points."aegiscore.bundles"]
 my-plugin-v1 = "my_plugin:get_bundle"
 ```
 
 Operators enable your bundle:
 
 ```bash
-DECEPTICON_PLUGINS=standard,my-plugin python -m decepticon ...
+DECEPTICON_PLUGINS=standard,my-plugin python -m aegiscore ...
 ```
 
 ### Safety-critical overrides
@@ -245,7 +245,7 @@ DECEPTICON_STRICT_REGISTRY=1
 ## 7. Publishing
 
 Standard PyPI workflow — the wheel is built by hatchling and pinned
-against `decepticon-sdk` so consumers automatically get the contract
+against `aegiscore-sdk` so consumers automatically get the contract
 layer at install time:
 
 ```bash
@@ -262,6 +262,6 @@ user installs the wheel. No registration call needed.
   [`docs/superpowers/specs/2026-05-23-core-framework-sdk-split-design.md`](superpowers/specs/2026-05-23-core-framework-sdk-split-design.md)
   — full design rationale.
 - Example plugins per kind at
-  [`packages/decepticon-sdk/examples/`](../packages/decepticon-sdk/examples/).
+  [`packages/aegiscore-sdk/examples/`](../packages/aegiscore-sdk/examples/).
 - Migration from `0.0.x` legacy imports:
   [`docs/migration/from-0.0.x.md`](migration/from-0.0.x.md).

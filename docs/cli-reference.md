@@ -4,28 +4,28 @@
 
 | Command | Description |
 |---------|-------------|
-| `decepticon` | Start all services, open the terminal UI, and print the web dashboard URL |
-| `decepticon onboard` | Interactive setup wizard (provider, API key, model profile, LangSmith) |
-| `decepticon onboard --reset` | Reconfigure even if `.env` already exists |
-| `decepticon stop` | Stop all services |
-| `decepticon status` | Show service status |
-| `decepticon logs [service]` | Follow service logs (default: `langgraph`) |
-| `decepticon kg-health` | Diagnose the Neo4j knowledge graph |
-| `decepticon update` | Explicitly refresh config files, Docker images, and the launcher binary when a release is available |
-| `decepticon remove` | Uninstall Decepticon completely |
-| `decepticon --version` | Show installed version |
+| `aegiscore` | Start all services, open the terminal UI, and print the web dashboard URL |
+| `aegiscore onboard` | Interactive setup wizard (provider, API key, model profile, LangSmith) |
+| `aegiscore onboard --reset` | Reconfigure even if `.env` already exists |
+| `aegiscore stop` | Stop all services |
+| `aegiscore status` | Show service status |
+| `aegiscore logs [service]` | Follow service logs (default: `langgraph`) |
+| `aegiscore kg-health` | Diagnose the Neo4j knowledge graph |
+| `aegiscore update` | Explicitly refresh config files, Docker images, and the launcher binary when a release is available |
+| `aegiscore remove` | Uninstall Aegiscore completely |
+| `aegiscore --version` | Show installed version |
 
-> **Web dashboard** is included in the default stack. After `decepticon` starts, the dashboard is available at `http://localhost:3000` (configurable via `WEB_PORT` in `.env`).
+> **Web dashboard** is included in the default stack. After `aegiscore` starts, the dashboard is available at `http://localhost:3000` (configurable via `WEB_PORT` in `.env`).
 
-### `decepticon logs` — Service names
+### `aegiscore logs` — Service names
 
 ```bash
-decepticon logs             # langgraph (default)
-decepticon logs litellm     # LiteLLM proxy
-decepticon logs postgres    # PostgreSQL
-decepticon logs neo4j       # Neo4j graph database
-decepticon logs sandbox     # Kali Linux sandbox
-decepticon logs web         # Web dashboard
+aegiscore logs             # langgraph (default)
+aegiscore logs litellm     # LiteLLM proxy
+aegiscore logs postgres    # PostgreSQL
+aegiscore logs neo4j       # Neo4j graph database
+aegiscore logs sandbox     # Kali Linux sandbox
+aegiscore logs web         # Web dashboard
 ```
 
 ---
@@ -85,7 +85,7 @@ Available inside the interactive terminal UI:
 
 ## Environment Variables
 
-These can be set in your `.env` file (configure with `decepticon onboard`) or as shell environment variables.
+These can be set in your `.env` file (configure with `aegiscore onboard`) or as shell environment variables.
 
 ### Required (at least one LLM key)
 
@@ -116,10 +116,10 @@ See [Models](models.md) for the full Tier × AuthMethod matrix and chain example
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `LITELLM_MASTER_KEY` | `sk-decepticon-master` | LiteLLM proxy auth key |
-| `LITELLM_SALT_KEY` | `sk-decepticon-salt-change-me` | LiteLLM salt (change in production) |
-| `POSTGRES_PASSWORD` | `decepticon` | PostgreSQL password |
-| `NEO4J_PASSWORD` | `decepticon-graph` | Neo4j password |
+| `LITELLM_MASTER_KEY` | `sk-aegiscore-master` | LiteLLM proxy auth key |
+| `LITELLM_SALT_KEY` | `sk-aegiscore-salt-change-me` | LiteLLM salt (change in production) |
+| `POSTGRES_PASSWORD` | `aegiscore` | PostgreSQL password |
+| `NEO4J_PASSWORD` | `aegiscore-graph` | Neo4j password |
 
 ### Ports (optional)
 
@@ -149,7 +149,7 @@ Currently allowlisted workloads (the agent can call `ops_start("X")` for any of 
 |----------|-------------|
 | `LANGSMITH_TRACING` | Set to `true` to enable LangSmith tracing |
 | `LANGSMITH_API_KEY` | LangSmith API key |
-| `LANGSMITH_PROJECT` | LangSmith project name (default: `decepticon`) |
+| `LANGSMITH_PROJECT` | LangSmith project name (default: `aegiscore`) |
 
 ### Debug
 

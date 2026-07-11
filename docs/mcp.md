@@ -1,12 +1,12 @@
 # MCP tool servers (opt-in)
 
-Decepticon can attach to external **Model Context Protocol** (MCP)
+Aegiscore can attach to external **Model Context Protocol** (MCP)
 servers — e.g. a Kali MCP daemon or HexStrike — and expose their
 tools to the agents alongside the built-in ones.
 
 The integration is **opt-in** and **additive**: nothing is loaded
 unless you both (a) install the optional adapter package and (b)
-point Decepticon at one or more MCP servers via an env var.
+point Aegiscore at one or more MCP servers via an env var.
 
 ## 1. Install the adapter
 
@@ -14,9 +14,9 @@ point Decepticon at one or more MCP servers via an env var.
 pip install langchain-mcp-adapters
 ```
 
-The dependency is intentionally **not** in `decepticon`'s base
+The dependency is intentionally **not** in `aegiscore`'s base
 install — operators who don't use MCP don't pay for it. If the
-package is missing when MCP is configured, Decepticon logs a single
+package is missing when MCP is configured, Aegiscore logs a single
 warning and continues with built-in tools only.
 
 ## 2. Declare your servers
@@ -47,7 +47,7 @@ Malformed JSON, unknown transports, or unreachable servers are
 ## 3. Programmatic use
 
 ```python
-from decepticon.tools.mcp import load_mcp_tools, mcp_servers_configured
+from aegiscore.tools.mcp import load_mcp_tools, mcp_servers_configured
 
 if mcp_servers_configured():
     tools = await load_mcp_tools()

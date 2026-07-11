@@ -1,6 +1,6 @@
-# Contributing to Decepticon
+# Contributing to Aegiscore
 
-Thank you for your interest in contributing to Decepticon! Whether you're a security researcher, AI engineer, or documentation enthusiast, we welcome your contributions.
+Thank you for your interest in contributing to Aegiscore! Whether you're a security researcher, AI engineer, or documentation enthusiast, we welcome your contributions.
 
 ## Getting Started
 
@@ -14,8 +14,8 @@ Thank you for your interest in contributing to Decepticon! Whether you're a secu
 ### Development Setup
 
 ```bash
-git clone https://github.com/PurpleAILAB/Decepticon.git
-cd Decepticon
+git clone https://github.com/PurpleAILAB/Aegiscore.git
+cd Aegiscore
 
 # Start with hot-reload (builds Docker images + watches for source changes)
 make dev
@@ -37,14 +37,14 @@ make lint-fix      # Auto-fix lint issues
 
 ### Reporting Bugs
 
-Use the [Bug Report](https://github.com/PurpleAILAB/Decepticon/issues/new?template=bug_report.yml) issue template. Include:
+Use the [Bug Report](https://github.com/PurpleAILAB/Aegiscore/issues/new?template=bug_report.yml) issue template. Include:
 - Steps to reproduce
 - Expected vs actual behavior
 - Docker and Python version info
 
 ### Suggesting Features
 
-Use the [Feature Request](https://github.com/PurpleAILAB/Decepticon/issues/new?template=feature_request.yml) issue template.
+Use the [Feature Request](https://github.com/PurpleAILAB/Aegiscore/issues/new?template=feature_request.yml) issue template.
 
 ### Submitting Pull Requests
 
@@ -64,16 +64,16 @@ Use the [Feature Request](https://github.com/PurpleAILAB/Decepticon/issues/new?t
 - **Python**: Pydantic v2, Ruff for formatting/linting, basedpyright for type checking
 - **Line length**: 100 characters
 - **Imports**: Absolute imports, public API re-exported through `__init__.py`
-- **Logging**: `from decepticon.core.logging import get_logger; log = get_logger("module.sub")`
-- **Skills**: Markdown files in `decepticon/skills/` with YAML frontmatter
+- **Logging**: `from aegiscore.core.logging import get_logger; log = get_logger("module.sub")`
+- **Skills**: Markdown files in `aegiscore/skills/` with YAML frontmatter
 - **CLI (TypeScript)**: Ink.js components in `clients/cli/src/`
 
 ## Project Structure
 
 ```
-decepticon/          Python agents, core logic, backends
+aegiscore/          Python agents, core logic, backends
 clients/cli/         Ink.js terminal UI (TypeScript)
-decepticon/skills/   Markdown knowledge base for agents
+aegiscore/skills/   Markdown knowledge base for agents
 containers/          Dockerfiles
 config/              Runtime configuration
 scripts/             Installer and utilities
@@ -82,7 +82,7 @@ docs/                Documentation
 
 ## Authoring Skills
 
-Every `packages/decepticon/decepticon/skills/**/SKILL.md` file must
+Every `packages/aegiscore/aegiscore/skills/**/SKILL.md` file must
 conform to the schema in [docs/skill-schema.md](docs/skill-schema.md).
 Before opening a PR, run `make audit-skills` locally and fix any
 reported violations. CI runs the same check on every PR.

@@ -360,3 +360,7 @@ ignore = [
     "DEP003",
     "DEP001",
 ]
+
+
+[tool.setuptools.packages.find]
+where = ["packages"]

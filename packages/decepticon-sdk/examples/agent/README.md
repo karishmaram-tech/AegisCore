@@ -1,6 +1,6 @@
-# decepticon-example-agent
+# aegiscore-example-agent
 
-A Decepticon plugin (agent) scaffolded by ``decepticon-sdk plugin new``.
+A Aegiscore plugin (agent) scaffolded by ``aegiscore-sdk plugin new``.
 
 ## Build + install
 
@@ -10,12 +10,12 @@ pip install dist/*.whl
 ```
 
 After install, the framework's plugin loader discovers this contribution
-via the ``decepticon.agents`` entry-point group.
+via the ``aegiscore.agents`` entry-point group.
 
 ## Test
 
 ```bash
-pip install decepticon-sdk[testing]
+pip install aegiscore-sdk[testing]
 pytest
 ```
 

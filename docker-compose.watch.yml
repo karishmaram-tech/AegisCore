@@ -1,4 +1,4 @@
-# docker-compose.watch.yml — hot-reload overrides for development
+# docker-compose.watch.yml Ã¢â‚¬â€ hot-reload overrides for development
 #
 # Requires Docker Compose 2.22+ (introduces the `develop.watch` key).
 # Kept separate from docker-compose.yml so OSS users on older Compose
@@ -14,30 +14,30 @@ services:
       watch:
         - action: sync
           # Phase 0 of the core/framework/sdk split relocated the source
-          # tree to packages/decepticon/decepticon/. The Dockerfile
+          # tree to packages/aegis-core/aegis-core/. The Dockerfile
           # COPY now pulls packages/, and uv sync installs editable from
-          # there — hot-reload mirrors the same path inside the image.
-          # Skills live under packages/decepticon/decepticon/skills,
-          # so this sync covers them too — no dedicated entry needed.
-          path: ./packages/decepticon/decepticon
-          target: /app/packages/decepticon/decepticon
+          # there Ã¢â‚¬â€ hot-reload mirrors the same path inside the image.
+          # Skills live under packages/aegis-core/aegis-core/skills,
+          # so this sync covers them too Ã¢â‚¬â€ no dedicated entry needed.
+          path: ./packages/aegis-core/aegis-core
+          target: /app/packages/aegis-core/aegis-core
         - action: sync
-          # decepticon-core changes also live-sync into the editable
+          # aegis-core-core changes also live-sync into the editable
           # install so plugin registry / role registry tweaks land
           # without a full image rebuild.
-          path: ./packages/decepticon-core/decepticon_core
-          target: /app/packages/decepticon-core/decepticon_core
+          path: ./packages/aegis-core-core/aegis-core_core
+          target: /app/packages/aegis-core-core/aegis-core_core
         - action: sync
           path: ./langgraph.json
           target: /app/langgraph.json
         - action: rebuild
-          # Any workspace pyproject change forces a rebuild — uv sync
+          # Any workspace pyproject change forces a rebuild Ã¢â‚¬â€ uv sync
           # must re-resolve the dependency closure.
           path: ./pyproject.toml
         - action: rebuild
-          path: ./packages/decepticon/pyproject.toml
+          path: ./packages/aegis-core/pyproject.toml
         - action: rebuild
-          path: ./packages/decepticon-core/pyproject.toml
+          path: ./packages/aegis-core-core/pyproject.toml
         - action: rebuild
           path: ./containers/langgraph.Dockerfile
 

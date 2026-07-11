@@ -17,7 +17,7 @@ This file is `CODEOWNERS`-gated. To change the bar, open an ADR.
 ## The Karpathy Four
 
 These four principles are the default behavioral contract for **every**
-Decepticon contribution, trivial or complex. They override any habit
+Aegiscore contribution, trivial or complex. They override any habit
 toward speed, breadth, or overcomplication. Bias: **caution over speed**.
 
 ### 1. Think Before Coding
@@ -104,7 +104,7 @@ changes," "obvious refactors," "docs-only" touching runtime code, or
 1. **You executed the new or changed code path on your machine.** Not
    imported. Not unit-tested in isolation. Actually called, in the
    actual runtime, against the actual surrounding system. If your
-   change is in `packages/decepticon/decepticon/agents/`, you ran an
+   change is in `packages/aegiscore/aegiscore/agents/`, you ran an
    engagement that exercised the agent. If it is a CLI command, you
    ran the command. If it is an HTTP route, you hit the route. If it
    is a skill, you triggered the skill from an agent that loads it.
@@ -174,7 +174,7 @@ observed. Examples that meet the bar:
 > implant on the same target. `make smoke` healthy on a clean
 > volume.
 
-> Ran `pytest packages/decepticon/tests/unit/middleware/test_safe_command.py::test_rejects_out_of_scope_host -x`
+> Ran `pytest packages/aegiscore/tests/unit/middleware/test_safe_command.py::test_rejects_out_of_scope_host -x`
 > twice: once on the parent commit (failed as expected: the new
 > CIDR-overlap check did not exist), once on this branch (passed).
 > Also ran `make ci-lint` and the full `pytest tests/`. Did **not**
@@ -196,7 +196,7 @@ The bar is on the *evidence*, not the *claim*.
 ## Banned patterns — PR closed on sight
 
 Each pattern is closed without further review when found. Several are
-already enforced by `.semgrep/decepticon-rules.yml`; the rest are
+already enforced by `.semgrep/aegiscore-rules.yml`; the rest are
 enforced by the maintainer reviewing the diff. There is no "I didn't
 know" exception once this document exists.
 
@@ -235,7 +235,7 @@ preserved.
 ### Type-safety escape hatches
 
 ```python
-# BANNED (also semgrep: decepticon-no-blanket-type-ignore)
+# BANNED (also semgrep: aegiscore-no-blanket-type-ignore)
 x = call()  # type: ignore
 y = other()  # pyright: ignore
 
@@ -249,11 +249,11 @@ justification.
 ### Logging in production
 
 ```python
-# BANNED in packages/decepticon/**, packages/decepticon-core/**
+# BANNED in packages/aegiscore/**, packages/aegiscore-core/**
 print(f"got result {result}")
 
 # REQUIRED
-from decepticon.core.logging import get_logger
+from aegiscore.core.logging import get_logger
 log = get_logger("agents.recon.scanner")
 log.info("recon scan complete", extra={"host_count": len(hosts)})
 ```
@@ -405,7 +405,7 @@ The complement of the banned list. The reviewer is looking for these:
 - **Every public function has explicit type annotations**, including
   return type. `-> None` when nothing is returned.
 - **Every exception raised is a named class** that subclasses a
-  Decepticon base error (`DecepticonError` or a domain-specific child).
+  Aegiscore base error (`DecepticonError` or a domain-specific child).
 - **Every fix PR's branch has a failing-test commit followed by a
   passing-test commit.** Don't squash locally; the maintainer wants
   to see the bug reproduced. CI will squash on merge.

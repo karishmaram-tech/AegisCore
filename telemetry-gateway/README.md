@@ -1,4 +1,4 @@
-# Decepticon Telemetry Gateway (PoC)
+# Aegiscore Telemetry Gateway (PoC)
 
 The public, unauthenticated **ingest gateway** for OSS maintainer telemetry —
 Layer 1 of [`docs/design/2026-06-20-telemetry-data-collection-design.md`](../docs/design/2026-06-20-telemetry-data-collection-design.md).
@@ -10,8 +10,8 @@ cannot, and to hold the backend secret so the OSS client never has to.
 > **PoC status.** Working, tested gateway (schema + Tier-C scanner + PostHog
 > forward + rate-limit) **plus** a Python client that emits to it: consent
 > resolution, sanitizer, batch exporter, and a sink wired into
-> `EventLogMiddleware` (`packages/decepticon/decepticon/telemetry/`), the
-> `decepticon-cli telemetry` subcommand, and `TELEMETRY.md`. Remaining: MITRE
+> `EventLogMiddleware` (`packages/aegiscore/aegiscore/telemetry/`), the
+> `aegiscore-cli telemetry` subcommand, and `TELEMETRY.md`. Remaining: MITRE
 > tagging at the agent layer (the heatmap source) and production hardening.
 
 ## Why a gateway (and not client → a third-party analytics backend directly)
@@ -34,7 +34,7 @@ counts.
 ## Data flow
 
 ```
-Decepticon client (URL only, no secret)
+Aegiscore client (URL only, no secret)
    │  POST /v1/telemetry   { Tier-A batch, batched + gzipped }
    ▼
 Cloudflare Worker (this)
@@ -89,6 +89,6 @@ change the other (a generator can replace the hand-mirror later).
 ## Next steps (not in this PoC)
 
 1. Python client emitter — reuse `event_log.py` shapes, POST Tier-A batches.
-2. Consent CLI — `decepticon telemetry status|off|preview`, honor `DO_NOT_TRACK`.
+2. Consent CLI — `aegiscore telemetry status|off|preview`, honor `DO_NOT_TRACK`.
 3. `TELEMETRY.md` — every field, the redaction rules, the endpoint.
 4. Tier-B classification/redaction behind `extended` consent.

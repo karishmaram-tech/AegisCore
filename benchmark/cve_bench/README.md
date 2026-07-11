@@ -1,4 +1,4 @@
-# CVE-Bench harness for Decepticon
+# CVE-Bench harness for Aegiscore
 
 Sibling to `benchmark/` XBOW provider; targets
 [CVE-Bench](https://github.com/uiuc-kang-lab/cve-bench)
@@ -7,7 +7,7 @@ Sibling to `benchmark/` XBOW provider; targets
 variants (`zero_day`, `one_day`), 8 win conditions per attempt.
 
 **Sprint S5 status:** harness + offline dry run landed. Live 40 × 2 run
-gated on Decepticon stack + LLM credentials (out of sprint scope). See
+gated on Aegiscore stack + LLM credentials (out of sprint scope). See
 [`benchmark/results/cve-bench/README.md`](../results/cve-bench/README.md).
 
 ## Layout

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the Decepticon project. Format based on
+All notable changes to the Aegiscore project. Format based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning
 follows [Semantic Versioning](https://semver.org/) from `1.0.0`
 onward (the `0.x` cycle is pre-stable per the core/framework/sdk split
@@ -10,14 +10,14 @@ design spec, §13.4).
 
 The agent-driven dynamic infrastructure release. Specialist workloads
 (BloodHound CE, Sliver C2, Ghidra MCP, …) and the web dashboard no
-longer come up on `decepticon start` — the orchestrator brings them
+longer come up on `aegiscore start` — the orchestrator brings them
 up on demand. Core management plane (LiteLLM, PostgreSQL, Skillogy,
 LangGraph, sandbox) keeps the always-on contract.
 
 ### Added
 
 - **Open-web acquisition engine (`web_search` / `web_fetch`).** A new
-  site-agnostic fetch engine (`decepticon/sandbox_web/`) that escalates past
+  site-agnostic fetch engine (`aegiscore/sandbox_web/`) that escalates past
   WAF/anti-bot defenses — Verdict-based 4-layer validation ("HTTP 200 is an
   inspection-start condition, not success"), ranked WAF-product detection, a
   transform×TLS-impersonate×referer grid, and a headless-browser fallback. It
@@ -107,7 +107,7 @@ LangGraph, sandbox) keeps the always-on contract.
   `ghidra-mcp` under `[reversing]`) keep their profile gates and are
   now driven exclusively by the orchestrator's `ops_start(...)`
   calls. (#620, #625)
-- `decepticon start` UX: the message in the README and the launcher
+- `aegiscore start` UX: the message in the README and the launcher
   banner now states "Start the core stack and drop into the terminal
   CLI" rather than "Start everything" — the dashboard and specialist
   workloads no longer come up by default.
@@ -160,7 +160,7 @@ LangGraph, sandbox) keeps the always-on contract.
   `_retry_on_connection_error` was called with `max_retries <= 0`
   the loop body never ran and the trailing `raise last_exc` raised
   `None`; it now raises a `SandboxError` naming the misconfiguration.
-- `decepticon.middleware.skillogy`: dropped the no-op
+- `aegiscore.middleware.skillogy`: dropped the no-op
   `wrap_tool_call` / `awrap_tool_call` passthrough overrides (base
   `AgentMiddleware` behavior is identical) and their stale
   `ToolMessage` return annotations.
@@ -184,17 +184,17 @@ same Skillogy publish fix as `v1.1.5`. (#452)
 
 ## [1.1.5] — 2026-06-01
 
-Patch release. Fixes a release-pipeline gap that broke `decepticon start`
+Patch release. Fixes a release-pipeline gap that broke `aegiscore start`
 for every published install since the Skillogy layer landed in `v1.1.4`.
 
 ### Fixed
 
 - **Skillogy image is now published** — the release pipeline never built,
-  pushed, verified, or promoted `ghcr.io/purpleailab/decepticon-skillogy`,
+  pushed, verified, or promoted `ghcr.io/purpleailab/aegiscore-skillogy`,
   even though the always-on compose `skillogy` service pulls it. Every
-  release since `v1.1.4` therefore failed at `decepticon start` with
-  `No such image: ghcr.io/purpleailab/decepticon-skillogy:<version>` /
-  `error from registry: denied`. `decepticon-skillogy` is now part of the
+  release since `v1.1.4` therefore failed at `aegiscore start` with
+  `No such image: ghcr.io/purpleailab/aegiscore-skillogy:<version>` /
+  `error from registry: denied`. `aegiscore-skillogy` is now part of the
   multi-arch `docker` build matrix and the `publish-release` verify +
   `:latest` promote lists (and `release-recover.yml`), so a missing image
   now fails the release loudly instead of shipping a broken compose file.
@@ -216,7 +216,7 @@ runtime (#342), the static-analysis CI arsenal (#343), three new
 specialist agents, the Skillogy skill-as-a-service layer, six new
 safety/security middleware, and the Makefile-as-single-source-of-truth
 CI refactor (#443). The OSS default runtime, public plugin contract
-(`decepticon-core` / `decepticon-sdk` surface), and three-package layout
+(`aegiscore-core` / `aegiscore-sdk` surface), and three-package layout
 are unchanged. All three Python packages release in lockstep.
 
 ### Added
@@ -226,7 +226,7 @@ are unchanged. All three Python packages release in lockstep.
   `agents/prompts/standard/` and a factory under `agents/standard/`.
   (#342)
 - **Skillogy — skill-as-a-service** — dedicated gRPC + REST layer at
-  `packages/decepticon/decepticon/skillogy/` (Dockerfile under
+  `packages/aegiscore/aegiscore/skillogy/` (Dockerfile under
   `containers/skillogy.Dockerfile`). v0.1 design spec in
   `docs/design/skillogy.md`; user docs in `docs/skillogy.md`. Skill
   authoring (`SKILL.md`) is unchanged — Skillogy is a discovery layer
@@ -255,8 +255,8 @@ are unchanged. All three Python packages release in lockstep.
   (`browser_action` multiplex), `tmux pipe-pane → asciicast v2`
   evidence export, WAVE-4 6.1 Buttercup benchmark integration,
   WAVE-5 sandbox tools. (#350)
-- **`decepticon-cli`** — `decepticon-cli auth` (headless provider /
-  auth introspection); `decepticon-cli scan` + GitHub Action template
+- **`aegiscore-cli`** — `aegiscore-cli auth` (headless provider /
+  auth introspection); `aegiscore-cli scan` + GitHub Action template
   for CI/CD parity. (#342, #350)
 - **Runtime infrastructure** — bounded graceful SIGTERM/SIGINT
   shutdown library; append-only engagement `events.jsonl` log;
@@ -266,10 +266,10 @@ are unchanged. All three Python packages release in lockstep.
   dynamic `load_skill`. (#350)
 - **Per-engagement isolation** — sandbox minimum-cap hardening;
   Neo4j per-engagement scoping (closes cross-engagement leak);
-  allowlist-only APOC with client-side safety guard; Decepticon
+  allowlist-only APOC with client-side safety guard; Aegiscore
   self-threat-model documented at
-  `docs/security/decepticon-threat-model.md`. (#342)
-- **Five new security docs** under `docs/security/` — decepticon
+  `docs/security/aegiscore-threat-model.md`. (#342)
+- **Five new security docs** under `docs/security/` — aegiscore
   threat model, Neo4j hardening, prompt-injection defense, sandbox
   isolation, sisyphus-pr top-level summary. (#342)
 - **`Makefile` two-tier gate** — `make quality` mirrors the CI PR
@@ -354,11 +354,11 @@ are unchanged. All three Python packages release in lockstep.
 
 ### Notes
 
-- All three Python packages (`decepticon-core`, `decepticon`,
-  `decepticon-sdk`) release in lockstep at `1.1.4`.
-- `decepticon-core` and `decepticon-sdk` surface (the public
+- All three Python packages (`aegiscore-core`, `aegiscore`,
+  `aegiscore-sdk`) release in lockstep at `1.1.4`.
+- `aegiscore-core` and `aegiscore-sdk` surface (the public
   plugin-author contract) is unchanged in this release. All additions
-  land in `decepticon` (the framework).
+  land in `aegiscore` (the framework).
 - Pre-1.0 cleanup mode continues — see the design spec at
   `docs/superpowers/specs/2026-05-23-core-framework-sdk-split-design.md`
   for the rationale.
@@ -385,7 +385,7 @@ additive or a fix.
   `DECEPTICON_CONTAINER_RUNTIME` override; Podman socket discovery injects
   `DOCKER_HOST` so nested Docker-API consumers keep working. Docker users
   see zero behavioral change. (#292)
-- **Ghidra 12.1 reverse-engineering backend** — `decepticon/tools/reversing/ghidra.py`
+- **Ghidra 12.1 reverse-engineering backend** — `aegiscore/tools/reversing/ghidra.py`
   (headless `analyzeHeadless` + optional MCP-bridge sidecar): `ghidra_analyze`,
   `ghidra_decompile`, `ghidra_xrefs`, `ghidra_status`. Gated behind
   `INSTALL_REVERSING=false` so the default sandbox image stays lean; the
@@ -435,7 +435,7 @@ additive or a fix.
   third-party `deepagents` subagent dispatch aborted runs ~85s in. The
   langgraph service now defaults to `--allow-blocking` (downgrades to a
   warning), with `LANGGRAPH_STRICT_ASYNC=1` to restore fatal behavior for
-  debugging. Complements #295's structural fix for Decepticon's own sync
+  debugging. Complements #295's structural fix for Aegiscore's own sync
   calls. (#333)
 - **LiteLLM truncated tool_use** — Claude models had no `max_tokens`, so
   LiteLLM fell back to its 4096 default and cut off 30–50KB report writes.
@@ -494,7 +494,7 @@ additive or a fix.
   rules removed, internal design specs untracked, `xbow-validation-benchmarks`
   submodule bumped to the buster apt-archive fix. (#282)
 
-## [1.1.2-localfixes.1] — 2026-05-25 (fork — mohamedq9900/Decepticon)
+## [1.1.2-localfixes.1] — 2026-05-25 (fork — mohamedq9900/Aegiscore)
 
 Runtime-stability fork of upstream `v1.1.2` carrying four targeted fixes
 that surfaced under sustained engagement load (multi-hour audits, large
@@ -510,7 +510,7 @@ preserve upstream contracts.
   to match the pattern already used for the surrounding `kill_session`
   call. The CLI previously surfaced this as "An internal error
   occurred" on every successful session kill.
-  ([`packages/decepticon/decepticon/tools/bash/bash.py`](packages/decepticon/decepticon/tools/bash/bash.py))
+  ([`packages/aegiscore/aegiscore/tools/bash/bash.py`](packages/aegiscore/aegiscore/tools/bash/bash.py))
 
 - **`GraphRecursionError: Recursion limit of 250 reached`** —
   bumped `_RECURSION_LIMIT` from `250` to `1000` on seven sub-agents
@@ -522,8 +522,8 @@ preserve upstream contracts.
   orchestrator) were already sized at ≥400 and remain unchanged.
   Cap of 1000 was chosen to cover observed worst-case depth without
   unbounded headroom.
-  ([`packages/decepticon/decepticon/agents/standard/*.py`,
-  `packages/decepticon/decepticon/agents/plugins/*.py`](packages/decepticon/decepticon/agents/))
+  ([`packages/aegiscore/aegiscore/agents/standard/*.py`,
+  `packages/aegiscore/aegiscore/agents/plugins/*.py`](packages/aegiscore/aegiscore/agents/))
 
 - **`auth/gpt-*` Codex OAuth handler dropped tool names mid-stream** —
   the streaming handler only processed
@@ -594,18 +594,18 @@ This release introduced the three-package split (additive — every
 legacy import path keeps working via compat shims), shipped as
 ``v1.1.2`` on the OSS series. Removal of
 the compat shims, ``PluginBundle`` aggregate shape, and the legacy
-``decepticon.agents.middleware_slots.MiddlewareSlot`` re-export is
+``aegiscore.agents.middleware_slots.MiddlewareSlot`` re-export is
 deferred to ``2.0.0`` (see "Deprecated" table below).
 
 ### Added — three-package split (core / framework / sdk)
 
-OSS shifts from a monolithic `decepticon` wheel to three coordinated
+OSS shifts from a monolithic `aegiscore` wheel to three coordinated
 wheels. The split exposes a stable contract layer that commercial
 products, downstream frameworks, and the community can extend without
 touching framework internals. Full design rationale in the
 core/framework/sdk split design spec.
 
-- **`decepticon-core`** (new) — pure types, protocols, plugin contracts,
+- **`aegiscore-core`** (new) — pure types, protocols, plugin contracts,
   registry primitives. Zero `langchain` / `langgraph` / `deepagents` /
   `httpx` / `fastapi` runtime dependency. Safe to pin from any context
   (CLI tooling, serverless workers, type-check-only environments).
@@ -619,15 +619,15 @@ core/framework/sdk split design spec.
     kitchen-sink `PluginBundle` shape.
   - `RoleRegistry`, `SkillSourceRegistry`, `PluginRegistry` with
     `PluginConflictWarning` + `RoleResolution` introspection types.
-- **`decepticon-sdk`** (new) — single-import surface for plugin
-  authors. Re-exports 23 stable symbols from `decepticon-core`. Ships
+- **`aegiscore-sdk`** (new) — single-import surface for plugin
+  authors. Re-exports 23 stable symbols from `aegiscore-core`. Ships
   `decepticon_sdk.testing` (`FakeBackend` / `FakeLLM` / `FakeSandbox`
   that satisfy their respective `Protocol`s at runtime) and a
-  `decepticon-sdk plugin new` scaffolder covering six plugin kinds
+  `aegiscore-sdk plugin new` scaffolder covering six plugin kinds
   (tool / middleware / agent / callback / skill / prompt).
-- **`decepticon`** (relocated to `packages/decepticon/src/decepticon/`) —
+- **`aegiscore`** (relocated to `packages/aegiscore/src/aegiscore/`) —
   the opinionated framework. Same agent factories, middleware, tools,
-  LLM router as before; depends on `decepticon-core` for every
+  LLM router as before; depends on `aegiscore-core` for every
   contract surface it touches.
 
 ### Added — plugin extension primitives (closes 9 of 12 spec §8 gaps)
@@ -641,8 +641,8 @@ core/framework/sdk split design spec.
   llm_role_fallback)` for custom agent roles (closes gap #5).
   Idempotent on identical parameters (multi-process worker startup
   safe). The framework registers all 16 OSS roles at boot via
-  `decepticon._boot.run()`.
-- `PluginRegistry.load()` walks the nine `decepticon.*` entry-point
+  `aegiscore._boot.run()`.
+- `PluginRegistry.load()` walks the nine `aegiscore.*` entry-point
   groups (`tools`, `middleware`, `agents`, `subagents`, `callbacks`,
   `skills`, `bundles`, `roles`, `prompts`) and surfaces same-key
   collisions as `PluginConflictWarning` (closes gap #4, gap #7).
@@ -653,7 +653,7 @@ core/framework/sdk split design spec.
   tool/middleware names (closes gap #10). Additive-only per the split
   design spec §16.4 #4 — plugins cannot remove safety on OSS-declared
   names.
-- `PromptContribution` + `decepticon.prompts` entry-point group for
+- `PromptContribution` + `aegiscore.prompts` entry-point group for
   prompt-only plugins (closes gap #8). No longer requires wrapping in
   `PluginBundle`.
 - `roles=` / `parent_agents=` now explicitly required on every
@@ -661,12 +661,12 @@ core/framework/sdk split design spec.
 
 ### Added — author tooling + docs
 
-- Scaffolding CLI: `decepticon-sdk plugin new --kind=KIND --name=NAME
+- Scaffolding CLI: `aegiscore-sdk plugin new --kind=KIND --name=NAME
   --path=PATH`. Generates a buildable plugin package (`pyproject.toml`
   + `README.md` + `src/<module>/__init__.py`) wired to the matching
   entry-point group.
 - Six runnable example plugins under
-  [`packages/decepticon-sdk/examples/`](packages/decepticon-sdk/examples/),
+  [`packages/aegiscore-sdk/examples/`](packages/aegiscore-sdk/examples/),
   one per kind. All six build to wheel + sdist via `uv build`.
 - New audience-specific guides:
   - [`docs/plugin-author-guide.md`](docs/plugin-author-guide.md)
@@ -676,9 +676,9 @@ core/framework/sdk split design spec.
 
 ### Changed
 
-- Source tree relocated: `decepticon/` and `tests/` moved into
-  `packages/decepticon/src/decepticon/` and
-  `packages/decepticon/tests/` respectively (history preserved via
+- Source tree relocated: `aegiscore/` and `tests/` moved into
+  `packages/aegiscore/src/aegiscore/` and
+  `packages/aegiscore/tests/` respectively (history preserved via
   `git mv`). End-user CLI commands and the Docker stack UX are
   unchanged.
 - The root `pyproject.toml` is now a workspace umbrella
@@ -690,32 +690,32 @@ core/framework/sdk split design spec.
   shims for one release; see migration guide.
 - `containers/langgraph.Dockerfile` switches to `uv sync --no-dev
   --frozen --extra neo4j` against the workspace; `langgraph.json`
-  graph paths repointed to `./packages/decepticon/src/decepticon/`.
+  graph paths repointed to `./packages/aegiscore/src/aegiscore/`.
 
 ### Deprecated
 
 The following legacy import paths keep working but emit a
-`DeprecationWarning` via `decepticon.compat.register_legacy_imports()`
+`DeprecationWarning` via `aegiscore.compat.register_legacy_imports()`
 (default-on; opt-out via `DECEPTICON_NO_COMPAT=1`). Shims removed at
 **2.0.0**.
 
 | Legacy path | Canonical path |
 |-------------|----------------|
-| `decepticon.core.schemas` | `decepticon_core.types.engagement` |
-| `decepticon.llm.models` | `decepticon_core.types.llm` |
-| `decepticon.tools.research.graph` | `decepticon_core.types.kg` |
-| `decepticon.plugin_loader` | `decepticon_core.plugin_loader` |
-| `decepticon.core.config` | `decepticon_core.utils.config` |
-| `decepticon.core.logging` | `decepticon_core.utils.logging` |
-| `decepticon.agents.middleware_slots.{MiddlewareSlot, SLOTS_PER_ROLE, SAFETY_CRITICAL_SLOTS}` | `decepticon_core.contracts.slots.*` |
+| `aegiscore.core.schemas` | `decepticon_core.types.engagement` |
+| `aegiscore.llm.models` | `decepticon_core.types.llm` |
+| `aegiscore.tools.research.graph` | `decepticon_core.types.kg` |
+| `aegiscore.plugin_loader` | `decepticon_core.plugin_loader` |
+| `aegiscore.core.config` | `decepticon_core.utils.config` |
+| `aegiscore.core.logging` | `decepticon_core.utils.logging` |
+| `aegiscore.agents.middleware_slots.{MiddlewareSlot, SLOTS_PER_ROLE, SAFETY_CRITICAL_SLOTS}` | `decepticon_core.contracts.slots.*` |
 
 ### Notes
 
-- `decepticon-core` LOC: 4,130 (spec §10 Phase 6 budget: ≤4,000).
+- `aegiscore-core` LOC: 4,130 (spec §10 Phase 6 budget: ≤4,000).
   Modest over-shoot from the registry + protocols modules; trim in a
   follow-up if it remains a concern. None of the over-budget code
   imports langchain/langgraph/deepagents (defended by
-  [`test_no_runtime_deps`](packages/decepticon-core/tests/test_no_runtime_deps.py)).
+  [`test_no_runtime_deps`](packages/aegiscore-core/tests/test_no_runtime_deps.py)).
 - All three packages ship a PEP 561 `py.typed` marker.
 - Three packages release in lockstep with a single version string
   stamped from the git tag — verified by the release workflow at tag
@@ -730,7 +730,7 @@ The following legacy import paths keep working but emit a
 - Per-import `DeprecationWarning` emission via `sys.modules` aliasing
   (current implementation emits a single boot-time warning listing all
   legacy paths).
-- Ruff `flake8-tidy-imports.banned-api` rule for `decepticon-core`
+- Ruff `flake8-tidy-imports.banned-api` rule for `aegiscore-core`
   (defended by runtime test at present).
 - PyPI Trusted Publisher OIDC configuration for the three-wheel
   atomic release.

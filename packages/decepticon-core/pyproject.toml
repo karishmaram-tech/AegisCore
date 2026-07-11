@@ -7,7 +7,7 @@ version = "0.0.0"
 description = "Decepticon contract layer: pure types, protocols, plugin contracts, registry primitives"
 readme = "README.md"
 license = { text = "Apache-2.0" }
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 
 authors = [
     { name = "Decepticon Team" }
@@ -49,3 +49,4 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["decepticon_core"]
+

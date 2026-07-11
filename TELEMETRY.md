@@ -1,7 +1,7 @@
-# Decepticon Telemetry
+# Aegiscore Telemetry
 
-Decepticon can send **anonymous usage telemetry** to help maintainers see what
-users ask the agents to do and what the agents actually do. Decepticon is
+Aegiscore can send **anonymous usage telemetry** to help maintainers see what
+users ask the agents to do and what the agents actually do. Aegiscore is
 free/OSS; this sharing helps fund and improve it. It is **opt-out** — the
 onboard wizard asks for consent (default yes) and you can turn it off at any
 time — and designed for a red-team threat model: **raw prompts, targets,
@@ -11,12 +11,12 @@ credentials, and tool output are never transmitted.**
 
 - **On by default for consenting users (opt-out).** The onboard wizard asks
   during setup (default yes), writing `DECEPTICON_TELEMETRY=research`. Existing
-  users are re-asked once at `decepticon start` after this policy change.
+  users are re-asked once at `aegiscore start` after this policy change.
 - **Turn it off anytime:** set `DECEPTICON_TELEMETRY=off` (or `basic`) in
-  `~/.decepticon/.env`, run `decepticon-cli telemetry off`, or `DO_NOT_TRACK=1`.
+  `~/.aegiscore/.env`, run `aegiscore-cli telemetry off`, or `DO_NOT_TRACK=1`.
 - **Nothing is sent** without a `DECEPTICON_TELEMETRY_ENDPOINT` (shipped in the
   `.env` template; backfilled into existing installs on update).
-- **See exactly what would be sent:** `decepticon-cli telemetry preview`.
+- **See exactly what would be sent:** `aegiscore-cli telemetry preview`.
 
 ## Controls
 
@@ -25,9 +25,9 @@ credentials, and tool output are never transmitted.**
 | `DECEPTICON_TELEMETRY=off\|basic\|research` | consent mode (template default `research`; unset ⇒ `off`) |
 | `DO_NOT_TRACK=1` | standard kill switch — forces `off` |
 | `DECEPTICON_TELEMETRY_ENDPOINT=<url>` | gateway URL; unset ⇒ nothing is sent |
-| `decepticon-cli telemetry status` | show resolved mode / endpoint / anonymous id |
-| `decepticon-cli telemetry preview` | print the exact payload for a sample run |
-| `decepticon-cli telemetry off` / `on` | persistent opt-out marker (overrides env) |
+| `aegiscore-cli telemetry status` | show resolved mode / endpoint / anonymous id |
+| `aegiscore-cli telemetry preview` | print the exact payload for a sample run |
+| `aegiscore-cli telemetry off` / `on` | persistent opt-out marker (overrides env) |
 
 ## What is collected
 
@@ -55,14 +55,14 @@ Two consent tiers map to the data tiers in the design doc:
   preserved for training future autonomous red-team agents. **Target identifiers
   are MASKED** (`10.0.0.5` → `<HOST_1>`, creds → `<CRED_1>`) so the reasoning stays
   intact but no real target/credential is shared. Enable with
-  `decepticon-cli telemetry enable research` (it prints the disclosure first).
+  `aegiscore-cli telemetry enable research` (it prints the disclosure first).
 
   **Consent boundary:** the agent's reasoning is yours to share. The *target's*
   data — IPs, hosts, domains, credentials, client/org names — is masked even here,
   because a third party's data is not yours to consent away.
 
 Every batch carries a non-identifying envelope: a random `install_id` (a UUID
-minted on first use — never machine- or IP-derived), the Decepticon version, and
+minted on first use — never machine- or IP-derived), the Aegiscore version, and
 the OS family (`linux`/`darwin`/`windows`).
 
 ### Example (exactly what leaves the machine)
@@ -98,7 +98,7 @@ turn sequence a training pipeline needs. Identifiers are masked throughout:
   "client": { "decepticon_version": "1.1.13", "os": "linux" },
   "events": [
     { "type": "trajectory.step", "session_id": "a1b2c3d4e5f60718", "step": 0,
-      "role": "human", "agent": "decepticon", "text": "Objective: own the host at <HOST_1>" },
+      "role": "human", "agent": "aegiscore", "text": "Objective: own the host at <HOST_1>" },
     { "type": "trajectory.step", "session_id": "a1b2c3d4e5f60718", "step": 1,
       "role": "agent", "agent": "exploit",
       "text": "the login at <DOMAIN_1> on <HOST_1> looks injectable — try UNION-based SQLi" },

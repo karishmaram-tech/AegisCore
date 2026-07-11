@@ -1,14 +1,14 @@
 # Library Consumer Guide
 
 Audience: a commercial product or downstream framework that embeds
-Decepticon — e.g., a dashboard, a B2B API service, or a research
+Aegiscore — e.g., a dashboard, a B2B API service, or a research
 toolkit. Library consumers compose agents, override middleware, and
 ship custom plugins layered on top of the OSS stack.
 
 ## 1. Install
 
 ```bash
-pip install decepticon
+pip install aegiscore
 ```
 
 For the full Docker stack (with sandbox container + LiteLLM proxy +
@@ -21,7 +21,7 @@ library consumers can rely on from v1.1.2 onward (the current
 release series — see CHANGELOG):
 
 ```python
-from decepticon.agents import (
+from aegiscore.agents import (
     create_decepticon_agent,
     create_soundwave_agent,
     create_recon_agent,
@@ -29,12 +29,12 @@ from decepticon.agents import (
     build_middleware,
     build_tools,
 )
-from decepticon.backends import (
+from aegiscore.backends import (
     HTTPSandbox,
     build_sandbox_backend,
     make_agent_backend,
 )
-from decepticon.middleware import (
+from aegiscore.middleware import (
     EngagementContextMiddleware,
     FilesystemMiddleware,
     OPPLANMiddleware,
@@ -42,11 +42,11 @@ from decepticon.middleware import (
     SkillsMiddleware,
     ModelOverrideMiddleware,
 )
-from decepticon.llm import LLMFactory, create_llm
+from aegiscore.llm import LLMFactory, create_llm
 ```
 
-Plugin contracts come from `decepticon-core` (or via the
-`decepticon-sdk` re-export):
+Plugin contracts come from `aegiscore-core` (or via the
+`aegiscore-sdk` re-export):
 
 ```python
 from decepticon_sdk import (
@@ -62,8 +62,8 @@ from decepticon_sdk import (
 The simplest path — use an OSS factory and pass it your own sandbox:
 
 ```python
-from decepticon.backends import build_sandbox_backend, make_agent_backend
-from decepticon.agents import create_recon_agent
+from aegiscore.backends import build_sandbox_backend, make_agent_backend
+from aegiscore.agents import create_recon_agent
 
 sandbox = build_sandbox_backend()
 backend = make_agent_backend(sandbox)
@@ -100,7 +100,7 @@ VENDOR_OVERLAY = PluginBundle(
 )
 ```
 
-Ship the bundle via the `decepticon.bundles` entry-point group; the
+Ship the bundle via the `aegiscore.bundles` entry-point group; the
 framework's `build_middleware` picks it up.
 
 ## 5. Mount per-tenant assets — `make_agent_backend(extra_routes=)`
@@ -109,7 +109,7 @@ For multi-tenant or B2B Enterprise deployments, mount your own
 asset trees onto the agent's filesystem:
 
 ```python
-from decepticon.backends import make_agent_backend
+from aegiscore.backends import make_agent_backend
 from deepagents.backends import FilesystemBackend
 
 
@@ -148,7 +148,7 @@ RoleRegistry.register(
         MiddlewareSlot.PROMPT_CACHING,
     }),
     skill_sources=("/skills/apt/", "/skills/shared/"),
-    llm_role_fallback="decepticon",   # falls back to OSS routing if no apt-specific model
+    llm_role_fallback="aegiscore",   # falls back to OSS routing if no apt-specific model
 )
 ```
 
@@ -168,7 +168,7 @@ reg = PluginRegistry.load()
 
 # Collision detection — surface plugin conflicts at boot
 for collision in reg.detect_collisions():
-    metrics.incr("decepticon.plugin.collision", tags=[
+    metrics.incr("aegiscore.plugin.collision", tags=[
         f"kind:{collision.kind}",
         f"key:{collision.key}",
         f"loser:{collision.previous_owner}",
@@ -196,7 +196,7 @@ if resolution is not None:
 Spec §16 documents the forward-compat design that keeps the contract
 layer suitable for B2B Enterprise integration:
 
-- Pin to `decepticon-core==X.Y.*` for stable integration code (zero
+- Pin to `aegiscore-core==X.Y.*` for stable integration code (zero
   runtime deps, survives framework refactors for years).
 - Use `RoleRegistry` to ship per-tenant role catalogs without forking.
 - Use `make_agent_backend(extra_routes=...)` for per-tenant asset

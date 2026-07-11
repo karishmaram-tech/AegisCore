@@ -1,6 +1,6 @@
-# decepticon-example-prompt
+# aegiscore-example-prompt
 
-A Decepticon plugin (prompt) scaffolded by ``decepticon-sdk plugin new``.
+A Aegiscore plugin (prompt) scaffolded by ``aegiscore-sdk plugin new``.
 
 ## Build + install
 
@@ -10,12 +10,12 @@ pip install dist/*.whl
 ```
 
 After install, the framework's plugin loader discovers this contribution
-via the ``decepticon.prompts`` entry-point group.
+via the ``aegiscore.prompts`` entry-point group.
 
 ## Test
 
 ```bash
-pip install decepticon-sdk[testing]
+pip install aegiscore-sdk[testing]
 pytest
 ```
 

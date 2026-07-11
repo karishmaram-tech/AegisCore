@@ -1,6 +1,6 @@
-# decepticon-example-callback
+# aegiscore-example-callback
 
-A Decepticon plugin (callback) scaffolded by ``decepticon-sdk plugin new``.
+A Aegiscore plugin (callback) scaffolded by ``aegiscore-sdk plugin new``.
 
 ## Build + install
 
@@ -10,12 +10,12 @@ pip install dist/*.whl
 ```
 
 After install, the framework's plugin loader discovers this contribution
-via the ``decepticon.callbacks`` entry-point group.
+via the ``aegiscore.callbacks`` entry-point group.
 
 ## Test
 
 ```bash
-pip install decepticon-sdk[testing]
+pip install aegiscore-sdk[testing]
 pytest
 ```
 

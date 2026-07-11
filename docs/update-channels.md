@@ -1,6 +1,6 @@
 # Update channels
 
-Decepticon publishes two update channels, modeled on
+Aegiscore publishes two update channels, modeled on
 [Claude Code's release channels](https://code.claude.com/docs/en/setup#configure-release-channel).
 **Both channels deliver only _final_ releases** (never pre-releases /
 betas). The difference is a **bake/soak delay**, not pre-release inclusion.
@@ -16,7 +16,7 @@ conservative users see it.
 
 > **Claude Code parity, with one deliberate difference.** The *semantics*
 > match Claude Code (soak model, final-only). Claude Code defaults to
-> `latest`; Decepticon defaults to **`stable`** because it is an autonomous
+> `latest`; Aegiscore defaults to **`stable`** because it is an autonomous
 > offensive-security tool where a conservative default is the safer choice.
 
 `latest` is **not** "the main branch." It only moves when a release is
@@ -25,11 +25,11 @@ release, use the separate `DECEPTICON_BRANCH` override.)
 
 ## Selecting a channel
 
-The channel lives in `DECEPTICON_CHANNEL` in `~/.decepticon/.env` (default
+The channel lives in `DECEPTICON_CHANNEL` in `~/.aegiscore/.env` (default
 `stable`; unrecognized values resolve to `stable`):
 
 ```bash
-# ~/.decepticon/.env
+# ~/.aegiscore/.env
 DECEPTICON_CHANNEL=latest
 # optional — override the stable soak window (days):
 DECEPTICON_STABLE_SOAK_DAYS=7
@@ -37,17 +37,17 @@ DECEPTICON_STABLE_SOAK_DAYS=7
 
 Three ways to set it:
 
-- **At install** — `CHANNEL=latest curl -fsSL https://decepticon.red/install | bash`.
+- **At install** — `CHANNEL=latest curl -fsSL https://aegiscore.red/install | bash`.
 - **In `.env`** — `DECEPTICON_CHANNEL=stable|latest`. The launch-time
-  self-update and `decepticon update` both honor it.
-- **Per command** — `decepticon update --channel latest` (one run only).
+  self-update and `aegiscore update` both honor it.
+- **Per command** — `aegiscore update --channel latest` (one run only).
 
 Pinning an exact version still wins over the channel: `VERSION=1.2.0
 curl … | bash` (install) or `DECEPTICON_VERSION=1.2.0` (compose).
 
 ## How it works
 
-- **Launcher self-update / `decepticon update`** (`internal/updater`):
+- **Launcher self-update / `aegiscore update`** (`internal/updater`):
   - `latest` → GitHub `…/releases/latest` (newest final; the endpoint
     already excludes pre-releases and drafts).
   - `stable` → lists `…/releases` and picks the newest **final** whose

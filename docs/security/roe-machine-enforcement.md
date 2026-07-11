@@ -17,9 +17,9 @@ the middleware runs in audit-only mode: every gated tool call is logged
 to the [audit ledger](./audit-ledger.md) but nothing is ever refused.
 
 Source of record:
-[`types/roe.py`](../../packages/decepticon-core/decepticon_core/types/roe.py)
+[`types/roe.py`](../../packages/aegiscore-core/decepticon_core/types/roe.py)
 (schema + evaluator) and
-[`middleware/roe.py`](../../packages/decepticon/decepticon/middleware/roe.py)
+[`middleware/roe.py`](../../packages/aegiscore/aegiscore/middleware/roe.py)
 (the gate).
 
 ## Enforcement modes
@@ -116,7 +116,7 @@ command string, not the full tool-arguments dict.
 ## What gets gated
 
 The middleware only evaluates tool calls whose name is in
-`GATED_TOOL_NAMES` (`decepticon/middleware/roe.py`):
+`GATED_TOOL_NAMES` (`aegiscore/middleware/roe.py`):
 
 ```
 bash
@@ -190,8 +190,8 @@ RoE enforcement is layered (defense-in-depth), and the names reflect it:
    sees.
 2. **RoE Egress Guardrail** (network) — compiles the *same*
    `machine_enforcement` block into a sandbox nftables connect-allowlist
-   + DNS allowlist (`decepticon.middleware.egress` →
-   `decepticon.sandbox_kernel.egress`). A packet to an out-of-scope host
+   + DNS allowlist (`aegiscore.middleware.egress` →
+   `aegiscore.sandbox_kernel.egress`). A packet to an out-of-scope host
    cannot leave the sandbox even when the parser missed the target. One
    scope definition, two enforcement points. **On by default** for
    `enforce` mode — no extra config; the operator can opt out with
@@ -231,7 +231,7 @@ the egress layer's job.
   knob/default table.
 - [HITL Approval](./hitl-approval.md) — the operator-approval gate that
   sits above RoE; operator approval cannot override an RoE refusal.
-- [Threat Model](./decepticon-threat-model.md) — Decepticon's own attack
+- [Threat Model](./aegiscore-threat-model.md) — Aegiscore's own attack
   surface.
 - [Engagement Workflow](../engagement-workflow.md) — where `plan/roe.json`
   comes from.

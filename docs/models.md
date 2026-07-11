@@ -1,8 +1,8 @@
 # Models
 
-Decepticon routes every LLM call through a [LiteLLM](https://github.com/BerriAI/litellm) proxy that abstracts Anthropic, OpenAI, Google, MiniMax, DeepSeek, xAI, Mistral, OpenRouter, Nvidia NIM, **local Ollama**, plus six subscription OAuth handlers (Claude Code / ChatGPT / Gemini Advanced / Copilot Pro / SuperGrok / Perplexity Pro) behind a single endpoint. The model assigned to each agent — and the model that takes over when the primary fails — is computed at startup from your **credentials inventory** plus the active **profile**.
+Aegiscore routes every LLM call through a [LiteLLM](https://github.com/BerriAI/litellm) proxy that abstracts Anthropic, OpenAI, Google, MiniMax, DeepSeek, xAI, Mistral, OpenRouter, Nvidia NIM, **local Ollama**, plus six subscription OAuth handlers (Claude Code / ChatGPT / Gemini Advanced / Copilot Pro / SuperGrok / Perplexity Pro) behind a single endpoint. The model assigned to each agent — and the model that takes over when the primary fails — is computed at startup from your **credentials inventory** plus the active **profile**.
 
-You don't pick agent-by-agent models manually. You tell Decepticon which credentials you have, in what order of preference; it builds the chain.
+You don't pick agent-by-agent models manually. You tell Aegiscore which credentials you have, in what order of preference; it builds the chain.
 
 ---
 
@@ -16,7 +16,7 @@ Three orthogonal axes:
 | **AuthMethod** | API: `anthropic_api` / `openai_api` / `google_api` / `minimax_api` / `deepseek_api` / `xai_api` / `mistral_api` / `openrouter_api` / `nvidia_api`<br/>OAuth: `anthropic_oauth` / `openai_oauth` / `google_oauth` / `copilot_oauth` / `grok_oauth` / `perplexity_oauth`<br/>Local: `ollama_local` | Your credentials inventory |
 | **Profile** | `eco` / `max` / `test`                                                                                 | `DECEPTICON_MODEL_PROFILE` |
 
-For each agent, Decepticon resolves a tier (from the profile) and walks your AuthMethod priority list, emitting the model identifier that method provides at that tier. The first hit is the primary; **every remaining hit is queued as a fallback in priority order**. langchain's `ModelFallbackMiddleware` walks the queue on primary failure, trying each method in turn until one succeeds.
+For each agent, Aegiscore resolves a tier (from the profile) and walks your AuthMethod priority list, emitting the model identifier that method provides at that tier. The first hit is the primary; **every remaining hit is queued as a fallback in priority order**. langchain's `ModelFallbackMiddleware` walks the queue on primary failure, trying each method in turn until one succeeds.
 
 ### Tier × AuthMethod matrix
 
@@ -53,7 +53,7 @@ Each agent runs at the tier suited to its workload:
 
 | Tier  | Agents                                                                                          |
 |-------|-------------------------------------------------------------------------------------------------|
-| HIGH  | `decepticon`, `exploit`, `exploiter`, `patcher`, `contract_auditor`, `analyst`, `vulnresearch`   |
+| HIGH  | `aegiscore`, `exploit`, `exploiter`, `patcher`, `contract_auditor`, `analyst`, `vulnresearch`   |
 | MID   | `detector`, `verifier`, `postexploit`, `ad_operator`, `cloud_hunter`, `reverser`, `phisher`, `mobile_operator` |
 | LOW   | `soundwave`, `recon`, `scanner`, `wireless_operator`                                            |
 
@@ -69,14 +69,14 @@ For development / CI. Forces every agent to the cheapest tier (Haiku-class).
 
 ## Credentials inventory
 
-Your inventory is built at startup from environment variables, written by `decepticon onboard`.
+Your inventory is built at startup from environment variables, written by `aegiscore onboard`.
 
 ```bash
 # Priority order (first = preferred). When unset, the factory's built-in
 # `_DEFAULT_AUTH_PRIORITY` order applies (OAuth subscriptions ahead of their
 # paid per-token peers, hosted providers before local endpoints, with
 # unconfigured methods skipped at runtime). See `_DEFAULT_AUTH_PRIORITY` in
-# `decepticon/llm/factory.py` for the full ordered list.
+# `aegiscore/llm/factory.py` for the full ordered list.
 DECEPTICON_AUTH_PRIORITY=anthropic_oauth,openai_api
 
 # Set true if you have an active Claude Code OAuth subscription
@@ -117,7 +117,7 @@ ANTHROPIC_API_KEY=sk-ant-...
 
 | Agent (tier)     | Primary                       | Fallback |
 |------------------|-------------------------------|----------|
-| decepticon (HIGH)| `anthropic/claude-opus-4-7`   | —        |
+| aegiscore (HIGH)| `anthropic/claude-opus-4-7`   | —        |
 | detector (MID)   | `anthropic/claude-sonnet-4-6` | —        |
 | recon (LOW)      | `anthropic/claude-haiku-4-5`  | —        |
 
@@ -132,7 +132,7 @@ OPENAI_API_KEY=sk-...
 
 | Agent (tier)     | Primary               | Fallback |
 |------------------|------------------------|----------|
-| decepticon (HIGH)| `openai/gpt-5.5`      | —        |
+| aegiscore (HIGH)| `openai/gpt-5.5`      | —        |
 | detector (MID)   | `openai/gpt-5.4`      | —        |
 | recon (LOW)      | `openai/gpt-5-nano` | —        |
 
@@ -146,7 +146,7 @@ ANTHROPIC_API_KEY=sk-ant-...
 
 | Agent (tier)     | Primary                  | Fallback                         |
 |------------------|---------------------------|----------------------------------|
-| decepticon (HIGH)| `auth/claude-opus-4-7`   | `anthropic/claude-opus-4-7`     |
+| aegiscore (HIGH)| `auth/claude-opus-4-7`   | `anthropic/claude-opus-4-7`     |
 | detector (MID)   | `auth/claude-sonnet-4-6` | `anthropic/claude-sonnet-4-6`   |
 | recon (LOW)      | `auth/claude-haiku-4-5`  | `anthropic/claude-haiku-4-5`    |
 
@@ -162,7 +162,7 @@ OPENAI_API_KEY=sk-...
 
 | Agent (tier)     | Primary                       | Fallback                |
 |------------------|-------------------------------|-------------------------|
-| decepticon (HIGH)| `anthropic/claude-opus-4-7`   | `openai/gpt-5.5`        |
+| aegiscore (HIGH)| `anthropic/claude-opus-4-7`   | `openai/gpt-5.5`        |
 | detector (MID)   | `anthropic/claude-sonnet-4-6` | `openai/gpt-5.4`        |
 | recon (LOW)      | `anthropic/claude-haiku-4-5`  | `openai/gpt-5-nano`   |
 
@@ -178,7 +178,7 @@ OLLAMA_MODEL=qwen3-coder:30b
 
 | Agent (tier)     | Primary                          | Fallback |
 |------------------|----------------------------------|----------|
-| decepticon (HIGH)| `ollama_chat/qwen3-coder:30b`    | —        |
+| aegiscore (HIGH)| `ollama_chat/qwen3-coder:30b`    | —        |
 | detector (MID)   | `ollama_chat/qwen3-coder:30b`    | —        |
 | recon (LOW)      | `ollama_chat/qwen3-coder:30b`    | —        |
 
@@ -187,11 +187,11 @@ run three different models simultaneously. The `ollama_chat/` provider
 routes to Ollama's `/api/chat` endpoint, the only one that supports
 tool/function calling — the legacy `ollama/` provider hits
 `/api/generate` and is rejected at LiteLLM-config-merge time because
-Decepticon agents always emit tool calls.
+Aegiscore agents always emit tool calls.
 
 Two probes guard the wiring end-to-end:
 
-1. **`decepticon onboard`** — the wizard hits `/api/tags` and
+1. **`aegiscore onboard`** — the wizard hits `/api/tags` and
    `/api/show` on the host, filters to models that report `tools` in
    their capabilities, and presents only that list as the
    `OLLAMA_MODEL` choice. If Ollama is unreachable or has no
@@ -202,8 +202,8 @@ Two probes guard the wiring end-to-end:
    inside the container, the only place that can detect
    `OLLAMA_HOST=127.0.0.1`-only bindings (which look fine to the
    wizard's host probe but are invisible from the container). Every
-   diagnostic appears in `decepticon logs litellm` prefixed with
-   `[decepticon ollama]`.
+   diagnostic appears in `aegiscore logs litellm` prefixed with
+   `[aegiscore ollama]`.
 
 ### Local Ollama + cloud fallback
 
@@ -216,7 +216,7 @@ ANTHROPIC_API_KEY=sk-ant-...
 
 | Agent (tier)     | Primary                          | Fallback                       |
 |------------------|----------------------------------|--------------------------------|
-| decepticon (HIGH)| `ollama_chat/qwen3-coder:30b`    | `anthropic/claude-opus-4-7`    |
+| aegiscore (HIGH)| `ollama_chat/qwen3-coder:30b`    | `anthropic/claude-opus-4-7`    |
 | detector (MID)   | `ollama_chat/qwen3-coder:30b`    | `anthropic/claude-sonnet-4-6`  |
 | recon (LOW)      | `ollama_chat/qwen3-coder:30b`    | `anthropic/claude-haiku-4-5`   |
 
@@ -235,7 +235,7 @@ LLAMACPP_MODEL=qwen2.5-coder-7b-instruct-q4_k_m
 
 | Agent (tier)     | Primary                                                  | Fallback |
 |------------------|----------------------------------------------------------|----------|
-| decepticon (HIGH)| `llamacpp/qwen2.5-coder-7b-instruct-q4_k_m`              | —        |
+| aegiscore (HIGH)| `llamacpp/qwen2.5-coder-7b-instruct-q4_k_m`              | —        |
 | detector (MID)   | `llamacpp/qwen2.5-coder-7b-instruct-q4_k_m`              | —        |
 | recon (LOW)      | `llamacpp/qwen2.5-coder-7b-instruct-q4_k_m`              | —        |
 
@@ -269,7 +269,7 @@ MINIMAX_API_KEY=eyJ...
 
 | Agent (tier)     | Primary                | Notes                                     |
 |------------------|------------------------|-------------------------------------------|
-| decepticon (HIGH)| `minimax/MiniMax-M3` | OK                                        |
+| aegiscore (HIGH)| `minimax/MiniMax-M3` | OK                                        |
 | detector (MID)   | `minimax/MiniMax-M2.7-highspeed` | OK                                        |
 | recon (LOW)      | *(role unassigned)*    | MiniMax has no LOW model and no fallback method |
 
@@ -322,7 +322,7 @@ startup:
 | `DECEPTICON_LITELLM_MODELS=<a,b,c>` | Bulk register multiple ids without editing YAML. |
 | `CUSTOM_OPENAI_API_BASE` + `CUSTOM_OPENAI_API_KEY` | OpenAI-compatible gateway. Use `custom/<model>` in the override env. |
 
-The proxy logs `[decepticon] registered N dynamic model route(s)` at
+The proxy logs `[aegiscore] registered N dynamic model route(s)` at
 startup so you can confirm what got picked up.
 
 ---

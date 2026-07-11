@@ -1,10 +1,10 @@
 # Release Process
 
-How Decepticon is versioned and released.
+How Aegiscore is versioned and released.
 
 ## Versioning
 
-Decepticon follows [Semantic Versioning](https://semver.org/). Releases are
+Aegiscore follows [Semantic Versioning](https://semver.org/). Releases are
 tagged `vMAJOR.MINOR.PATCH` (e.g. `v1.1.1`); pre-releases use a suffix
 (e.g. `v1.2.0-rc.1`).
 
@@ -74,7 +74,7 @@ flow above also still works for out-of-band releases.
 
 | Job | Output |
 |-----|--------|
-| `publish-pypi` | Builds the wheel + sdist and publishes the `decepticon` package to PyPI via Trusted Publishing (OIDC — no API token). |
+| `publish-pypi` | Builds the wheel + sdist and publishes the `aegiscore` package to PyPI via Trusted Publishing (OIDC — no API token). |
 | `launcher` | Builds the Go launcher binaries with GoReleaser (which drafts the GitHub release) and uploads `config-checksums.txt`, a SHA-256 integrity manifest for `docker-compose.yml`, `config/litellm.yaml`, and `.env.example`. |
 | `docker` | Builds and pushes the multi-arch `litellm`, `langgraph`, `cli`, and `skillogy` images. |
 | `docker-heavy` / `docker-heavy-merge` | Builds `sandbox` and `c2-sliver` on native amd64/arm64 runners (the Kali base is too slow under QEMU), then merges the per-arch digests into manifests. |

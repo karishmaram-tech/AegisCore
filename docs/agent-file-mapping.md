@@ -2,8 +2,8 @@
 
 > Authoritative mapping of **which agent / which skill is instructed to write
 > which file**, extracted verbatim from the agent system prompts
-> (`packages/decepticon/decepticon/agents/prompts/standard/*.md`) and the
-> skill catalogs (`packages/decepticon/decepticon/skills/**/SKILL.md`).
+> (`packages/aegiscore/aegiscore/agents/prompts/standard/*.md`) and the
+> skill catalogs (`packages/aegiscore/aegiscore/skills/**/SKILL.md`).
 >
 > This is a *literal* inventory of the instructions as written — not a
 > normative spec. Where the prompts and skills disagree on a path, both are
@@ -26,7 +26,7 @@
 > per-item resolution.
 
 All paths are relative to the engagement workspace root (`/workspace`, which
-maps to `~/.decepticon/workspace/<engagement-slug>/` on the host).
+maps to `~/.aegiscore/workspace/<engagement-slug>/` on the host).
 
 ---
 
@@ -37,17 +37,17 @@ summarizes the trigger; "Cite" is the prompt line.
 
 ### Orchestration tier
 
-#### Decepticon (orchestrator) — `agents/prompts/standard/decepticon.md`
+#### Aegiscore (orchestrator) — `agents/prompts/standard/aegiscore.md`
 
 No bash; writes only via workspace file tools and OPPLAN CRUD.
 
 | File | Format | When / why | Cite |
 |------|--------|-----------|------|
-| `exploit/creds/credentials.md` | Markdown (verbatim secret) | Immediately when a `task()` return yields a high-value secret, before `update_objective` | decepticon.md:60 |
-| `report/executive-summary.md` | Markdown | Final-report sequence at engagement close | decepticon.md:124 |
-| `report/technical-report.md` | Markdown | Final-report sequence | decepticon.md:125 |
-| `report/finding-NNN.md` | Markdown | Promote each `findings/FIND-NNN.md` to deliverable tier | decepticon.md:126 |
-| `plan/opplan.json` | JSON | Auto-persisted by `add_objective`/`update_objective` (not a manual write) | decepticon.md:21 |
+| `exploit/creds/credentials.md` | Markdown (verbatim secret) | Immediately when a `task()` return yields a high-value secret, before `update_objective` | aegiscore.md:60 |
+| `report/executive-summary.md` | Markdown | Final-report sequence at engagement close | aegiscore.md:124 |
+| `report/technical-report.md` | Markdown | Final-report sequence | aegiscore.md:125 |
+| `report/finding-NNN.md` | Markdown | Promote each `findings/FIND-NNN.md` to deliverable tier | aegiscore.md:126 |
+| `plan/opplan.json` | JSON | Auto-persisted by `add_objective`/`update_objective` (not a manual write) | aegiscore.md:21 |
 
 Reads (not writes): `plan/roe.json` before every dispatch; `recon/SUMMARY.md` after every recon return.
 
@@ -163,7 +163,7 @@ Skills that define a file template, naming scheme, or write step.
 | `standard/recon/reporting/SKILL.md` | Recon finding docs in `findings/`; evidence `findings/evidence/FIND-{NNN}_{tool}.txt`; consolidated `report_<target>_final.md` | recon/reporting:36,83,420 |
 | `standard/exploit/reporting/SKILL.md` | `findings/FIND-{NNN}.md` (heavyweight CVSS 4.0 template); `exploit/shells.json` (SHELL-NNN→finding_id); `exploit/creds_initial.json` (CRED-NNN→finding_id); attack paths `findings/attack-paths/PATH-{NNN}.md`; evidence under `findings/evidence/` | exploit/reporting:19,194,219,252 |
 | `standard/post-exploit/reporting/SKILL.md` | Phase-specific `findings/FIND-{NNN}.md` (cred-access/privesc/lateral); attack paths `findings/attack-paths/PATH-{NNN}.md`; creds `post-exploit/creds/`; `network_map.json`; detection-gap matrix | post-exploit/reporting:27,396,509 |
-| `standard/decepticon/final-report/SKILL.md` | Reads all `findings/*.md` + `findings/attack-paths/PATH-*.md` + `timeline.jsonl` + `plan/*.json`; writes `report/executive-summary.md` and `report/technical-report.md` | final-report:14,19–25 |
+| `standard/aegiscore/final-report/SKILL.md` | Reads all `findings/*.md` + `findings/attack-paths/PATH-*.md` + `timeline.jsonl` + `plan/*.json`; writes `report/executive-summary.md` and `report/technical-report.md` | final-report:14,19–25 |
 
 ### Soundwave planning templates
 
@@ -273,7 +273,7 @@ item below records the original conflict and its **Resolution**.
    the planning bundle to `plan/*.json`. But several prompts and skills
    referenced the docs **without** the `plan/` prefix (e.g. analyst/exploit/
    postexploit "check `roe.json`", soundwave templates "Read/Write `roe.json`",
-   `decepticon/orchestration` and `exploit/reporting` file-layout trees showing
+   `aegiscore/orchestration` and `exploit/reporting` file-layout trees showing
    root-level docs). **Resolution:** every *path-action* reference (read / write
    / check / update / file-layout tree) was normalized to the `plan/` prefix
    across the standard prompts and skills. Purely conceptual document-name
@@ -285,6 +285,6 @@ item below records the original conflict and its **Resolution**.
 
 ### Source files
 
-- Agent prompts: `packages/decepticon/decepticon/agents/prompts/standard/*.md`
-- Skills: `packages/decepticon/decepticon/skills/{shared,standard,benchmark}/**/SKILL.md`
-- Schemas: `packages/decepticon-core/decepticon_core/types/`
+- Agent prompts: `packages/aegiscore/aegiscore/agents/prompts/standard/*.md`
+- Skills: `packages/aegiscore/aegiscore/skills/{shared,standard,benchmark}/**/SKILL.md`
+- Schemas: `packages/aegiscore-core/decepticon_core/types/`

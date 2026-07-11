@@ -5,7 +5,7 @@
   moved from the checked-in dump to boot-ingest, MoC dropped from the embedding
   text, skillogy↔litellm coupling made explicit; deltas marked inline)
 - **Deciders:** @PurpleCHOIms
-- **Related:** ADR-0008 (skillogy hard ACL), `docs/design/skillogy-brain-redesign.md`, `docs/design/2026-06-12-skillogy-load-skill-by-name-pollution.md` (#670 load_skill exact-match), `packages/decepticon/decepticon/skillogy/server/neo4j_backend.py::find_skill`, `packages/decepticon/decepticon/skillogy/builder/` (ingest)
+- **Related:** ADR-0008 (skillogy hard ACL), `docs/design/skillogy-brain-redesign.md`, `docs/design/2026-06-12-skillogy-load-skill-by-name-pollution.md` (#670 load_skill exact-match), `packages/aegiscore/aegiscore/skillogy/server/neo4j_backend.py::find_skill`, `packages/aegiscore/aegiscore/skillogy/builder/` (ingest)
 
 ## Context
 

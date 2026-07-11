@@ -17,9 +17,9 @@ unless `DECEPTICON_HITL__ENABLED` is truthy, so default engagements never
 freeze waiting on a human.
 
 Source of record:
-[`middleware/hitl.py`](../../packages/decepticon/decepticon/middleware/hitl.py)
+[`middleware/hitl.py`](../../packages/aegiscore/aegiscore/middleware/hitl.py)
 (middleware, policy, transports) and
-[`agents/middleware_slots.py`](../../packages/decepticon/decepticon/agents/middleware_slots.py)
+[`agents/middleware_slots.py`](../../packages/aegiscore/aegiscore/agents/middleware_slots.py)
 (the opt-in slot factory).
 
 ## Enabling it
@@ -122,5 +122,5 @@ The middleware does not hardcode any event-log format; it talks to an
   below HITL; operator approval cannot override an RoE refusal.
 - [Audit Ledger](./audit-ledger.md) — the append-only record of RoE
   decisions.
-- [Threat Model](./decepticon-threat-model.md) — HITL as the
+- [Threat Model](./aegiscore-threat-model.md) — HITL as the
   operator-approval control.

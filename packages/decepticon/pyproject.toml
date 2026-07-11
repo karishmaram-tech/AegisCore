@@ -8,7 +8,7 @@ version = "0.0.0"
 description = "AI-powered autonomous red team testing framework"
 readme = "README.md"
 license = { text = "Apache-2.0" }
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 
 authors = [
     { name = "Decepticon Team" }
@@ -197,3 +197,4 @@ packages = ["decepticon"]
 # XBOW/CTF eval-harness conventions — kept in-repo for `make benchmark` but
 # excluded from the published wheel.
 exclude = ["decepticon/skills/benchmark/**"]
+

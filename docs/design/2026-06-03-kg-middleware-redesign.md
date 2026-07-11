@@ -1,4 +1,4 @@
-# Decepticon: KG Middleware Redesign — Design Spec
+# Aegiscore: KG Middleware Redesign — Design Spec
 
 - **Date:** 2026-06-03
 - **Status:** Drafted, pending review
@@ -12,7 +12,7 @@
 
 ## 1. TL;DR
 
-Replace Decepticon's broken standalone `kg_*` `@tool` decorators with a **`KGMiddleware`** class that owns the Neo4j store, builds the agent-facing tool surface, and handles the lifecycle. The middleware mirrors the existing `OPPLANMiddleware` pattern:
+Replace Aegiscore's broken standalone `kg_*` `@tool` decorators with a **`KGMiddleware`** class that owns the Neo4j store, builds the agent-facing tool surface, and handles the lifecycle. The middleware mirrors the existing `OPPLANMiddleware` pattern:
 
 ```python
 class KGMiddleware(AgentMiddleware):
@@ -44,14 +44,14 @@ Pre-1.0 status means the OSS plugin contract surface (`decepticon_core.contracts
 | | |
 |---|---|
 | KG-using agents | `analyst`, `ad_operator` (AD_TOOLS only), `contract_auditor` (CONTRACT_TOOLS only). 14 others have zero KG surface. |
-| Tool implementation | Standalone `@tool` functions in `packages/decepticon/decepticon/tools/research/tools.py` (2,386 LOC, 34 @tool). All write paths wrap `with graph_transaction()`. |
-| Backend | `Neo4jStore` (`packages/decepticon/decepticon/tools/research/neo4j_store.py`, 787 LOC). Has correct per-op `upsert_node`, `upsert_edge`, `batch_upsert_*`, `load_graph`, `query_custom`. Currently called only by `chain.py` and indirectly via the broken `graph_transaction()` wrapper in `_state.py`. |
+| Tool implementation | Standalone `@tool` functions in `packages/aegiscore/aegiscore/tools/research/tools.py` (2,386 LOC, 34 @tool). All write paths wrap `with graph_transaction()`. |
+| Backend | `Neo4jStore` (`packages/aegiscore/aegiscore/tools/research/neo4j_store.py`, 787 LOC). Has correct per-op `upsert_node`, `upsert_edge`, `batch_upsert_*`, `load_graph`, `query_custom`. Currently called only by `chain.py` and indirectly via the broken `graph_transaction()` wrapper in `_state.py`. |
 | Engagement scope | `decepticon_core.utils.engagement_scope` (post-evacuation). Contextvar + label validator. Honored only on `load_graph()`; **not enforced** on `query_custom()`. |
 | Middleware surface | No KG middleware. `engagement.py` sets the active-engagement contextvar via `set_active_engagement`. |
 | CART contract | `runtime/cart.py` docstring promises `AttackGraphProtocol` (line 36) — **no class exists**. Vaporware. |
 | Web dashboard | `clients/web/src/app/api/engagements/[id]/graph/route.ts` reads Neo4j directly via `neo4j-driver`. Will keep working as long as analyst writes findings (which it does via the same broken shim — to be replaced). |
-| Tests | 17 test files under `packages/decepticon/tests/unit/research/` exercise the broken behavior and pass against it. |
-| Skillogy | Separate concern — uses a separate Neo4j database (`neo4j_backend.py` in `decepticon/skillogy/server/`). Not in scope. |
+| Tests | 17 test files under `packages/aegiscore/tests/unit/research/` exercise the broken behavior and pass against it. |
+| Skillogy | Separate concern — uses a separate Neo4j database (`neo4j_backend.py` in `aegiscore/skillogy/server/`). Not in scope. |
 
 ### 2.2 The five high-impact problems (from research notes)
 
@@ -106,7 +106,7 @@ The redesign now starts from a smaller, well-understood blast radius (3 KG-using
 ### 4.1 Module layout
 
 ```
-packages/decepticon/decepticon/middleware/
+packages/aegiscore/aegiscore/middleware/
   kg.py                      ← new. KGMiddleware + KGState + tool factory
   kg_internal/
     __init__.py
@@ -122,7 +122,7 @@ Why `kg_internal/` and not `tools/research/`:
 - The middleware's tool factory is *not* a public plugin surface (it is mediated by `KGMiddleware`).
 - Tools imported from `kg_internal` should NEVER be imported by an agent directly — only constructed via the middleware. The `_internal` naming makes that explicit.
 
-`packages/decepticon/decepticon/tools/research/`:
+`packages/aegiscore/aegiscore/tools/research/`:
 - `chain.py` and `neo4j_store.py` are *moved* under `middleware/kg_internal/` to consolidate ownership. Imports from outside the middleware are forbidden by a new linter rule (or at minimum a CONTRIBUTING note).
 - `tools.py` is *retired in three slices* (see §6.2). Each slice removes a category of broken tools as the middleware absorbs them.
 - `_state.py`, `_engagement_scope.py` (re-export shim), `bounty.py`, `dedupe.py`, `patch.py`, `scanner_tools.py`, `sarif.py`, `sarif_export.py`, `fuzz.py`, `cve.py`, `poc.py`, `health.py`, `graph.py` — assessed individually in §6.3.
@@ -159,8 +159,8 @@ from typing import override
 from langchain.agents.middleware import AgentMiddleware
 from langchain_core.tools import BaseTool
 
-from decepticon.middleware.kg_internal.store import KGStore
-from decepticon.middleware.kg_internal.tools import build_kg_tools
+from aegiscore.middleware.kg_internal.store import KGStore
+from aegiscore.middleware.kg_internal.tools import build_kg_tools
 from decepticon_core.utils.engagement_scope import set_active_engagement
 
 
@@ -262,7 +262,7 @@ If the just-executed tool calls included a write tool (`kg_add_node`, `kg_add_ed
 | `kg_stats()` | R | `kg_stats` + `kg_backend_health` | Stats + driver connectivity in one call. |
 | `kg_add_node(kind, label, props)` | W | `kg_add_node` (broken) | Single `store.upsert_node` MERGE; engagement auto-tagged. |
 | `kg_add_edge(src, dst, kind, weight)` | W | `kg_add_edge` (broken) | Single `store.upsert_edge` MERGE. |
-| `kg_ingest(scanner_kind, path)` | W | 12 `kg_ingest_*` tools | Dispatch via `ingest.py` adapter registry. Scanner kinds: `nmap_xml`, `nuclei_jsonl`, `subfinder`, `httpx_jsonl`, `dnsx`, `katana`, `masscan`, `ffuf`, `testssl`, `crackmapexec`, `asrep_hashes`, `sarif`. Plugin authors register new adapters via `decepticon.kg.ingesters` entry-point. |
+| `kg_ingest(scanner_kind, path)` | W | 12 `kg_ingest_*` tools | Dispatch via `ingest.py` adapter registry. Scanner kinds: `nmap_xml`, `nuclei_jsonl`, `subfinder`, `httpx_jsonl`, `dnsx`, `katana`, `masscan`, `ffuf`, `testssl`, `crackmapexec`, `asrep_hashes`, `sarif`. Plugin authors register new adapters via `aegiscore.kg.ingesters` entry-point. |
 | `kg_plan_chains(max_depth, max_cost, top_k)` | R | `plan_attack_chains` | Wraps `chain.py:plan_chains`. APOC dijkstra with shortestPath fallback (unchanged — already correct). |
 | `kg_promote_chain(chain_dict)` | W | `plan_attack_chains(promote=True)` half | Single atomic `CALL { ... }` subquery (research note §5). |
 
@@ -284,8 +284,8 @@ This is the consolidation that takes the agent's KG surface from ~30 tools to **
 class KGStore:
     """Engagement-scoped wrapper around Neo4j driver.
 
-    Replaces decepticon.tools.research._state.{get_store, graph_transaction}
-    and decepticon.tools.research.neo4j_store.Neo4jStore.{load_graph,
+    Replaces aegiscore.tools.research._state.{get_store, graph_transaction}
+    and aegiscore.tools.research.neo4j_store.Neo4jStore.{load_graph,
     batch_upsert_*, query_custom}.
 
     Every public method takes an explicit `engagement` parameter; the
@@ -321,7 +321,7 @@ Notes:
 Fills the docstring vaporware:
 
 ```python
-# packages/decepticon/decepticon/runtime/cart.py
+# packages/aegiscore/aegiscore/runtime/cart.py
 
 from typing import Protocol, runtime_checkable
 
@@ -343,7 +343,7 @@ class AttackGraphProtocol(Protocol):
 
 ### 4.8 Composite range indexes
 
-Ship via a new migration file `packages/decepticon/decepticon/middleware/kg_internal/migrations/V002__engagement_composite_indexes.cypher` (V001 = the existing schema in `Neo4jStore.ensure_schema`):
+Ship via a new migration file `packages/aegiscore/aegiscore/middleware/kg_internal/migrations/V002__engagement_composite_indexes.cypher` (V001 = the existing schema in `Neo4jStore.ensure_schema`):
 
 ```cypher
 CREATE RANGE INDEX engagement_host_explored IF NOT EXISTS
@@ -379,7 +379,7 @@ register_adapter("nuclei_jsonl", _nuclei_adapter)
 # ...11 more
 ```
 
-Plugin authors extend via the `decepticon.kg.ingesters` entry-point group (one of the entry-point groups documented in §5).
+Plugin authors extend via the `aegiscore.kg.ingesters` entry-point group (one of the entry-point groups documented in §5).
 
 ### 4.10 Plugin surface — `MiddlewareSlot.KG`
 
@@ -413,11 +413,11 @@ The post-1.0 plugin contract needs to absorb the changes:
 
 | Entry-point group | Status | Purpose |
 |---|---|---|
-| `decepticon.kg.ingesters` | **new** | Plugin authors register scanner adapters. Loaded by `kg_internal.ingest.register_adapter` during framework boot. |
-| `decepticon.middleware` | existing | Plugin authors can ship their own `KGMiddleware` subclass and have it picked up via the slot system. |
-| `decepticon.bundles` | existing | Bundle authors compose middleware sets including / excluding KG. |
+| `aegiscore.kg.ingesters` | **new** | Plugin authors register scanner adapters. Loaded by `kg_internal.ingest.register_adapter` during framework boot. |
+| `aegiscore.middleware` | existing | Plugin authors can ship their own `KGMiddleware` subclass and have it picked up via the slot system. |
+| `aegiscore.bundles` | existing | Bundle authors compose middleware sets including / excluding KG. |
 
-Documentation goes in `packages/decepticon-sdk/decepticon_sdk/scaffold/templates/kg_ingester/` — a `decepticon-sdk plugin new --kind=kg-ingester` template ships in the SDK.
+Documentation goes in `packages/aegiscore-sdk/decepticon_sdk/scaffold/templates/kg_ingester/` — a `aegiscore-sdk plugin new --kind=kg-ingester` template ships in the SDK.
 
 ---
 
@@ -425,7 +425,7 @@ Documentation goes in `packages/decepticon-sdk/decepticon_sdk/scaffold/templates
 
 ### 6.1 Phased execution (4 PRs after this spec lands)
 
-**PR-A — Foundations (no behavior change for agents).** Adds `KGStore`, `AttackGraphProtocol`, composite range indexes (migration file + invocation at boot), and the `decepticon.kg.ingesters` entry-point group. `tools/research/` is untouched.
+**PR-A — Foundations (no behavior change for agents).** Adds `KGStore`, `AttackGraphProtocol`, composite range indexes (migration file + invocation at boot), and the `aegiscore.kg.ingesters` entry-point group. `tools/research/` is untouched.
 
 **PR-B — Middleware introduction.** Adds `KGMiddleware`, `KGState`, `kg_internal/` package, the 8-tool surface, the `kg_ingest` adapter registry with 12 built-in adapters. The middleware is **not yet wired into any agent** — opt-in is by direct construction for the integration tests only. `analyst`, `ad_operator`, `contract_auditor` continue to import the broken `RESEARCH_TOOLS` etc.
 
@@ -468,9 +468,9 @@ Acceptance: `analyst` end-to-end via `make benchmark ARGS="--ids XBEN-095-24"` p
 
 ### 6.4 Downstream coordination
 
-A downstream plugin package may import from `decepticon.tools.research`. A follow-up change there:
+A downstream plugin package may import from `aegiscore.tools.research`. A follow-up change there:
 1. Replaces direct `kg_*` imports with `KGMiddleware`-mediated access (or whatever the downstream agents do).
-2. Adds any downstream-specific KG ingesters via the `decepticon.kg.ingesters` entry-point.
+2. Adds any downstream-specific KG ingesters via the `aegiscore.kg.ingesters` entry-point.
 
 Coordinated with this spec, not gated on it.
 
@@ -482,15 +482,15 @@ For each PR:
 
 ### PR-A
 
-- `KGStore` is importable from `decepticon.middleware.kg_internal.store`.
+- `KGStore` is importable from `aegiscore.middleware.kg_internal.store`.
 - `AttackGraphProtocol` is defined in `runtime/cart.py` and `KGStore` is checked via `isinstance(store, AttackGraphProtocol)` at boot.
 - The three composite indexes are created on first boot against a fresh Neo4j volume; `EXPLAIN MATCH (h:Host {engagement: $e, explored: true}) RETURN h` shows index usage.
-- `decepticon.kg.ingesters` entry-point group is wired (an empty implementation in the framework + a stub adapter registered).
+- `aegiscore.kg.ingesters` entry-point group is wired (an empty implementation in the framework + a stub adapter registered).
 - All existing tests pass.
 
 ### PR-B
 
-- `KGMiddleware` is importable from `decepticon.middleware.kg`.
+- `KGMiddleware` is importable from `aegiscore.middleware.kg`.
 - `KGMiddleware().tools` returns 8 tools with names `kg_query`, `kg_neighbors`, `kg_stats`, `kg_add_node`, `kg_add_edge`, `kg_ingest`, `kg_plan_chains`, `kg_promote_chain`.
 - Integration test against compose Neo4j: build an agent with `KGMiddleware()` only, call `kg_add_node` + `kg_query` + `kg_ingest("nmap_xml", ...)`, assert results.
 - `kg_ingest` with each of the 12 built-in scanner kinds round-trips against a sample input file.
@@ -507,7 +507,7 @@ For each PR:
 ### PR-D
 
 - `tools/research/` reduces to `__init__.py` + the chain.py / neo4j_store.py files (if not moved) or is empty (if all moved).
-- No production code imports from `decepticon.tools.research.{_state,bounty,dedupe,patch,scanner_tools,sarif,sarif_export,fuzz,cve,poc,health,graph}`.
+- No production code imports from `aegiscore.tools.research.{_state,bounty,dedupe,patch,scanner_tools,sarif,sarif_export,fuzz,cve,poc,health,graph}`.
 - `DeprecationWarning` from the migration shim is the only remaining trace; the shim ships for one minor version and is removed at the next minor.
 - All tests pass; coverage of the new `middleware/kg.py` and `kg_internal/` is ≥ 85%.
 
@@ -527,7 +527,7 @@ For each PR:
 | AD_TOOLS / CONTRACT_TOOLS still use the broken shim after PR-C | High | Medium (they keep working, just slowly) | Out of scope for this spec by design (NG3). Track as follow-up. |
 | Composite index creation collides with existing data (engagement property missing on legacy nodes) | Low | Medium | The existing `_LEGACY_ENGAGEMENT_LABEL` migration helper in `_engagement_scope.py` covers this. Run it before V002 migration. |
 | Web dashboard query shape changes break the graph view | Low | High (visible to user) | Web route reads via direct `neo4j-driver`; it queries by label + engagement property. We preserve that contract. No web changes in this spec. |
-| Plugin authors get broken imports during the deprecation window | Medium | Low | `DeprecationWarning` with explicit migration mapping in `decepticon.compat`. One minor cycle window. |
+| Plugin authors get broken imports during the deprecation window | Medium | Low | `DeprecationWarning` with explicit migration mapping in `aegiscore.compat`. One minor cycle window. |
 | `query_custom` removal breaks a downstream plugin | Medium | Medium | Coordinated migration in the downstream plugin package. |
 
 ---

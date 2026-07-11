@@ -1,6 +1,6 @@
-# decepticon-example-middleware
+# aegiscore-example-middleware
 
-A Decepticon plugin (middleware) scaffolded by ``decepticon-sdk plugin new``.
+A Aegiscore plugin (middleware) scaffolded by ``aegiscore-sdk plugin new``.
 
 ## Build + install
 
@@ -10,12 +10,12 @@ pip install dist/*.whl
 ```
 
 After install, the framework's plugin loader discovers this contribution
-via the ``decepticon.middleware`` entry-point group.
+via the ``aegiscore.middleware`` entry-point group.
 
 ## Test
 
 ```bash
-pip install decepticon-sdk[testing]
+pip install aegiscore-sdk[testing]
 pytest
 ```
 

@@ -16,17 +16,17 @@ That's it. Everything else runs inside containers.
 ## Install
 
 ```bash
-curl -fsSL https://decepticon.red/install | bash
+curl -fsSL https://aegiscore.red/install | bash
 ```
 
-This installs the `decepticon` CLI to your system.
+This installs the `aegiscore` CLI to your system.
 
 ---
 
 ## Configure
 
 ```bash
-decepticon onboard
+aegiscore onboard
 ```
 
 The interactive setup wizard guides you through:
@@ -39,7 +39,7 @@ The interactive setup wizard guides you through:
 
 For detailed provider setup including OAuth configuration, see [Setup Guide](setup-guide.md).
 
-Configuration is saved to `~/.decepticon/.env`. Run `decepticon onboard --reset` to reconfigure.
+Configuration is saved to `~/.aegiscore/.env`. Run `aegiscore onboard --reset` to reconfigure.
 
 ---
 
@@ -47,20 +47,20 @@ Configuration is saved to `~/.decepticon/.env`. Run `decepticon onboard --reset`
 
 **Terminal CLI** (default):
 ```bash
-decepticon
+aegiscore
 ```
 
 Starts all services (PostgreSQL, LiteLLM, LangGraph, Neo4j, sandbox, C2 server, web dashboard) and opens the interactive terminal UI.
 
 **Web Dashboard** (browser):
 
-The web dashboard starts as part of the default stack — it's reachable at `http://localhost:3000` once `decepticon` (or `make dev` for contributors) is running.
+The web dashboard starts as part of the default stack — it's reachable at `http://localhost:3000` once `aegiscore` (or `make dev` for contributors) is running.
 
 ---
 
 ## First Real Engagement
 
-1. Launch Decepticon (`decepticon`) and open <http://localhost:3000>
+1. Launch Aegiscore (`aegiscore`) and open <http://localhost:3000>
 2. The **Soundwave** agent interviews you to define the engagement:
    - Target scope (IP range, URL, Git repo, file upload, or local path)
    - Threat actor profile
@@ -69,14 +69,14 @@ The web dashboard starts as part of the default stack — it's reachable at `htt
 4. The orchestrator builds the OPPLAN from the bundle — you review and approve it
 5. The autonomous loop begins
 
-> **Important**: Only run Decepticon against systems you own or have explicit written authorization to test. See the disclaimer in the main README.
+> **Important**: Only run Aegiscore against systems you own or have explicit written authorization to test. See the disclaimer in the main README.
 
 ---
 
 ## Stopping Services
 
 ```bash
-decepticon stop     # Stop all services, keep data
+aegiscore stop     # Stop all services, keep data
 make clean          # Stop + remove all volumes (resets everything)
 ```
 
@@ -85,10 +85,10 @@ make clean          # Stop + remove all volumes (resets everything)
 ## Check Service Status
 
 ```bash
-decepticon status        # Show running services
-decepticon logs          # Follow LangGraph logs (default)
-decepticon logs litellm  # Follow a specific service's logs
-decepticon kg-health     # Diagnose the Neo4j knowledge graph
+aegiscore status        # Show running services
+aegiscore logs          # Follow LangGraph logs (default)
+aegiscore logs litellm  # Follow a specific service's logs
+aegiscore kg-health     # Diagnose the Neo4j knowledge graph
 ```
 
 ---
@@ -103,4 +103,4 @@ decepticon kg-health     # Diagnose the Neo4j knowledge graph
 | Model profiles and fallback chain | [Models](models.md) |
 | Engagement workflow (RoE → Execution) | [Engagement Workflow](engagement-workflow.md) |
 | Web dashboard features | [Web Dashboard](web-dashboard.md) |
-| Contributing to Decepticon | [Contributing](contributing.md) |
+| Contributing to Aegiscore | [Contributing](contributing.md) |

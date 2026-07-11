@@ -1,19 +1,19 @@
 # CI/CD Integration
 
-> Run Decepticon as part of any CI/CD pipeline. Produce SARIF v2.1.0 results,
+> Run Aegiscore as part of any CI/CD pipeline. Produce SARIF v2.1.0 results,
 > upload to GitHub Code Scanning, and gate merges on severity thresholds.
 
-Decepticon ships a **headless scan CLI** (`python -m decepticon.cli scan`)
-and a **composite GitHub Action** (`.github/actions/decepticon-scan`)
+Aegiscore ships a **headless scan CLI** (`python -m aegiscore.cli scan`)
+and a **composite GitHub Action** (`.github/actions/aegiscore-scan`)
 designed for the pull-request gating pattern Strix users will recognize,
-with Decepticon's engagement / OPPLAN / RoE discipline preserved.
+with Aegiscore's engagement / OPPLAN / RoE discipline preserved.
 
 ## Quick start — GitHub Actions
 
 `.github/workflows/security-scan.yml`:
 
 ```yaml
-name: "Decepticon security scan"
+name: "Aegiscore security scan"
 
 on:
   pull_request:
@@ -25,7 +25,7 @@ permissions:
   security-events: write   # required for Code Scanning upload
 
 jobs:
-  decepticon:
+  aegiscore:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -33,7 +33,7 @@ jobs:
         with:
           fetch-depth: 0     # required for diff-scope resolution
 
-      - uses: PurpleAILAB/Decepticon/.github/actions/decepticon-scan@main
+      - uses: PurpleAILAB/Aegiscore/.github/actions/aegiscore-scan@main
         with:
           target: "./"
           scan-mode: "quick"
@@ -46,13 +46,13 @@ jobs:
 
 The action:
 
-1. Installs the Decepticon Python CLI from PyPI.
+1. Installs the Aegiscore Python CLI from PyPI.
 2. Either uses a remote LangGraph URL you provide (`langgraph-url` input)
-   or boots a local Decepticon stack via `docker compose` for the
+   or boots a local Aegiscore stack via `docker compose` for the
    duration of the scan and tears it down on exit.
-3. Runs `decepticon-cli scan` against the changed files only
+3. Runs `aegiscore-cli scan` against the changed files only
    (`scope-mode: diff`) for a fast PR gate.
-4. Emits SARIF v2.1.0 at `decepticon.sarif`.
+4. Emits SARIF v2.1.0 at `aegiscore.sarif`.
 5. Uploads the SARIF to GitHub Code Scanning (visible under
    *Security → Code scanning alerts*).
 6. Fails the workflow when findings hit `fail-on` severity or higher.
@@ -87,49 +87,49 @@ Internal exit codes:
 
 ## Other CI systems
 
-The action wraps `python -m decepticon.cli scan` which works on any
-runner with Python 3.13+ and `pip install decepticon`. For GitLab CI:
+The action wraps `python -m aegiscore.cli scan` which works on any
+runner with Python 3.13+ and `pip install aegiscore`. For GitLab CI:
 
 ```yaml
-decepticon:
+aegiscore:
   image: python:3.13
   stage: security
   script:
-    - pip install decepticon decepticon-core langgraph-sdk
-    - python -m decepticon.cli scan
+    - pip install aegiscore aegiscore-core langgraph-sdk
+    - python -m aegiscore.cli scan
         --target ./
         --scan-mode quick
         --scope-mode diff
         --diff-base "$CI_MERGE_REQUEST_DIFF_BASE_SHA"
-        --sarif-output decepticon.sarif
+        --sarif-output aegiscore.sarif
         --fail-on high
         --non-interactive
   artifacts:
-    paths: [decepticon.sarif]
+    paths: [aegiscore.sarif]
     reports:
-      sast: decepticon.sarif
+      sast: aegiscore.sarif
 ```
 
 For Jenkins (declarative):
 
 ```groovy
-stage('Decepticon') {
+stage('Aegiscore') {
   steps {
     sh '''
-      pip install decepticon decepticon-core langgraph-sdk
-      python -m decepticon.cli scan \
+      pip install aegiscore aegiscore-core langgraph-sdk
+      python -m aegiscore.cli scan \
         --target ./ \
         --scan-mode quick \
         --scope-mode diff \
         --diff-base "$CHANGE_TARGET" \
-        --sarif-output decepticon.sarif \
+        --sarif-output aegiscore.sarif \
         --fail-on high \
         --non-interactive
     '''
   }
   post {
     always {
-      archiveArtifacts artifacts: 'decepticon.sarif'
+      archiveArtifacts artifacts: 'aegiscore.sarif'
     }
   }
 }
@@ -137,8 +137,8 @@ stage('Decepticon') {
 
 ## Engagement context in CI
 
-Even in `--non-interactive` mode, Decepticon enforces RoE: pass an
+Even in `--non-interactive` mode, Aegiscore enforces RoE: pass an
 `--instruction-file` pointing at a markdown document declaring scope and
 exclusions. Anything outside that scope produces a structured refusal in
 the SARIF properties rather than a finding. This is the safety boundary
-that distinguishes Decepticon from naive SAST tools.
+that distinguishes Aegiscore from naive SAST tools.

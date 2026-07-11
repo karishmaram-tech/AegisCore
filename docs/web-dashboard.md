@@ -10,10 +10,10 @@ The web dashboard is an open-source (Apache 2.0) browser-based control plane for
 
 **End users:**
 ```bash
-decepticon                    # starts the core stack + drops into the terminal CLI
+aegiscore                    # starts the core stack + drops into the terminal CLI
 ```
 
-The dashboard is **dynamic-spawn** (v1.1.8+): it does NOT come up on `decepticon start`. Bring it up from inside the CLI with the `/web` slash command, then open <http://localhost:3000>:
+The dashboard is **dynamic-spawn** (v1.1.8+): it does NOT come up on `aegiscore start`. Bring it up from inside the CLI with the `/web` slash command, then open <http://localhost:3000>:
 
 | CLI command | Effect |
 |---|---|
@@ -24,7 +24,7 @@ The dashboard is **dynamic-spawn** (v1.1.8+): it does NOT come up on `decepticon
 
 Headless operators (no CLI, e.g. CI) can drive the same lifecycle from the host shell:
 ```bash
-docker compose -p decepticon --profile web up -d --no-build web
+docker compose -p aegiscore --profile web up -d --no-build web
 ```
 
 **Contributors (full stack with hot-reload):**

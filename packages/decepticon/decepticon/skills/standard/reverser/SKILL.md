@@ -4,7 +4,7 @@ description: Root pointer for the binary reversing lane. Covers triage, string e
 metadata:
   subdomain: reverse-engineering
   when_to_use: "reverser binary reversing triage strings packer unpack rop ghidra firmware overview routing"
-  upstream_ref: "Decepticon reverser lane catalog — Ghidra, AFL++, libFuzzer, binwalk, and binary triage tooling"
+  upstream_ref: "Aegiscore reverser lane catalog — Ghidra, AFL++, libFuzzer, binwalk, and binary triage tooling"
 ---
 
 # Reverser Skill Catalog

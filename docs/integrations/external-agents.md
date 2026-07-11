@@ -1,30 +1,30 @@
 # External agents — OpenClaw & Hermes
 
-Decepticon ships an **engagement MCP server** so external agent runtimes can
+Aegiscore ships an **engagement MCP server** so external agent runtimes can
 drive it like its CLI — from a phone, via those agents' chat channels. It
 exposes the full interactive loop over the Model Context Protocol: discover and
 resume engagements, launch one, **steer it by chatting**, **watch progress**,
 inspect the OPPLAN, and pull findings.
 
-This makes Decepticon usable from
+This makes Aegiscore usable from
 [OpenClaw](https://github.com/openclaw/openclaw) and
 [Hermes](https://github.com/NousResearch/hermes-agent).
 
 ```
-OpenClaw / Hermes  ──MCP──▶  decepticon-mcp  ──LangGraph SDK──▶  Decepticon server
+OpenClaw / Hermes  ──MCP──▶  aegiscore-mcp  ──LangGraph SDK──▶  Aegiscore server
    (chat / phone)              (bridge)         (HTTP :2024)        (16 agents, RoE, KG)
 ```
 
 The bridge is a thin control plane. The red-team work runs inside the
-Decepticon LangGraph server (full RoE enforcement, sandbox, knowledge-graph
+Aegiscore LangGraph server (full RoE enforcement, sandbox, knowledge-graph
 persistence); the MCP layer translates tool calls into LangGraph runs
-(`decepticon.mcp_server`) and reads persisted transcript/state/findings back.
+(`aegiscore.mcp_server`) and reads persisted transcript/state/findings back.
 
 ## Tools
 
 | Tool | Purpose |
 |------|---------|
-| `decepticon_list_graphs` | Discover engagement graphs (decepticon, recon, soundwave, …) |
+| `decepticon_list_graphs` | Discover engagement graphs (aegiscore, recon, soundwave, …) |
 | `decepticon_list_engagements` | Browse / resume recent engagements |
 | `decepticon_start_engagement` | Launch a background engagement (targets + scope/RoE) |
 | `decepticon_send_message` | Steer / answer the coordinator / `/model` switch mid-run |
@@ -41,15 +41,15 @@ Every tool is keyed by the `thread_id` returned from `decepticon_start_engagemen
 ## 1. Install + run
 
 ```bash
-# Install Decepticon with the MCP server extra
-pip install 'decepticon[mcp]'        # or: uv sync --extra mcp
+# Install Aegiscore with the MCP server extra
+pip install 'aegiscore[mcp]'        # or: uv sync --extra mcp
 
-# Start the Decepticon LangGraph server (one of):
+# Start the Aegiscore LangGraph server (one of):
 langgraph dev                        # dev server on http://localhost:2024
 # or the Docker stack — see docs/deployment
 
 # Smoke-test the bridge over stdio (Ctrl-C to exit):
-DECEPTICON_SKIP_BOOT=1 decepticon-mcp --transport stdio
+DECEPTICON_SKIP_BOOT=1 aegiscore-mcp --transport stdio
 ```
 
 > **`DECEPTICON_SKIP_BOOT=1`** — always set this for the bridge. It drives a
@@ -67,19 +67,19 @@ Override with `--langgraph-url` or the env var.
 
 ```bash
 # Register the engagement MCP server (stdio)
-openclaw mcp set decepticon '{
-  "command": "decepticon-mcp",
+openclaw mcp set aegiscore '{
+  "command": "aegiscore-mcp",
   "args": ["--transport", "stdio"],
   "env": { "DECEPTICON_API_URL": "http://localhost:2024", "DECEPTICON_SKIP_BOOT": "1" }
 }'
 
 # Install the agent skill (clone the repo first, then point at the skill dir)
-openclaw skills install ./Decepticon/integrations/agent-skills/decepticon --as decepticon --global
+openclaw skills install ./Aegiscore/integrations/agent-skills/aegiscore --as aegiscore --global
 openclaw gateway restart
 ```
 
 Now message your OpenClaw agent (dashboard or any connected channel, e.g.
-Telegram for phone): *"Start a Decepticon recon engagement against
+Telegram for phone): *"Start a Aegiscore recon engagement against
 `https://test.example.com` — scope only that host — then watch it and summarise
 findings."* The agent calls `decepticon_start_engagement`, polls
 `decepticon_transcript`, and reports findings.
@@ -89,8 +89,8 @@ findings."* The agent calls `decepticon_start_engagement`, polls
 ```yaml
 # ~/.hermes/config.yaml
 mcp_servers:
-  decepticon:
-    command: decepticon-mcp
+  aegiscore:
+    command: aegiscore-mcp
     args: ["--transport", "stdio"]
     env:
       DECEPTICON_API_URL: "http://localhost:2024"
@@ -99,14 +99,14 @@ mcp_servers:
 
 ```bash
 # Install the skill for Hermes (copy the skill folder into Hermes' skills dir)
-cp -r ./Decepticon/integrations/agent-skills/decepticon ~/.hermes/skills/red-teaming/decepticon
+cp -r ./Aegiscore/integrations/agent-skills/aegiscore ~/.hermes/skills/red-teaming/aegiscore
 ```
 
-Restart Hermes; the `decepticon` skill and `decepticon_*` tools become available.
+Restart Hermes; the `aegiscore` skill and `decepticon_*` tools become available.
 
 ### The bundled skill
 
-The skill at `integrations/agent-skills/decepticon/` is one canonical AgentSkill
+The skill at `integrations/agent-skills/aegiscore/` is one canonical AgentSkill
 that loads in **both** OpenClaw and Hermes (same `SKILL.md` format), using
 progressive disclosure so the always-loaded context stays lean:
 
@@ -117,7 +117,7 @@ progressive disclosure so the always-loaded context stays lean:
   phone, recon-only, steering, resume, live burst, failure handling).
 
 Both install commands above copy the whole directory, so the reference files
-come along automatically. OpenClaw installs it globally as `decepticon`; Hermes
+come along automatically. OpenClaw installs it globally as `aegiscore`; Hermes
 auto-discovers it under the `red-teaming` category.
 
 ## 4. CLI-like workflow (what the agent does)
@@ -146,8 +146,8 @@ environment, never from argv:
 
 ```bash
 DECEPTICON_MCP_TOKEN=$(openssl rand -hex 32) \
-DECEPTICON_SKIP_BOOT=1 decepticon-mcp --transport streamable-http \
-  --host 0.0.0.0 --port 8765 --langgraph-url http://decepticon-host:2024
+DECEPTICON_SKIP_BOOT=1 aegiscore-mcp --transport streamable-http \
+  --host 0.0.0.0 --port 8765 --langgraph-url http://aegiscore-host:2024
 ```
 
 Clients send `Authorization: Bearer <token>`.
@@ -158,9 +158,9 @@ bearer JWT's signature, `iss`, and `aud` against your identity provider's JWKS
 June-2025 spec prescribes for remote servers:
 
 ```bash
-DECEPTICON_SKIP_BOOT=1 decepticon-mcp --transport streamable-http \
-  --host 0.0.0.0 --port 8765 --langgraph-url http://decepticon-host:2024 \
-  --issuer https://issuer.example.com --audience decepticon-mcp \
+DECEPTICON_SKIP_BOOT=1 aegiscore-mcp --transport streamable-http \
+  --host 0.0.0.0 --port 8765 --langgraph-url http://aegiscore-host:2024 \
+  --issuer https://issuer.example.com --audience aegiscore-mcp \
   --jwks-uri https://issuer.example.com/.well-known/jwks.json \
   --required-scope engage
 ```
@@ -170,7 +170,7 @@ Point the agent's MCP client at `http://<bridge-host>:8765/mcp`. Loopback
 
 ## Authorization
 
-Engagements run under Decepticon's Rules-of-Engagement enforcement. The calling
+Engagements run under Aegiscore's Rules-of-Engagement enforcement. The calling
 agent **must** pass scope (in / out of scope) in the `instruction` argument and
 only target assets the operator is authorized to test. See the bundled
-`integrations/agent-skills/decepticon/SKILL.md` for the agent-facing contract.
+`integrations/agent-skills/aegiscore/SKILL.md` for the agent-facing contract.

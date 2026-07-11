@@ -6,7 +6,7 @@
 
 ## Problem
 
-Every Decepticon hotfix today requires a **full release cycle** — PyPI publish + 7 GHCR images + GoReleaser binaries + Cosign signing + GitHub release — even when the fix only touches one Python file and a single image's contents. Two costs:
+Every Aegiscore hotfix today requires a **full release cycle** — PyPI publish + 7 GHCR images + GoReleaser binaries + Cosign signing + GitHub release — even when the fix only touches one Python file and a single image's contents. Two costs:
 
 1. **Maintainer toil.** ~30 minutes of CI per cycle, three pypi-release approvals per run, occasional transient Cosign failures (v1.1.12's c2-sliver merge needed a re-run).
 2. **Release pollution.** Every hotfix creates a new GitHub release entry, a new PyPI version, a new git tag — even when only one image changed.
@@ -22,7 +22,7 @@ cliEnv["DECEPTICON_VERSION"] = version   // the launcher binary's stamped versio
 
 `docker-compose.yml` interpolates that on every image:
 ```yaml
-image: ghcr.io/purpleailab/decepticon-langgraph:${DECEPTICON_VERSION:-latest}
+image: ghcr.io/purpleailab/aegiscore-langgraph:${DECEPTICON_VERSION:-latest}
 ```
 
 `clients/launcher/internal/compose/compose.go:264` strips the `v` prefix, so a launcher built at tag `v1.1.12` resolves images at `:1.1.12`.
@@ -41,7 +41,7 @@ Two parallel blockers stack on top:
 Drop the binding `DECEPTICON_VERSION = version`. The launcher queries `releases/latest` at start (already does for the self-update check), caches the result, and sets `DECEPTICON_VERSION` to **that** tag's stripped form. Image-only patches show up immediately.
 
 **Pros**
-- Image-only patches reach users on the next `decepticon start` with zero launcher binary rebuild.
+- Image-only patches reach users on the next `aegiscore start` with zero launcher binary rebuild.
 - Combines naturally with silent auto-update — the launcher already polls `releases/latest`.
 
 **Cons**
@@ -71,7 +71,7 @@ Drop `${DECEPTICON_VERSION:-latest}` interpolation and just always use `:latest`
 **Cons**
 - **Loses reproducibility.** Users on different days are running different image versions despite seemingly identical launchers. Bug reports become unreproducible.
 - An accidentally-promoted `:latest` (e.g. a partial release that survived `publish-release`'s verify gate) silently lands on every user.
-- Conflicts with the `decepticon` operator who wants to pin a specific version for a multi-day engagement.
+- Conflicts with the `aegiscore` operator who wants to pin a specific version for a multi-day engagement.
 
 ## Recommendation
 
@@ -113,4 +113,4 @@ Before any code change:
 
 1. Confirm **A** is the direction (vs B's simpler-but-defeats-the-point, or C's lose-reproducibility).
 2. Pick the cache invalidation policy for the latest-release lookup.
-3. Decide whether `--pin-version` lives on `decepticon start` (per-launch) or in `.env` (per-install).
+3. Decide whether `--pin-version` lives on `aegiscore start` (per-launch) or in `.env` (per-install).

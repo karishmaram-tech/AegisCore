@@ -1,11 +1,11 @@
 # Agent File & Reporting Conventions
 
-> How Decepticon's agents write to disk, hand work off to each other, and
+> How Aegiscore's agents write to disk, hand work off to each other, and
 > report back to the orchestrator. This is the authoritative reference for
 > the workspace file contract that the 16 specialist agents, the skill
 > catalogs, and the client UIs all depend on.
 
-Decepticon's multi-agent loop is **file-mediated, not memory-mediated**.
+Aegiscore's multi-agent loop is **file-mediated, not memory-mediated**.
 Each specialist agent is spawned with a fresh context window (no parent
 transcript), does its work, writes its results to agreed-upon paths in the
 engagement workspace, and returns a short summary. The orchestrator reads
@@ -48,13 +48,13 @@ Inside the sandbox container, the daemon (`sandbox_server/app.py` wrapping
 `/workspace` is **bind-mounted** from the host:
 
 ```
-~/.decepticon/workspace/<engagement-slug>/   (host)
+~/.aegiscore/workspace/<engagement-slug>/   (host)
         ⇅  docker volume bind
 /workspace/                                   (container, what the agent sees)
 ```
 
 So a write to `/workspace/findings/FIND-001.md` lands at
-`~/.decepticon/workspace/<slug>/findings/FIND-001.md` on the host and is
+`~/.aegiscore/workspace/<slug>/findings/FIND-001.md` on the host and is
 visible to the web dashboard (which mounts the same tree read-only).
 
 **Engagement isolation is physical, not state-level.** Each engagement is
@@ -167,7 +167,7 @@ drift when sub-shells, background jobs, or tool wrappers change the working
 directory mid-task. Agents must not assume `pwd` equals the engagement root
 after any `cd`.
 
-**The orchestrator (decepticon) has no bash tool at all.** It only has
+**The orchestrator (aegiscore) has no bash tool at all.** It only has
 OPPLAN CRUD tools (`add_objective`, `update_objective`, `get_objective`,
 `list_objectives`) plus the workspace file tools (`read_file`, `write_file`,
 `ls`) for reading sub-agent artifacts. All offensive work is delegated via
@@ -268,8 +268,8 @@ undocumented success attempt.
 
 ## 6. The orchestrator read protocol
 
-After **every** recon `task()` returns, the orchestrator (decepticon)
-executes a fixed decision tree (in `decepticon.md`):
+After **every** recon `task()` returns, the orchestrator (aegiscore)
+executes a fixed decision tree (in `aegiscore.md`):
 
 1. `read_file("recon/SUMMARY.md")`. If missing/empty → treat as crash.
 2. Grep for the terminal token.
@@ -296,7 +296,7 @@ classification is the cycle's #1 failure mode.
 
 ### Sub-agent failure modes
 
-The orchestrator distinguishes three fault classes (`decepticon.md`):
+The orchestrator distinguishes three fault classes (`aegiscore.md`):
 
 | Fault | Signal | Response |
 |-------|--------|----------|
@@ -382,9 +382,9 @@ contract the orchestrator re-reads before **every** `task()` dispatch.
 ## 9. Final report generation
 
 At engagement close, the orchestrator runs the final-report sequence
-(`decepticon.md` → `/skills/standard/decepticon/final-report/SKILL.md`):
+(`aegiscore.md` → `/skills/standard/aegiscore/final-report/SKILL.md`):
 
-1. `load_skill("/skills/standard/decepticon/final-report/SKILL.md")`.
+1. `load_skill("/skills/standard/aegiscore/final-report/SKILL.md")`.
 2. Generate `report/executive-summary.md` (C-level, no tool names/jargon).
 3. Generate `report/technical-report.md` (findings detail, attack-path
    narratives, detection-gap analysis, activity timeline, remediation
@@ -467,15 +467,15 @@ The host-mounted workspace tree is what the clients render.
   in-flight `findings/FIND-*.md`, the `plan/opplan.json` checkpoint, a
   partial `report/report_partial_executive.md`, and `events.jsonl`, so a
   killed engagement still leaves a coherent workspace.
-- **Orphan reaping** — on daemon startup, decepticon-named tmux sockets from
+- **Orphan reaping** — on daemon startup, aegiscore-named tmux sockets from
   a crashed prior run are reaped before new sessions start.
 
 ---
 
 ## 14. Writing a plugin agent that fits the contract
 
-A community/downstream plugin agent (registered under the `decepticon.subagents`
-entry-point group, declaring `parent_agents=("decepticon",)`) inherits the
+A community/downstream plugin agent (registered under the `aegiscore.subagents`
+entry-point group, declaring `parent_agents=("aegiscore",)`) inherits the
 file contract for free if it:
 
 1. **Mounts `FilesystemMiddleware`** so it gets the scoped `/workspace`
