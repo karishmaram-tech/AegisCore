@@ -147,7 +147,7 @@ But more importantly: it operates under the discipline that separates red teamer
 ## Architecture
 
 <div align="center">
-  <img src="assets/decepticon_infra.svg" alt="Aegiscore Infrastructure" width="680">
+  <img src="assets/aegiscore_infra.svg" alt="Aegiscore Infrastructure" width="680">
 </div>
 
 Two-network design. The **always-on** management plane (LiteLLM, PostgreSQL, Skillogy, LangGraph) and the always-on sandbox plane stay up across the whole engagement; everything else is **dynamic-spawn** — the Web dashboard comes up on `/web` from the CLI, and specialist workloads (BloodHound CE, Sliver C2, Ghidra MCP, …) come up only when the orchestrator calls `ops_start(...)` (see [ADR-0006](docs/adr/0006-agent-driven-container-lifecycle.md)). Networks: management on `aegiscore-net`; sandbox + C2 server + targets on `sandbox-net`. Neo4j is dual-homed so the agent (on management) can persist findings written from inside the sandbox.
