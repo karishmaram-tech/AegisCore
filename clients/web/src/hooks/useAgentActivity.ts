@@ -3,13 +3,13 @@
 /**
  * useAgentActivity — maps SubagentCustomEvent[] to graph nodes/edges.
  *
- * Uses @decepticon/streaming types directly — no regex parsing.
+ * Uses @aegiscore/streaming types directly — no regex parsing.
  * Same event types that the CLI processes, rendered as a graph instead of text.
  */
 
 import { useMemo } from "react";
 import type { AgentConfig } from "@/lib/agents";
-import type { SubagentCustomEvent } from "@decepticon/streaming";
+import type { SubagentCustomEvent } from "@aegiscore/streaming";
 import type { GraphNode, GraphEdge, AgentRuntimeState } from "@/lib/graph/types";
 import { isWaitingState } from "@/lib/graph/types";
 
@@ -97,12 +97,12 @@ export function useAgentActivity({
 
     const nodes: GraphNode[] = [];
     const agentPositions = new Map<string, { x: number; y: number }>();
-    const ringCount = visibleAgents.filter((a) => a.id !== "decepticon").length;
+    const ringCount = visibleAgents.filter((a) => a.id !== "aegiscore").length;
     const angleStep = (2 * Math.PI) / Math.max(ringCount, 1);
 
     let angleIdx = 0;
     for (const agent of visibleAgents) {
-      const isOrch = agent.id === "decepticon";
+      const isOrch = agent.id === "aegiscore";
       const runtimeState = agentStates.get(agent.id) ?? (isOrch ? "processing" : "idle");
       const radius = isOrch ? ORCHESTRATOR_RADIUS : AGENT_RADIUS;
       const circleR = 160;
@@ -173,9 +173,9 @@ export function useAgentActivity({
     const edges: GraphEdge[] = [];
 
     for (const [agentId, state] of agentStates) {
-      if (agentId === "decepticon") continue;
+      if (agentId === "aegiscore") continue;
       edges.push({
-        source: "decepticon",
+        source: "aegiscore",
         target: agentId,
         active: state === "processing" || isWaitingState(state),
       });

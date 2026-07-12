@@ -16,18 +16,18 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Server code. The decepticon namespace package is materialized at the
-# top level so ``python -m decepticon.skillogy`` works without the rest
-# of the decepticon framework being present.
-COPY packages/decepticon/decepticon/skillogy ./decepticon/skillogy
-COPY packages/decepticon/decepticon/skill_audit ./decepticon/skill_audit
+# Server code. The aegiscore namespace package is materialized at the
+# top level so ``python -m aegiscore.skillogy`` works without the rest
+# of the aegiscore framework being present.
+COPY packages/aegiscore/aegiscore/skillogy ./aegiscore/skillogy
+COPY packages/aegiscore/aegiscore/skill_audit ./aegiscore/skill_audit
 
 # CI-built graph dump. The builder emits MERGE-only Cypher so re-runs
 # against an already-loaded Neo4j are idempotent — the boot script
 # below replays this file every time SKILLOGY_AUTO_INGEST is set.
-COPY packages/decepticon/decepticon/skills/.graph/skills.cypher /app/skills.cypher
+COPY packages/aegiscore/aegiscore/skills/.graph/skills.cypher /app/skills.cypher
 
-RUN touch ./decepticon/__init__.py
+RUN touch ./aegiscore/__init__.py
 
 RUN pip install --no-cache-dir \
     "fastapi>=0.115.0" \
@@ -44,7 +44,7 @@ USER skillogy
 # Bind / port
 ENV SKILLOGY_REST_PORT=9100
 
-# Neo4j connection — overridable per environment. The decepticon-net
+# Neo4j connection — overridable per environment. The aegiscore-net
 # compose hostname is ``neo4j``; standalone tests may point this at
 # ``bolt://localhost:7687``.
 ENV SKILLOGY_NEO4J_URI=bolt://neo4j:7687
@@ -60,4 +60,4 @@ EXPOSE 9100
 HEALTHCHECK --interval=10s --timeout=3s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:9100/v1/health')" || exit 1
 
-CMD ["python", "-m", "decepticon.skillogy"]
+CMD ["python", "-m", "aegiscore.skillogy"]

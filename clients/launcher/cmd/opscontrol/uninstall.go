@@ -1,8 +1,8 @@
 package opscontrol
 
 import (
-	internal "github.com/PurpleAILAB/Decepticon/clients/launcher/internal/opscontrol"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/ui"
+	internal "github.com/karishmaram-tech/AegisCore/clients/launcher/internal/opscontrol"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -10,10 +10,10 @@ var uninstallCmd = &cobra.Command{
 	Use:   "uninstall",
 	Short: "Remove the opscontrol managed service (reverts to launcher-spawn fallback)",
 	Long: `Stops the service, removes the systemd unit / launchd plist, and
-reloads the init system so a subsequent ` + "`decepticon opscontrol install`" + `
+reloads the init system so a subsequent ` + "`aegiscore opscontrol install`" + `
 starts from a clean state.
 
-If the service was never installed via ` + "`decepticon opscontrol install`" + `,
+If the service was never installed via ` + "`aegiscore opscontrol install`" + `,
 this command is a no-op.`,
 	RunE: runUninstall,
 }
@@ -35,7 +35,7 @@ func runUninstall(_ *cobra.Command, _ []string) error {
 	if err := mgr.Uninstall(); err != nil {
 		return err
 	}
-	ui.Success("opscontrol service removed. Future `decepticon start` will use the launcher-spawn fallback unless reinstalled.")
+	ui.Success("opscontrol service removed. Future `aegiscore start` will use the launcher-spawn fallback unless reinstalled.")
 	return nil
 }
 

@@ -22,7 +22,7 @@ from benchmark.scorer import Scorer
 _PROVIDER_CHOICES = ("xbow", "exploitbench", "mhbench")
 
 log = logging.getLogger(__name__)
-app = typer.Typer(name="benchmark", help="Decepticon Benchmark Runner")
+app = typer.Typer(name="benchmark", help="Aegiscore Benchmark Runner")
 
 
 def _build_provider(config: BenchmarkConfig) -> BaseBenchmarkProvider:

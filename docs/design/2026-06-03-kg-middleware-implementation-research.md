@@ -362,7 +362,7 @@ Estimated dynamic block: **15-25 lines of markdown**. Compares to the broken bac
 
 **PR-C — Agent cutover + prompt rewrite (~400 LOC)**
 
-9. `feat(kg): MiddlewareSlot.KG + SLOTS_PER_ROLE adoption` — `decepticon_core.contracts.slots`. Analyst gets the slot.
+9. `feat(kg): MiddlewareSlot.KG + SLOTS_PER_ROLE adoption` — `aegiscore_core.contracts.slots`. Analyst gets the slot.
 10. `refactor(kg): analyst.py drops direct RESEARCH_TOOLS imports` — middleware provides them.
 11. `docs(prompts): analyst.md rewrites the KG_DISCIPLINE block` — drops `kg_query`/`kg_neighbors` references. Replaces with "the chain candidates above are computed each turn; call `kg_record` to observe; use `grep findings/` to recall older details; use `bash('cypher-shell ...')` for advanced graph queries."
 12. `test(integration): analyst e2e against compose Neo4j` — full workflow: observe host → record → check summary block updates → record chain → verify web-dashboard read works.

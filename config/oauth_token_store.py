@@ -19,7 +19,7 @@ Design:
     that takes a ``force_refresh`` flag; the wrapper calls once normally,
     once with force_refresh on 401.
 
-This module is self-contained — it does NOT import the ``decepticon``
+This module is self-contained — it does NOT import the ``aegiscore``
 package because LiteLLM mounts only the handler files into ``/app``.
 """
 
@@ -87,7 +87,7 @@ def write_json_atomic(
     Sensitive-data note: this helper persists OAuth refresh / access
     tokens unencrypted, mirroring how the upstream CLIs (Claude Code's
     ``~/.claude/.credentials.json``, Codex's ``~/.codex/auth.json``)
-    already store them. Decepticon's value-add is *sharing* those exact
+    already store them. Aegiscore's value-add is *sharing* those exact
     files between host CLI and the LiteLLM container so a refresh on
     either side flows to the other. Encrypting at this layer would break
     that contract and gain nothing — the file mode is restricted to

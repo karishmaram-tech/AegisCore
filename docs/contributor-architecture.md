@@ -47,7 +47,7 @@ Use this table when deciding which package owns a new feature:
 The contract layer's promise is "zero langchain / langgraph /
 deepagents runtime dependency." A test
 (`packages/aegiscore-core/tests/test_no_runtime_deps.py`) verifies
-this at every CI run — it walks every submodule under `decepticon_core`
+this at every CI run — it walks every submodule under `aegiscore_core`
 and asserts none of the forbidden packages end up in `sys.modules`
 after import.
 
@@ -64,7 +64,7 @@ the canonical guard.
 
 1. **Framework imports core — never the other way.** Anywhere a
    contract or type lives in core, the framework consumes it via
-   `from decepticon_core.X import Y`. Code in
+   `from aegiscore_core.X import Y`. Code in
    `aegiscore-core/*.py` may not contain `from aegiscore import ...`.
 
 2. **Adding a new public name to core = minor bump.** Adding a new
@@ -79,7 +79,7 @@ the canonical guard.
    guarantee — refactor them at will.
 
 4. **SDK re-exports follow core.** When you add a new name to
-   `aegiscore-core` public API, also add it to `decepticon_sdk/__init__.py`'s
+   `aegiscore-core` public API, also add it to `aegiscore_sdk/__init__.py`'s
    re-export list. Plugin authors must reach every contract via a
    single SDK import.
 
@@ -95,7 +95,7 @@ the canonical guard.
 ├── packages/
 │   ├── aegiscore-core/
 │   │   ├── pyproject.toml
-│   │   ├── src/decepticon_core/
+│   │   ├── src/aegiscore_core/
 │   │   │   ├── types/              (Phase 1.A)
 │   │   │   ├── protocols/          (Phase 1.D)
 │   │   │   ├── contracts/          (Phase 1.C / 1.F)
@@ -118,7 +118,7 @@ the canonical guard.
 │   │   └── tests/                  ~890 unit tests
 │   └── aegiscore-sdk/
 │       ├── pyproject.toml
-│       ├── src/decepticon_sdk/
+│       ├── src/aegiscore_sdk/
 │       │   ├── __init__.py         single-import re-exports
 │       │   ├── testing/            FakeBackend / FakeLLM / FakeSandbox
 │       │   └── scaffold/           typer CLI + templates

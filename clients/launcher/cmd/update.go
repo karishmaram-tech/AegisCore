@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/compose"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/config"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/ui"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/updater"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/compose"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/config"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/ui"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/updater"
 	"github.com/spf13/cobra"
 )
 
@@ -95,6 +95,6 @@ func runUpdate(cmd *cobra.Command, args []string) error {
 	}
 
 	ui.Success("Update complete")
-	ui.DimText("Restart Decepticon to use the new version")
+	ui.DimText("Restart Aegiscore to use the new version")
 	return nil
 }

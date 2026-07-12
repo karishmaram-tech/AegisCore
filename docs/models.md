@@ -303,7 +303,7 @@ Configuration: `config/litellm.yaml`. Authentication: `LITELLM_MASTER_KEY` in `.
 To wire in a new provider model:
 
 1. Add a `model_list` entry to `config/litellm.yaml` with the LiteLLM `provider/model` identifier and the env var that holds the key.
-2. Add the model identifier to the appropriate cell of `METHOD_MODELS` in `decepticon_core.types.llm`.
+2. Add the model identifier to the appropriate cell of `METHOD_MODELS` in `aegiscore_core.types.llm`.
 3. If introducing a new AuthMethod, also add it to `AuthMethod`, the factory's `_API_METHOD_ENV` map, and the onboard wizard's option list.
 
 Tests in `tests/unit/llm/test_models.py` will catch dropped tiers or missing matrix entries.

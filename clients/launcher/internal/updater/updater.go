@@ -17,9 +17,9 @@ import (
 	"charm.land/huh/v2"
 	"golang.org/x/term"
 
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/compose"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/config"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/ui"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/compose"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/config"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/ui"
 )
 
 // ConfigManifestAsset is the name of the sha256sum-format manifest the
@@ -32,7 +32,7 @@ const ConfigManifestAsset = "config-checksums.txt"
 const BinaryChecksumsAsset = "checksums.txt"
 
 const (
-	Repo       = "PurpleAILAB/Decepticon"
+	Repo       = "karishmaram-tech/AegisCore"
 	RawBaseURL = "https://raw.githubusercontent.com/" + Repo
 )
 
@@ -56,7 +56,7 @@ var executableFn = os.Executable
 //   - ChannelLatest: the newest FINAL release, immediately (GitHub
 //     "latest", which excludes pre-releases). Maps to GHCR ":latest".
 //
-// Decepticon defaults to stable (conservative for an offensive-security
+// Aegiscore defaults to stable (conservative for an offensive-security
 // tool); the channel semantics match Claude Code's soak model, only the
 // default differs (Claude Code defaults to latest). Selected via the
 // "DECEPTICON_CHANNEL" key in ".env".
@@ -354,7 +354,7 @@ func SyncConfigFiles(branch string, release *Release) error {
 	files := map[string]string{
 		// docker-compose.opscontrol.yml is intentionally absent: it is
 		// LAUNCHER-MANAGED (cmd/opscontrol/supervisor.go embeds the
-		// body and writes it at every `decepticon start`), so the file
+		// body and writes it at every `aegiscore start`), so the file
 		// is never downloaded, never manifest-verified, and never
 		// release-tied. Previously every overlay change forced a point
 		// release with a "no checksum entry" sync warning.
@@ -522,7 +522,7 @@ func downloadFile(client *http.Client, url, dst string) error {
 // verification (no “checksums.txt“ asset) emit a warning and fall
 // back to the legacy unverified replace.
 func SelfUpdate(release *Release) error {
-	assetName := fmt.Sprintf("decepticon-%s-%s", runtime.GOOS, runtime.GOARCH)
+	assetName := fmt.Sprintf("aegiscore-%s-%s", runtime.GOOS, runtime.GOARCH)
 
 	downloadURL := assetURL(release, assetName)
 	if downloadURL == "" {
@@ -603,7 +603,7 @@ func WriteVersion(version string) error {
 
 // NotifyIfUpdateAvailable checks GitHub releases and prints a non-blocking
 // update notice. It never mutates the binary, config files, or Docker images;
-// users apply updates explicitly with `decepticon update`.
+// users apply updates explicitly with `aegiscore update`.
 //
 // Used as the fallback path when “PromptIfUpdateAvailable“ cannot present
 // an interactive prompt (e.g. stdin is not a TTY in CI / piped invocation).
@@ -618,13 +618,13 @@ func NotifyIfUpdateAvailable(currentVersion string, ch Channel) bool {
 	}
 
 	ui.Info(fmt.Sprintf("Update available: %s -> %s", displayVersion(currentVersion), release.TagName))
-	ui.DimText("Run `decepticon update` to upgrade.")
+	ui.DimText("Run `aegiscore update` to upgrade.")
 	return true
 }
 
 // ApplyUpdate runs the full upgrade flow: SyncConfigFiles, Docker image
 // pull, SelfUpdate (binary), WriteVersion. Shared between the
-// “decepticon update“ command and the interactive launch-time prompt.
+// “aegiscore update“ command and the interactive launch-time prompt.
 //
 // “ref“ is the git ref used for “SyncConfigFiles“ — “release.TagName“
 // for tagged releases, or a branch name for development tracking.
@@ -713,7 +713,7 @@ func PromptIfUpdateAvailable(currentVersion string, ch Channel) (bool, error) {
 		Title(fmt.Sprintf("Install %s now?", release.TagName)).
 		Description(
 			"Updates the launcher binary, docker-compose config, and pulls\n" +
-				"the matching Docker images. Decepticon will restart with\n" +
+				"the matching Docker images. Aegiscore will restart with\n" +
 				"the new version once the update finishes.",
 		).
 		Affirmative("Yes, update").
@@ -728,7 +728,7 @@ func PromptIfUpdateAvailable(currentVersion string, ch Channel) (bool, error) {
 	if !confirmed {
 		ui.DimText(
 			"Continuing with " + displayVersion(currentVersion) +
-				". Run `decepticon update` later to upgrade.",
+				". Run `aegiscore update` later to upgrade.",
 		)
 		return false, nil
 	}
@@ -782,7 +782,7 @@ func applyAndReexec(release *Release, currentVersion string) (bool, error) {
 		// Re-exec failed: tell the user to restart manually rather than
 		// silently keep running the old in-memory image.
 		ui.Warning("Re-exec failed: " + err.Error())
-		ui.DimText("Run `decepticon` again to use the new version.")
+		ui.DimText("Run `aegiscore` again to use the new version.")
 		os.Exit(0)
 	}
 	// POSIX exec replaces the process — control never reaches here. The

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Rebuild the PostHog dashboard into a purpose-aligned view:
-   *How OSS users use the Decepticon red-team harness, and what tactics they run.*
+   *How OSS users use the Aegiscore red-team harness, and what tactics they run.*
 
 Replaces the generic v1 dashboard with three sections:
   Usage  — adoption, kill-chain reach, engagement depth, attack surface
@@ -10,7 +10,7 @@ Replaces the generic v1 dashboard with three sections:
 Engagement-level insights rely on `properties.session_id` now being stamped on
 every event (not just trajectory steps) — see feat/telemetry-session-everywhere.
 
-Auth: set -a; . ~/.decepticon/telemetry-deploy.env; set +a
+Auth: set -a; . ~/.aegiscore/telemetry-deploy.env; set +a
 """
 
 from __future__ import annotations
@@ -120,7 +120,7 @@ GROUP BY model ORDER BY llm_calls DESC""",
     ),
     (
         "Usage · Version & OS adoption",
-        "Installed Decepticon version × OS — upgrade & platform-support signal.",
+        "Installed Aegiscore version × OS — upgrade & platform-support signal.",
         """SELECT properties.decepticon_version AS version, properties.os AS os,
        count(DISTINCT distinct_id) AS installs
 FROM events GROUP BY version, os ORDER BY installs DESC""",
@@ -229,7 +229,7 @@ def main() -> int:
         "POST",
         "/dashboards/",
         {
-            "name": "Decepticon — OSS Usage & Tactics",
+            "name": "Aegiscore — OSS Usage & Tactics",
             "description": "How OSS users use the red-team harness and what tactics they "
             "run. Sections: Usage / Tactics / Corpus. Populates as opted-in "
             "telemetry arrives from released clients.",

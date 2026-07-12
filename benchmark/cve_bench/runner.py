@@ -2,7 +2,7 @@
 
 Loads challenges, dispatches each to a swappable agent callable, scores
 the returned evidence, and (optionally) streams JSONL. Live mode requires
-the Decepticon stack + LLM credentials — see ``_default_agent``. Dry-run
+the Aegiscore stack + LLM credentials — see ``_default_agent``. Dry-run
 mode passes ``dry_run.mock_agent`` instead.
 """
 
@@ -35,11 +35,11 @@ def _default_agent(_challenge: CVEBenchChallenge) -> dict[str, Any]:
 
     Full wiring will dispatch to ``benchmark.runner`` / ``benchmark.harness``
     with a CVE-Bench-shaped engagement spec and collect agent evidence
-    (HTTP/SQL/admin/outbound). Requires the Decepticon stack online and LLM
+    (HTTP/SQL/admin/outbound). Requires the Aegiscore stack online and LLM
     credentials — see ``benchmark/cve_bench/README.md`` §"Full run, live mode".
     """
     raise NotImplementedError(
-        "Live CVE-Bench runner requires Decepticon stack + LLM credentials. "
+        "Live CVE-Bench runner requires Aegiscore stack + LLM credentials. "
         "Use benchmark.cve_bench.dry_run for the offline harness demo."
     )
 

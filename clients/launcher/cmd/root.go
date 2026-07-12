@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/ui"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/ui"
 	"github.com/spf13/cobra"
 )
 
 var version = "dev"
 
 var rootCmd = &cobra.Command{
-	Use:   "decepticon",
-	Short: "Decepticon — Autonomous Hacking Agent for Red Team",
+	Use:   "aegiscore",
+	Short: "Aegiscore — Autonomous Hacking Agent for Red Team",
 	Long:  ui.RenderBanner() + "\n" + ui.Dim.Render("Autonomous Hacking Agent for Red Team"),
 	CompletionOptions: cobra.CompletionOptions{
 		HiddenDefaultCmd: true,
@@ -30,5 +30,5 @@ func Execute() {
 
 func init() {
 	rootCmd.Version = version
-	rootCmd.SetVersionTemplate(fmt.Sprintf("Decepticon %s\n", version))
+	rootCmd.SetVersionTemplate(fmt.Sprintf("Aegiscore %s\n", version))
 }

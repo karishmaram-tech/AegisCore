@@ -58,9 +58,9 @@ jobs:
         with:
           filters: |
             python:
-              - 'packages/decepticon/**'
-              - 'packages/decepticon-core/**'
-              - 'packages/decepticon-sdk/**'
+              - 'packages/aegiscore/**'
+              - 'packages/aegiscore-core/**'
+              - 'packages/aegiscore-sdk/**'
               - 'pyproject.toml'
               - 'uv.lock'
               - '.github/workflows/ci.yml'
@@ -90,9 +90,9 @@ jobs:
           filters: |
             langgraph:
               - 'containers/langgraph.Dockerfile'
-              - 'packages/decepticon/**'
-              - 'packages/decepticon-core/**'
-              - 'packages/decepticon-sdk/**'
+              - 'packages/aegiscore/**'
+              - 'packages/aegiscore-core/**'
+              - 'packages/aegiscore-sdk/**'
               - 'pyproject.toml'
               - 'uv.lock'
               - '.github/workflows/ci.yml'
@@ -103,10 +103,10 @@ jobs:
             sandbox:
               - 'containers/sandbox.Dockerfile'
               # Skills no longer ship in the sandbox image — they live under
-              # packages/decepticon/src/decepticon/skills and are read
+              # packages/aegiscore/src/aegiscore/skills and are read
               # in-process by the langgraph service (see
-              # packages/decepticon/src/decepticon/backends/__init__.py).
-              # Skill changes rebuild langgraph (via the packages/decepticon/**
+              # packages/aegiscore/src/aegiscore/backends/__init__.py).
+              # Skill changes rebuild langgraph (via the packages/aegiscore/**
               # filter above), not the sandbox.
               - '.github/workflows/ci.yml'
             cli:
@@ -158,7 +158,7 @@ jobs:
   python:
     # ubuntu-only by design: the Python backend ships and runs inside the
     # langgraph Docker image (python:3.13-slim — Linux), never natively on
-    # a developer's macOS/Windows host. The pip-installable `decepticon`
+    # a developer's macOS/Windows host. The pip-installable `aegiscore`
     # SDK is a thin client that routes execution to those Linux services
     # over HTTP, so there is no macOS/Windows Python runtime to validate.
     # Testing Python on macOS only bought 10x CI minutes, flakiness, and a
@@ -235,8 +235,8 @@ jobs:
           ec=$?
           if [ $ec -ne 0 ]; then
             echo "::group::Diff against checked-in dump"
-            uv run python -m decepticon.skillogy.builder --frozen-built-at --out /tmp/built.cypher
-            diff -u packages/decepticon/decepticon/skills/.graph/skills.cypher /tmp/built.cypher | head -200 || true
+            uv run python -m aegiscore.skillogy.builder --frozen-built-at --out /tmp/built.cypher
+            diff -u packages/aegiscore/aegiscore/skills/.graph/skills.cypher /tmp/built.cypher | head -200 || true
             echo "::endgroup::"
             exit $ec
           fi
@@ -407,13 +407,13 @@ jobs:
             macOS-X64)   npm install --no-save @rollup/rollup-darwin-x64 ;;
             Windows-X64) npm install --no-save @rollup/rollup-win32-x64-msvc ;;
           esac
-      # @decepticon/streaming now ships as a built ESM package
+      # @aegiscore/streaming now ships as a built ESM package
       # (package.json main → dist/index.js). cli's tsc + web's next build
       # resolve the workspace by walking that main, so the dist has to
       # exist before either downstream build runs.
       - name: Build shared streaming workspace
         if: needs.changes.outputs.cli == 'true'
-        run: npm run build --workspace=@decepticon/streaming
+        run: npm run build --workspace=@aegiscore/streaming
       - if: needs.changes.outputs.cli == 'true'
         run: cd clients/cli && npm run typecheck
       - name: Run CLI tests
@@ -443,7 +443,7 @@ jobs:
         run: npm ci
       - name: Build shared streaming workspace
         if: needs.changes.outputs.web == 'true'
-        run: npm run build --workspace=@decepticon/streaming
+        run: npm run build --workspace=@aegiscore/streaming
       - name: Generate Prisma client
         if: needs.changes.outputs.web == 'true'
         run: cd clients/web && npx prisma generate
@@ -519,7 +519,7 @@ jobs:
           file: containers/${{ matrix.image }}.Dockerfile
           push: false
           load: true
-          tags: decepticon-${{ matrix.image }}:ci
+          tags: aegiscore-${{ matrix.image }}:ci
           cache-from: type=gha
           cache-to: type=gha,mode=${{ github.event_name == 'push' && 'max' || 'min' }}
       # Informational scan. The hotfix scope (1.0.27) keeps this as a
@@ -532,7 +532,7 @@ jobs:
       - name: Trivy image scan
         uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
         with:
-          image-ref: decepticon-${{ matrix.image }}:ci
+          image-ref: aegiscore-${{ matrix.image }}:ci
           format: sarif
           output: trivy-${{ matrix.image }}.sarif
           severity: CRITICAL,HIGH
@@ -585,7 +585,7 @@ jobs:
           # Dockerfile path on the target arch.
           load: false
           platforms: linux/arm64
-          tags: decepticon-${{ matrix.image }}:ci-arm64
+          tags: aegiscore-${{ matrix.image }}:ci-arm64
           cache-from: type=gha,scope=arm64
           cache-to: type=gha,mode=${{ github.event_name == 'push' && 'max' || 'min' }},scope=arm64
 

@@ -1,6 +1,6 @@
 # typos (crate-ci/typos) per-repo configuration
 #
-# Decepticon's skill bodies + offensive tooling include security jargon
+# Aegiscore's skill bodies + offensive tooling include security jargon
 # and exfiltrated-data strings that `typos` mistakes for misspellings.
 # Allowlist them here rather than disable typos entirely.
 
@@ -128,7 +128,7 @@ extend-ignore-re = [
 "NDAs" = "NDAs"      # Non-Disclosure Agreements (plural)
 "AKS" = "AKS"        # Azure Kubernetes Service
 "RTO" = "RTO"        # Red Team Operator (also Recovery Time Objective)
-# Async variants of LangChain agent middleware hooks. Decepticon names
+# Async variants of LangChain agent middleware hooks. Aegiscore names
 # them ``a<sync-name>`` (``aafter_model``, ``abefore_model``, ``aafter_agent``)
 # to mirror the langchain.agents.middleware convention. typos misreads
 # the leading ``a`` as a typo of the base name.
@@ -149,28 +149,28 @@ extend-exclude = [
     "*.snap",
     "assets/**",
     "benchmark/results/**",
-    "packages/decepticon/decepticon/skills/_corpus/**",
+    "packages/aegiscore/aegiscore/skills/_corpus/**",
     "reference/**",
     # ICS/OT skill bodies are dense with industrial-protocol jargon that
     # typos misreads: "OT" (Operational Technology), "ot" inside
     # "ics ot ..." trigger lists, "BA" (BACnet/Building Automation), etc.
     # Scoped to this directory so the rest of the tree keeps full typo
     # coverage rather than globally allow-listing two-letter tokens.
-    "packages/decepticon/decepticon/skills/standard/exploit/ics-ot/**",
-    "packages/decepticon/decepticon/skills/standard/ics/**",
+    "packages/aegiscore/aegiscore/skills/standard/exploit/ics-ot/**",
+    "packages/aegiscore/aegiscore/skills/standard/ics/**",
     # Sisyphus-added domain skill seeds with industrial / wireless / OT
     # protocol jargon that typos misreads (BACnet, OT tag list, ics, etc.)
-    "packages/decepticon/decepticon/skills/standard/iot/**",
-    "packages/decepticon/decepticon/skills/standard/dfir/**",
-    "packages/decepticon/decepticon/skills/standard/phish/**",
-    "packages/decepticon/decepticon/skills/standard/supply-chain/**",
-    "packages/decepticon/decepticon/skills/standard/osint/**",
+    "packages/aegiscore/aegiscore/skills/standard/iot/**",
+    "packages/aegiscore/aegiscore/skills/standard/dfir/**",
+    "packages/aegiscore/aegiscore/skills/standard/phish/**",
+    "packages/aegiscore/aegiscore/skills/standard/supply-chain/**",
+    "packages/aegiscore/aegiscore/skills/standard/osint/**",
     ".omo/plans/**",
     # Adversary-emulation playbooks + APT/CTI reference cards: dense with
     # threat-intel jargon typos misreads — "OT" (Operational Technology),
     # "HPE" (Hewlett Packard Enterprise), product names like "MOVEit".
     # Scoped to these dirs to match the ics-ot/iot exclusion pattern rather
     # than globally allow-listing two-letter tokens.
-    "packages/decepticon/decepticon/skills/standard/soundwave/threat-profile/emulation/**",
-    "packages/decepticon/decepticon/skills/standard/soundwave/threat-profile/references/**",
+    "packages/aegiscore/aegiscore/skills/standard/soundwave/threat-profile/emulation/**",
+    "packages/aegiscore/aegiscore/skills/standard/soundwave/threat-profile/references/**",
 ]

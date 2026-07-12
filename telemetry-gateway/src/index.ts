@@ -1,5 +1,5 @@
 /**
- * Decepticon telemetry gateway — Cloudflare Worker.
+ * Aegiscore telemetry gateway — Cloudflare Worker.
  *
  * The single public, unauthenticated ingest endpoint for OSS maintainer
  * collection (design doc §4, Layer 1). It holds the PostHog secret so the OSS
@@ -48,7 +48,7 @@ export default {
 
     // Health check.
     if (request.method === "GET" && url.pathname === "/") {
-      return json(200, { service: "decepticon-telemetry-gateway", ok: true });
+      return json(200, { service: "aegiscore-telemetry-gateway", ok: true });
     }
 
     if (url.pathname !== path) return json(404, { error: "not_found" });

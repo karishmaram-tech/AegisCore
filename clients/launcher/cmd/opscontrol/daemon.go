@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"syscall"
 
-	internal "github.com/PurpleAILAB/Decepticon/clients/launcher/internal/opscontrol"
+	internal "github.com/karishmaram-tech/AegisCore/clients/launcher/internal/opscontrol"
 	"github.com/spf13/cobra"
 )
 
@@ -19,10 +19,10 @@ var daemonCmd = &cobra.Command{
 	Short: "Run the opscontrol daemon in the foreground",
 	Long: `Runs the opscontrol HTTP server on the Unix domain socket at
 $DECEPTICON_HOME/run/ops.sock. Intended to be supervised by
-` + "`decepticon start`" + ` (which spawns it detached and writes the
+` + "`aegiscore start`" + ` (which spawns it detached and writes the
 PID file). Operators can also invoke it directly for debugging:
 
-    DECEPTICON_HOME=/tmp/dogfood decepticon opscontrol daemon
+    DECEPTICON_HOME=/tmp/dogfood aegiscore opscontrol daemon
 
 ADR-0006 §1' is the authoritative spec.`,
 	RunE: runDaemon,
@@ -64,7 +64,7 @@ func runDaemon(_ *cobra.Command, _ []string) error {
 	logger := slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelInfo}))
 	server := internal.NewServer(backend, allow, logger)
 
-	// Write the PID file so `decepticon stop` knows who to signal.
+	// Write the PID file so `aegiscore stop` knows who to signal.
 	// We write our own PID (not the parent shell's) so that a
 	// foreground run still places a valid marker.
 	pidPath := internal.PIDFilePath()

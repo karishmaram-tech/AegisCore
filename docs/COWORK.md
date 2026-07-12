@@ -122,7 +122,7 @@ Today those are:
 |------|--------------------------------|
 | `.github/workflows/**`, `.github/actions/**`, `.github/CODEOWNERS` | These files define what happens in CI and what gates a release; a malicious or careless change here can disable every other gate in the repo. |
 | `pyproject.toml`, `packages/*/pyproject.toml`, `uv.lock`, `package.json`, `package-lock.json`, `go.mod`, `go.sum`, `.goreleaser.yaml` | These control what ends up published to PyPI, npm, and the launcher binaries. A pinned-dep change is a supply-chain change. |
-| `packages/aegiscore-core/decepticon_core/contracts/**`, `protocols/**`, `registry/**` | The public plugin API surface. Plugin authors build against these; breakages cascade. |
+| `packages/aegiscore-core/aegiscore_core/contracts/**`, `protocols/**`, `registry/**` | The public plugin API surface. Plugin authors build against these; breakages cascade. |
 | `scripts/install.sh` | Executed by users with `curl \| bash`. One-shot RCE surface. |
 | `docker-compose.yml`, `containers/*.Dockerfile` | Defines the runtime stack every user spins up. |
 

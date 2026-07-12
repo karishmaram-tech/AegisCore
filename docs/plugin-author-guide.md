@@ -45,7 +45,7 @@ framework discovers your contribution automatically.
 ### Tool
 
 ```python
-from decepticon_sdk import ToolProtocol
+from aegiscore_sdk import ToolProtocol
 
 
 class WhoamiTool:
@@ -71,7 +71,7 @@ whoami = "my_plugin:get_tools"
 ### Middleware
 
 ```python
-from decepticon_sdk import MiddlewareProtocol, MiddlewareSlot
+from aegiscore_sdk import MiddlewareProtocol, MiddlewareSlot
 
 
 class AuditLoggingMiddleware:
@@ -92,7 +92,7 @@ audit-log = "my_plugin:get_middleware"
 ### Sub-agent
 
 ```python
-from decepticon_sdk import SubAgentSpec
+from aegiscore_sdk import SubAgentSpec
 from my_plugin.agent import create_agent
 
 
@@ -135,7 +135,7 @@ files as package data:
 ### Prompt fragment (new in this release)
 
 ```python
-from decepticon_sdk import PromptContribution
+from aegiscore_sdk import PromptContribution
 
 def get_contribution() -> PromptContribution:
     return PromptContribution(
@@ -157,7 +157,7 @@ Bundle activation is controlled by `DECEPTICON_PLUGINS` (or the
 your contribution so end users can opt in deliberately:
 
 ```python
-from decepticon_sdk import PluginBundle
+from aegiscore_sdk import PluginBundle
 
 
 def get_bundle() -> PluginBundle:
@@ -188,7 +188,7 @@ tool / middleware safety-critical (additive only — never removes
 safety on OSS names):
 
 ```python
-from decepticon_sdk import SafetyDeclaration
+from aegiscore_sdk import SafetyDeclaration
 
 
 PLUGIN_SAFETY = SafetyDeclaration(
@@ -201,12 +201,12 @@ Spec §16.4 #4: SafetyDeclaration is **additive only**.
 
 ## 5. Test hermetically
 
-`decepticon_sdk.testing` ships in-memory fakes that satisfy each
+`aegiscore_sdk.testing` ships in-memory fakes that satisfy each
 Protocol — your plugin tests run without a live sandbox or LiteLLM
 proxy:
 
 ```python
-from decepticon_sdk.testing import FakeBackend, FakeLLM, FakeSandbox
+from aegiscore_sdk.testing import FakeBackend, FakeLLM, FakeSandbox
 
 
 def test_my_middleware_records_audit():
@@ -223,7 +223,7 @@ def test_my_middleware_records_audit():
 `PluginRegistry` is the read-only introspection API (spec §16.4 #2):
 
 ```python
-from decepticon_sdk import PluginRegistry
+from aegiscore_sdk import PluginRegistry
 
 reg = PluginRegistry.load()
 

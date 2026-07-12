@@ -23,7 +23,7 @@ import {
   STREAM_OPTIONS,
   extractText,
   stripResultTags,
-} from "@decepticon/streaming";
+} from "@aegiscore/streaming";
 import { getModelOverride } from "../commands/modelOverride.js";
 import { getAssistantOverride } from "../commands/assistantOverride.js";
 
@@ -87,9 +87,9 @@ interface UseAgentReturn {
   isStreaming: boolean;
   pendingTool: PendingTool | null;
   streamStats: StreamStats | null;
-  /** Currently active agent name (e.g. "decepticon", "recon"). */
+  /** Currently active agent name (e.g. "aegiscore", "recon"). */
   activeAgent: string | null;
-  /** Persistent assistant id ("soundwave" | "decepticon") — shown when no subagent is streaming. */
+  /** Persistent assistant id ("soundwave" | "aegiscore") — shown when no subagent is streaming. */
   assistantId: string;
   /** Queued message to auto-submit on completion. */
   queuedMessage: string | null;
@@ -104,15 +104,15 @@ interface UseAgentReturn {
 
 // Initial assistant_id from the launcher's engagement picker:
 // - "soundwave" for new engagements (interview lane)
-// - "decepticon" for resuming an existing engagement
-// Defaults to "decepticon" when launched directly (legacy / dev workflows).
+// - "aegiscore" for resuming an existing engagement
+// Defaults to "aegiscore" when launched directly (legacy / dev workflows).
 //
 // When soundwave finishes its interview and emits the `engagement_ready`
-// custom event, the active assistant is flipped in-flight to "decepticon"
+// custom event, the active assistant is flipped in-flight to "aegiscore"
 // and the next operator message starts a fresh thread on that assistant —
 // no CLI restart needed.
 const INITIAL_ASSISTANT_ID =
-  process.env.DECEPTICON_ASSISTANT_ID || "decepticon";
+  process.env.DECEPTICON_ASSISTANT_ID || "aegiscore";
 let _nextEventId = 0;
 
 
@@ -152,12 +152,12 @@ export function useAgent({
   // after Command(resume=...).
   const askedQuestionIds = useRef<Set<string>>(new Set());
   // Active LangGraph assistant. Soundwave's complete_engagement_planning
-  // tool flips this to "decepticon" mid-flight; the next submit() then opens
+  // tool flips this to "aegiscore" mid-flight; the next submit() then opens
   // a fresh thread on the new assistant.
   const assistantIdRef = useRef<string>(INITIAL_ASSISTANT_ID);
   // Boolean handoff signal — set when soundwave emits engagement_ready; consumed
   // in handleStreamComplete to drop the soundwave thread before the auto-submit
-  // opens a fresh decepticon thread. Carries no slug; the launcher is the single
+  // opens a fresh aegiscore thread. Carries no slug; the launcher is the single
   // source of truth and reaches the agent via config.configurable.
   const pendingHandoffRef = useRef<boolean>(false);
 
@@ -297,7 +297,7 @@ export function useAgent({
               subagent: data.agent,
               status: data.error ? "error" : "success",
             });
-            setActiveAgent("decepticon");
+            setActiveAgent("aegiscore");
             setPendingTool(null);
             break;
 
@@ -328,7 +328,7 @@ export function useAgent({
 
           case "engagement_ready": {
             // Soundwave finished writing the planning bundle. Flip the
-            // active assistant so the next submit() lands on decepticon.
+            // active assistant so the next submit() lands on aegiscore.
             // The current run continues to completion (soundwave's closing
             // message); thread handoff fires from handleStreamComplete.
             // Pure boolean signal — the engagement slug travels independently
@@ -336,7 +336,7 @@ export function useAgent({
             //
             // When the operator has explicitly picked another orchestrator
             // via /agent (e.g. "vulnresearch"), skip this auto-handoff —
-            // their explicit choice beats the soundwave→decepticon default.
+            // their explicit choice beats the soundwave→aegiscore default.
             if (getAssistantOverride()) {
               addEvent({
                 type: "system",
@@ -346,12 +346,12 @@ export function useAgent({
               break;
             }
             pendingHandoffRef.current = true;
-            assistantIdRef.current = "decepticon";
-            setAssistantId("decepticon");
+            assistantIdRef.current = "aegiscore";
+            setAssistantId("aegiscore");
             addEvent({
               type: "system",
               content:
-                "Engagement planning complete — Decepticon will pick up your next message.",
+                "Engagement planning complete — Aegiscore will pick up your next message.",
             });
             break;
           }
@@ -598,8 +598,8 @@ export function useAgent({
       resetStreamState();
 
       // Engagement handoff: soundwave's complete_engagement_planning tool
-      // flipped assistantIdRef to "decepticon" during this run. Drop the
-      // soundwave thread so the next submit opens a fresh decepticon
+      // flipped assistantIdRef to "aegiscore" during this run. Drop the
+      // soundwave thread so the next submit opens a fresh aegiscore
       // thread. Reset askedQuestionIds since they were per-thread.
       if (pendingHandoffRef.current) {
         threadIdRef.current = null;
@@ -751,7 +751,7 @@ export function useAgent({
 
         setRunState("streaming");
         setPendingTool(null);
-        setActiveAgent("decepticon");
+        setActiveAgent("aegiscore");
         setStreamStats({ startTime: Date.now(), totalTokens: 0, promptTokens: 0, completionTokens: 0 });
 
         // Engagement context and the /model override flow as runnable
@@ -925,7 +925,7 @@ export function useAgent({
 
           setRunState("streaming");
           setPendingTool(null);
-          setActiveAgent("decepticon");
+          setActiveAgent("aegiscore");
           setStreamStats({ startTime: Date.now(), totalTokens: 0, promptTokens: 0, completionTokens: 0 });
 
           try {

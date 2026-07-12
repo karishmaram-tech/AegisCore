@@ -8,7 +8,7 @@ import (
 
 	"charm.land/huh/v2"
 
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/config"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/config"
 )
 
 // TelemetryPolicyID identifies the one-time telemetry re-consent prompt.
@@ -83,7 +83,7 @@ func applyEnvBackfill(c *Ctx) (string, error) {
 }
 
 const telemetryConsentBlurb = "" +
-	"Decepticon is free and open source. Sharing anonymous usage helps fund\n" +
+	"Aegiscore is free and open source. Sharing anonymous usage helps fund\n" +
 	"and improve it, and — with your consent — contributes masked red-team\n" +
 	"reasoning to train future open offensive-security agents.\n\n" +
 	"What is shared (research tier):\n" +
@@ -93,12 +93,12 @@ const telemetryConsentBlurb = "" +
 	"Never sent at any tier: raw prompts, real target IPs/hosts, credentials.\n" +
 	"Your IP is dropped at the gateway.\n\n" +
 	"You can change this anytime: set DECEPTICON_TELEMETRY=off (or basic) in\n" +
-	"~/.decepticon/.env, run `decepticon-cli telemetry off`, or DO_NOT_TRACK=1."
+	"~/.aegiscore/.env, run `aegiscore-cli telemetry off`, or DO_NOT_TRACK=1."
 
 func applyTelemetryReconsent(c *Ctx) (string, error) {
 	// Honor hard opt-outs without prompting (and record the ack so we
 	// never re-ask): DO_NOT_TRACK, or the persistent opt-out marker
-	// written by `decepticon-cli telemetry off`.
+	// written by `aegiscore-cli telemetry off`.
 	if truthy(os.Getenv("DO_NOT_TRACK")) || truthy(c.Env["DO_NOT_TRACK"]) || hasOptOutMarker(c.Home) {
 		return "", nil
 	}
@@ -128,7 +128,7 @@ func applyTelemetryReconsent(c *Ctx) (string, error) {
 }
 
 // hasOptOutMarker mirrors the Python config's persistent opt-out marker at
-// $DECEPTICON_HOME/telemetry/opt_out (decepticon_core/.../telemetry).
+// $DECEPTICON_HOME/telemetry/opt_out (aegiscore_core/.../telemetry).
 func hasOptOutMarker(home string) bool {
 	_, err := os.Stat(filepath.Join(home, "telemetry", "opt_out"))
 	return err == nil

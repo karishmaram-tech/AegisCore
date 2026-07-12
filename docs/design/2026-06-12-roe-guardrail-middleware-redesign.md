@@ -249,7 +249,7 @@ class name, `MiddlewareSlot.ROE_ENFORCEMENT` →
 | `packages/aegiscore/aegiscore/middleware/_command_targets.py` | Layer 1 — add `_extract_token_hosts`, wire as `not matched_tool` fallback in `extract_targets`. |
 | `packages/aegiscore/tests/unit/middleware/test_command_targets_scope_bypass.py` | Add the bare-hostname fail-open matrix; assert fail-closed. |
 | `packages/aegiscore/aegiscore/middleware/roe.py` | Layer 2 — class rename; integrate egress provisioning hook. |
-| `packages/aegiscore-core/decepticon_core/contracts/slots.py` | `ROE_ENFORCEMENT` → `ROE_GUARDRAIL` (keep safety-critical). |
+| `packages/aegiscore-core/aegiscore_core/contracts/slots.py` | `ROE_ENFORCEMENT` → `ROE_GUARDRAIL` (keep safety-critical). |
 | sandbox backend / workspace provisioning | Layer 2 — compile `machine_enforcement` → DNS + nftables/proxy config. |
 | `docs/security/roe-machine-enforcement.md` | Correct the "false-positive-safe" claim; document the two enforcement points. |
 

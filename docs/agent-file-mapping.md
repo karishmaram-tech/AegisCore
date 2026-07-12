@@ -167,7 +167,7 @@ Skills that define a file template, naming scheme, or write step.
 
 ### Soundwave planning templates
 
-Each template validates against a `decepticon_core.types` schema and writes
+Each template validates against a `aegiscore_core.types` schema and writes
 to `plan/`:
 
 | Skill | Output file | Schema |
@@ -287,4 +287,4 @@ item below records the original conflict and its **Resolution**.
 
 - Agent prompts: `packages/aegiscore/aegiscore/agents/prompts/standard/*.md`
 - Skills: `packages/aegiscore/aegiscore/skills/{shared,standard,benchmark}/**/SKILL.md`
-- Schemas: `packages/aegiscore-core/decepticon_core/types/`
+- Schemas: `packages/aegiscore-core/aegiscore_core/types/`

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { SubagentCustomEvent } from "@decepticon/streaming";
+import type { SubagentCustomEvent } from "@aegiscore/streaming";
 import { AGENT_DISPLAY_CONFIG } from "@/lib/agents";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -200,7 +200,7 @@ function EventRow({ event, relativeTime }: EventRowProps) {
     case "engagement_ready": {
       icon = <Rocket className="h-3.5 w-3.5 shrink-0 text-violet-400" />;
       detail = (
-        <span className="text-violet-300">Engagement planning complete — Decepticon will continue</span>
+        <span className="text-violet-300">Engagement planning complete — Aegiscore will continue</span>
       );
       rowClass = "bg-violet-500/5";
       break;

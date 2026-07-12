@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/config"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/config"
 )
 
 func newTestCtx(t *testing.T, env map[string]string, tty bool) *Ctx {
@@ -161,7 +161,7 @@ func TestEnvBackfillStepReflectsIntoEnv(t *testing.T) {
 }
 
 // TestRunAll_ExistingUserUpgrade exercises the fully wired path an existing
-// (pre-endpoint) user hits at `decepticon start`: env-backfill adds the
+// (pre-endpoint) user hits at `aegiscore start`: env-backfill adds the
 // telemetry endpoint their .env never had, and the one-time re-consent
 // prompt flips them to research — then never fires again.
 func TestRunAll_ExistingUserUpgrade(t *testing.T) {

@@ -541,7 +541,7 @@ func TestDecepticonHome(t *testing.T) {
 		t.Errorf("DecepticonHome() = %q, want /custom/path", got)
 	}
 
-	// Without DECEPTICON_HOME — falls back to ~/.decepticon
+	// Without DECEPTICON_HOME — falls back to ~/.aegiscore
 	t.Setenv("DECEPTICON_HOME", "")
 	home := DecepticonHome()
 	if !filepath.IsAbs(home) {

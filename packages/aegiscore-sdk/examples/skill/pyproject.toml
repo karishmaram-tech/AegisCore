@@ -1,0 +1,21 @@
+[project]
+name = "aegiscore-example-skill"
+version = "0.0.1"
+description = "Aegiscore plugin scaffolded by aegiscore-sdk."
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.13"
+
+dependencies = [
+    "aegiscore-sdk",
+]
+
+[project.entry-points."aegiscore.skills"]
+aegiscore_example_skill = "aegiscore_example_skill"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/aegiscore_example_skill"]

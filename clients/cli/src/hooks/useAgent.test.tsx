@@ -65,7 +65,7 @@ describe("useAgent — engagement handoff lifecycle", () => {
   });
 
   // ── 1. engagement_ready flips assistantId mid-stream ─────────────────────
-  it("flips assistantId to 'decepticon' when engagement_ready fires mid-stream", async () => {
+  it("flips assistantId to 'aegiscore' when engagement_ready fires mid-stream", async () => {
     const stream = createControllableStream();
     (mockState.client!.runs.stream as Mock).mockReturnValueOnce(stream);
 
@@ -87,7 +87,7 @@ describe("useAgent — engagement handoff lifecycle", () => {
     });
 
     // assistantId state should have flipped; stream has NOT ended yet
-    expect(result.current.assistantId).toBe("decepticon");
+    expect(result.current.assistantId).toBe("aegiscore");
 
     // Clean up — end stream so the hook reaches an idle state
     await act(async () => {
@@ -96,8 +96,8 @@ describe("useAgent — engagement handoff lifecycle", () => {
     });
   });
 
-  // ── 2. Handoff auto-submits enqueued message on fresh decepticon thread ───
-  it("auto-submits enqueued message on a fresh decepticon thread after handoff", async () => {
+  // ── 2. Handoff auto-submits enqueued message on fresh aegiscore thread ───
+  it("auto-submits enqueued message on a fresh aegiscore thread after handoff", async () => {
     const firstStream = createControllableStream();
     const secondStream = createMockStream([noopValuesEvent]);
     const mc = mockState.client!;
@@ -106,7 +106,7 @@ describe("useAgent — engagement handoff lifecycle", () => {
       .mockReturnValueOnce(secondStream);
     (mc.threads.create as Mock)
       .mockResolvedValueOnce({ thread_id: "thread-soundwave" })
-      .mockResolvedValueOnce({ thread_id: "thread-decepticon" });
+      .mockResolvedValueOnce({ thread_id: "thread-aegiscore" });
 
     const { result } = renderHook(() => useAgent());
 
@@ -136,13 +136,13 @@ describe("useAgent — engagement handoff lifecycle", () => {
     const streamCalls = (mc.runs.stream as Mock).mock.calls;
     const createCalls = (mc.threads.create as Mock).mock.calls;
 
-    // New thread created for the decepticon run
+    // New thread created for the aegiscore run
     expect(createCalls.length).toBe(2);
 
-    // Second stream call targets decepticon assistant on the fresh thread
+    // Second stream call targets aegiscore assistant on the fresh thread
     expect(streamCalls.length).toBe(2);
-    expect(streamCalls[1][0]).toBe("thread-decepticon"); // new thread, not original
-    expect(streamCalls[1][1]).toBe("decepticon");
+    expect(streamCalls[1][0]).toBe("thread-aegiscore"); // new thread, not original
+    expect(streamCalls[1][1]).toBe("aegiscore");
 
     // Second stream call's input carries the queued message
     const secondInput = streamCalls[1][2].input as { messages: Array<{ content: string }> };
@@ -159,7 +159,7 @@ describe("useAgent — engagement handoff lifecycle", () => {
       .mockReturnValueOnce(secondStream);
     (mc.threads.create as Mock)
       .mockResolvedValueOnce({ thread_id: "thread-soundwave" })
-      .mockResolvedValueOnce({ thread_id: "thread-decepticon" });
+      .mockResolvedValueOnce({ thread_id: "thread-aegiscore" });
 
     const { result } = renderHook(() => useAgent());
 
@@ -171,7 +171,7 @@ describe("useAgent — engagement handoff lifecycle", () => {
     });
 
     act(() => {
-      result.current.enqueue("decepticon prompt");
+      result.current.enqueue("aegiscore prompt");
     });
 
     await act(async () => {
@@ -266,7 +266,7 @@ describe("useAgent — engagement handoff lifecycle", () => {
       .mockReturnValueOnce(secondStream);
     (mc.threads.create as Mock)
       .mockResolvedValueOnce({ thread_id: "t-soundwave" })
-      .mockResolvedValueOnce({ thread_id: "t-decepticon" });
+      .mockResolvedValueOnce({ thread_id: "t-aegiscore" });
 
     const { result } = renderHook(() => useAgent());
 

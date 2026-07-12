@@ -7,7 +7,7 @@ each PR is **1 logical concern, ≤ 400 runtime lines, ≤ 10 files**, with a re
 verification statement. File paths below were confirmed against the current `main` tree.
 
 > **Prerequisite that shapes everything:** the AI-surface cluster needs a `Technology` KG node kind.
-> KG node kinds live in `packages/aegiscore-core/decepticon_core/types/kg.py` and are exercised by
+> KG node kinds live in `packages/aegiscore-core/aegiscore_core/types/kg.py` and are exercised by
 > `packages/aegiscore-core/tests/test_public_api_stability.py` + `test_kg_detection_types.py` —
 > i.e. a **public-type-surface change**. `types/**` is *not* in `.github/CODEOWNERS` today (only
 > `contracts/**`, `protocols/**`, `registry/**` are), so it may self-merge on green — but because it

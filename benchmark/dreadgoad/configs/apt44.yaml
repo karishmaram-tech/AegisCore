@@ -5,9 +5,9 @@ rounds: 1
 parallel: 1
 timeout_per_run_seconds: 10800
 langgraph_url: http://localhost:2024
-# Replace ``decepticon`` with the assistant_id of the LangGraph agent
+# Replace ``aegiscore`` with the assistant_id of the LangGraph agent
 # you want to drive against the lab.
-agents: [decepticon]
+agents: [aegiscore]
 # APT44 (Sandworm / Seashell Blizzard, G0034) persona. Destructive
 # IMPACT-phase techniques are operator-approved for this isolated lab
 # only; each T-code listed here authorizes the agent's OPPLAN gate to

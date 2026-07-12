@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useMemo } from "react";
-import type { SubagentCustomEvent } from "@decepticon/streaming";
+import type { SubagentCustomEvent } from "@aegiscore/streaming";
 import type { AgentConfig } from "@/lib/agents";
 import { AGENT_DISPLAY_CONFIG } from "@/lib/agents";
 import { cn } from "@/lib/utils";
@@ -198,10 +198,10 @@ export function AgentDetailPanel({
         <ScrollArea className="flex-1 min-h-0">
           <div className="space-y-1 px-4 pb-3">
             {recentEvents.length === 0 ? (
-              agent.id === "decepticon" ? (
+              agent.id === "aegiscore" ? (
                 <div className="py-4 text-center text-xs text-zinc-500 space-y-2">
                   <p className="font-medium text-zinc-400">Orchestrator</p>
-                  <p>Decepticon coordinates sub-agents via task() delegation.</p>
+                  <p>Aegiscore coordinates sub-agents via task() delegation.</p>
                   <p>Activity appears on the sub-agent nodes, not here.</p>
                   <p className="text-zinc-600 mt-2">Click a sub-agent node in the graph to see its activity.</p>
                 </div>

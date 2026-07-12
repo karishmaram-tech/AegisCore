@@ -185,7 +185,7 @@ uv run --project packages/aegiscore python -m pytest \
 
 # Slot wiring (every role gets it)
 uv run --project packages/aegiscore python -c "
-from decepticon_core.contracts.slots import MiddlewareSlot, SLOTS_PER_ROLE
+from aegiscore_core.contracts.slots import MiddlewareSlot, SLOTS_PER_ROLE
 for role, slots in SLOTS_PER_ROLE.items():
     assert MiddlewareSlot.UNTRUSTED_OUTPUT in slots, role
 print('OK - all', len(SLOTS_PER_ROLE), 'roles wired')

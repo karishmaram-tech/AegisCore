@@ -268,7 +268,7 @@ plugins (scanner, exploiter, detector, verifier, patcher) additionally pull
 `/skills/shared/` (OPSEC, defense evasion, workflow) is appended to every standard
 role's default source list — including Soundwave, which uses the same
 `skills_sources_for(role)` fallback. The `SKILLS` middleware slot is part of the base
-slot set (`decepticon_core/contracts/slots.py`), so every role carries it.
+slot set (`aegiscore_core/contracts/slots.py`), so every role carries it.
 
 When `BENCHMARK_MODE=1`, `/skills/benchmark/` is appended to a role's sources
 (`agents/_benchmark_mode.py`).

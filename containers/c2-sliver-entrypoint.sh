@@ -7,7 +7,7 @@
 set -e
 
 CONFIG_DIR="/workspace/.sliver-configs"
-CONFIG_FILE="${CONFIG_DIR}/decepticon.cfg"
+CONFIG_FILE="${CONFIG_DIR}/aegiscore.cfg"
 
 # ── Fix volume permissions (runs as root) ──────────────────────────
 # Docker named volumes are created as root. Ensure sliver user can write.
@@ -36,7 +36,7 @@ done
 
 # Generate operator config if not already present
 if [ ! -f "$CONFIG_FILE" ]; then
-  if run_as_sliver sliver-server operator --name decepticon --lhost c2-sliver --permissions all --save "$CONFIG_FILE"; then
+  if run_as_sliver sliver-server operator --name aegiscore --lhost c2-sliver --permissions all --save "$CONFIG_FILE"; then
     echo "[c2-sliver] Operator config saved → ${CONFIG_FILE}"
   else
     echo "[c2-sliver] WARNING: Failed to generate operator config"

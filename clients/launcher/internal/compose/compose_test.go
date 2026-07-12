@@ -53,15 +53,15 @@ func TestBaseArgs(t *testing.T) {
 		EnvFile:     "/test/.env",
 	}
 	args := c.baseArgs()
-	// Expected shape: ["compose", "-p", "decepticon", "-f",
+	// Expected shape: ["compose", "-p", "aegiscore", "-f",
 	//                  "/test/docker-compose.yml", "--env-file", "/test/.env"]
-	// `-p decepticon` is explicit so the launcher and the opscontrol
+	// `-p aegiscore` is explicit so the launcher and the opscontrol
 	// daemon both target the same compose project; otherwise the
-	// daemon's no-`-p` default ("decepticon" via dir basename) drifts
+	// daemon's no-`-p` default ("aegiscore" via dir basename) drifts
 	// the moment any caller passes `-p X` themselves.
 	want := []string{
 		"compose",
-		"-p", "decepticon",
+		"-p", "aegiscore",
 		"-f", "/test/docker-compose.yml",
 		"--env-file", "/test/.env",
 	}
@@ -83,8 +83,8 @@ func TestBaseArgs_StackNameOverridesProjectName(t *testing.T) {
 		EnvFile:     "/test/.env",
 	}
 	args := c.baseArgs()
-	if args[2] != "decepticon-stack2" {
-		t.Errorf("expected -p decepticon-stack2 for DECEPTICON_STACK_NAME=stack2; got args=%v", args)
+	if args[2] != "aegiscore-stack2" {
+		t.Errorf("expected -p aegiscore-stack2 for DECEPTICON_STACK_NAME=stack2; got args=%v", args)
 	}
 }
 

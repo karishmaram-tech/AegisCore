@@ -7,12 +7,12 @@ import (
 	"time"
 
 	"charm.land/huh/v2"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/cmd/opscontrol"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/config"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/migrate"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/platform"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/starprompt"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/ui"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/cmd/opscontrol"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/config"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/migrate"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/platform"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/starprompt"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -26,7 +26,7 @@ var resetFlag bool
 
 var onboardCmd = &cobra.Command{
 	Use:   "onboard",
-	Short: "Configure Decepticon (auth methods, model profile, observability)",
+	Short: "Configure Aegiscore (auth methods, model profile, observability)",
 	RunE:  runOnboard,
 }
 
@@ -39,7 +39,7 @@ func init() {
 // `claude setup-token` (mint a long-lived 1-year OAuth token for headless use).
 const claudeSetupTokenDocsURL = "https://code.claude.com/docs/en/authentication"
 
-// AuthMethod identifiers — must match decepticon/llm/models.py::AuthMethod.
+// AuthMethod identifiers — must match aegiscore/llm/models.py::AuthMethod.
 const (
 	methodAnthropicOAuth  = "anthropic_oauth"
 	methodAnthropicAPI    = "anthropic_api"
@@ -83,7 +83,7 @@ const (
 
 // Default Ollama wiring shown to OSS users. `host.docker.internal`
 // is the universal answer regardless of where Ollama runs (macOS host,
-// WSL2 distro, native Linux): from inside Decepticon's containers it
+// WSL2 distro, native Linux): from inside Aegiscore's containers it
 // resolves to the host network namespace via the
 // `extra_hosts: [host.docker.internal:host-gateway]` entry on the
 // litellm service in docker-compose.yml. `localhost` is never the
@@ -175,7 +175,7 @@ func systemCheckGroup(sys platform.SystemInfo) *huh.Group {
 	b.WriteString("Docker   " + docker + "\n\n")
 
 	if sys.Ready() {
-		b.WriteString("This system is ready to run Decepticon.")
+		b.WriteString("This system is ready to run Aegiscore.")
 	} else {
 		b.WriteString(sys.DockerHint() + "\n")
 		b.WriteString("You can still configure credentials now and sort out Docker before launching.")
@@ -191,7 +191,7 @@ func systemCheckGroup(sys platform.SystemInfo) *huh.Group {
 func runOnboard(cmd *cobra.Command, args []string) error {
 	if config.EnvExists() && !resetFlag {
 		ui.Info(".env already configured at " + config.EnvPath())
-		ui.DimText("Run 'decepticon onboard --reset' to reconfigure")
+		ui.DimText("Run 'aegiscore onboard --reset' to reconfigure")
 		return nil
 	}
 
@@ -282,7 +282,7 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 		// Intro
 		huh.NewGroup(
 			huh.NewNote().
-				Title("Decepticon Setup").
+				Title("Aegiscore Setup").
 				Description("Configure auth methods, model profile, and\nobservability.\n\nUse ↑↓ to navigate, space to toggle, Enter to confirm."),
 		),
 
@@ -532,7 +532,7 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 		huh.NewGroup(
 			huh.NewNote().
 				Title("Local Ollama").
-				Description("Ollama must already be running on your host with\nat least one tool-capable model pulled. Launch it\nbound to all interfaces so the Decepticon container\ncan reach it:\n\n  OLLAMA_HOST=0.0.0.0:11434 ollama serve\n\nThe default 127.0.0.1 binding only accepts host-side\nconnections — containers won't see it.\n\nThe default URL `host.docker.internal:11434` works\non macOS, Linux, and WSL2 (with or without Docker\nDesktop). Only change it for remote / custom setups.\nNote: the model list is probed against the default URL\nat wizard start; if you customize OLLAMA_API_BASE,\nfinish the wizard then re-run 'decepticon onboard\n--reset' so the probe targets the new endpoint."),
+				Description("Ollama must already be running on your host with\nat least one tool-capable model pulled. Launch it\nbound to all interfaces so the Aegiscore container\ncan reach it:\n\n  OLLAMA_HOST=0.0.0.0:11434 ollama serve\n\nThe default 127.0.0.1 binding only accepts host-side\nconnections — containers won't see it.\n\nThe default URL `host.docker.internal:11434` works\non macOS, Linux, and WSL2 (with or without Docker\nDesktop). Only change it for remote / custom setups.\nNote: the model list is probed against the default URL\nat wizard start; if you customize OLLAMA_API_BASE,\nfinish the wizard then re-run 'aegiscore onboard\n--reset' so the probe targets the new endpoint."),
 			huh.NewInput().
 				Title("OLLAMA_API_BASE").
 				Placeholder(defaultOllamaAPIBase).
@@ -854,7 +854,7 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 			huh.NewConfirm().
 				Title("Share anonymous + masked red-team telemetry?").
 				Description(
-					"Decepticon is free/OSS — sharing usage helps fund and improve it,\n"+
+					"Aegiscore is free/OSS — sharing usage helps fund and improve it,\n"+
 						"and contributes masked red-team reasoning to train future open\n"+
 						"offensive-security agents.\n\n"+
 						"  • anonymous structural stats (tools used, finding severity/CWE,\n"+
@@ -863,7 +863,7 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 						"    (10.0.0.5 -> <HOST_1>, acme.com -> <DOMAIN_1>)\n\n"+
 						"Never sent: raw prompts, real target IPs/hosts, credentials. Your\n"+
 						"IP is dropped at the gateway. Change anytime: DECEPTICON_TELEMETRY=off\n"+
-						"(or basic) in .env, `decepticon-cli telemetry off`, or DO_NOT_TRACK=1.",
+						"(or basic) in .env, `aegiscore-cli telemetry off`, or DO_NOT_TRACK=1.",
 				).
 				Affirmative("Yes, share (recommended)").
 				Negative("No, keep it off").
@@ -1029,7 +1029,7 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 	if useLangSmith && langSmithKey != "" {
 		values["LANGSMITH_TRACING"] = "true"
 		values["LANGSMITH_API_KEY"] = langSmithKey
-		values["LANGSMITH_PROJECT"] = "decepticon"
+		values["LANGSMITH_PROJECT"] = "aegiscore"
 	}
 
 	// Anonymous usage telemetry consent. Only sends when a gateway endpoint is
@@ -1071,7 +1071,7 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 	// — re-running onboard re-templates the unit so a launcher
 	// upgrade picks up the new ExecStart path. On hosts without
 	// systemd-user / launchd this is a no-op announcement, and the
-	// launcher's spawn fallback takes over at `decepticon start`.
+	// launcher's spawn fallback takes over at `aegiscore start`.
 	fmt.Println()
 	if err := opscontrol.EnsureInstalled(); err != nil {
 		// Non-fatal: onboarding can complete without managed-service
@@ -1082,11 +1082,11 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 
 	// One-time GitHub star ask — the natural post-onboarding moment.
 	// Suppressed on subsequent runs by the ack file at
-	// $DECEPTICON_HOME/.starred, so a re-run of `decepticon onboard
+	// $DECEPTICON_HOME/.starred, so a re-run of `aegiscore onboard
 	// --reset` does not re-prompt.
 	starprompt.PromptIfNotStarred()
 
-	ui.DimText("  Run 'decepticon' to start the platform")
+	ui.DimText("  Run 'aegiscore' to start the platform")
 	return nil
 }
 
@@ -1138,7 +1138,7 @@ func buildOllamaModelField(probe ollamaProbeResult, selected *string) huh.Field 
 		}
 		return huh.NewSelect[string]().
 			Title("OLLAMA_MODEL").
-			Description("Tool-capable models found on your host. Decepticon\nagents always emit tool calls — these are the only\nmodels the wizard will accept.").
+			Description("Tool-capable models found on your host. Aegiscore\nagents always emit tool calls — these are the only\nmodels the wizard will accept.").
 			Options(options...).
 			Value(selected)
 	}
@@ -1146,12 +1146,12 @@ func buildOllamaModelField(probe ollamaProbeResult, selected *string) huh.Field 
 	if probe.Reachable {
 		return huh.NewNote().
 			Title("OLLAMA_MODEL — no tool-capable models found").
-			Description("Ollama is reachable but none of your pulled models\nadvertise the 'tools' capability. Decepticon agents\nalways emit tool calls, so a model without tool\nsupport cannot power them.\n\n  ollama pull qwen3-coder:30b\n  ollama show qwen3-coder:30b   # capabilities should list 'tools'\n\nThen press Esc and re-run 'decepticon onboard'.")
+			Description("Ollama is reachable but none of your pulled models\nadvertise the 'tools' capability. Aegiscore agents\nalways emit tool calls, so a model without tool\nsupport cannot power them.\n\n  ollama pull qwen3-coder:30b\n  ollama show qwen3-coder:30b   # capabilities should list 'tools'\n\nThen press Esc and re-run 'aegiscore onboard'.")
 	}
 
 	return huh.NewNote().
 		Title("OLLAMA_MODEL — Ollama not reachable").
-		Description("Could not reach Ollama at " + defaultOllamaAPIBase + ".\n\nMost likely Ollama isn't running or is bound to\n127.0.0.1 only (which the Decepticon container can't\nsee). Launch it on all interfaces, pull a tool-capable\nmodel, then re-run the wizard:\n\n  OLLAMA_HOST=0.0.0.0:11434 ollama serve\n  ollama pull qwen3-coder:30b\n  ollama show qwen3-coder:30b   # capabilities should list 'tools'\n\nThen press Esc and re-run 'decepticon onboard'.")
+		Description("Could not reach Ollama at " + defaultOllamaAPIBase + ".\n\nMost likely Ollama isn't running or is bound to\n127.0.0.1 only (which the Aegiscore container can't\nsee). Launch it on all interfaces, pull a tool-capable\nmodel, then re-run the wizard:\n\n  OLLAMA_HOST=0.0.0.0:11434 ollama serve\n  ollama pull qwen3-coder:30b\n  ollama show qwen3-coder:30b   # capabilities should list 'tools'\n\nThen press Esc and re-run 'aegiscore onboard'.")
 }
 
 // ollamaUnusableError surfaces the post-form remediation when the user
@@ -1161,11 +1161,11 @@ func ollamaUnusableError(probe ollamaProbeResult, baseURL string) error {
 	if probe.Reachable {
 		return fmt.Errorf(
 			"Ollama selected but no tool-capable models found on the host.\n" +
-				"Decepticon agents always emit tool calls — pull a tool-capable\n" +
+				"Aegiscore agents always emit tool calls — pull a tool-capable\n" +
 				"model and verify it advertises tools, then re-run:\n\n" +
 				"  ollama pull qwen3-coder:30b\n" +
 				"  ollama show qwen3-coder:30b   # capabilities should list 'tools'\n" +
-				"  decepticon onboard --reset")
+				"  aegiscore onboard --reset")
 	}
 	return fmt.Errorf(
 		"Ollama selected but the host probe could not reach %s.\n"+
@@ -1175,6 +1175,6 @@ func ollamaUnusableError(probe ollamaProbeResult, baseURL string) error {
 			"  OLLAMA_HOST=0.0.0.0:11434 ollama serve\n"+
 			"  ollama pull qwen3-coder:30b\n"+
 			"  ollama show qwen3-coder:30b   # capabilities should list 'tools'\n"+
-			"  decepticon onboard --reset",
+			"  aegiscore onboard --reset",
 		baseURL)
 }

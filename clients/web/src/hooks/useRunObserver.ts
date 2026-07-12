@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * useRunObserver — real-time observation of LangGraph runs via @decepticon/streaming.
+ * useRunObserver — real-time observation of LangGraph runs via @aegiscore/streaming.
  *
  * Uses the shared streaming library (same as CLI) to process LangGraph events.
  * No custom parsing — SubagentCustomEvent is the canonical event type.
@@ -11,14 +11,14 @@
  *                                                                        ↓
  *   CLI ──submit──→ LangGraph Server ←──joinStream──── useRunObserver(threadId)
  *                                                           ↓
- *                                              @decepticon/streaming (shared)
+ *                                              @aegiscore/streaming (shared)
  *                                                    ↓              ↓
  *                                              CLI (Ink UI)    Web (Canvas Graph)
  */
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Client } from "@langchain/langgraph-sdk";
-import { type SubagentCustomEvent, STREAM_OPTIONS } from "@decepticon/streaming";
+import { type SubagentCustomEvent, STREAM_OPTIONS } from "@aegiscore/streaming";
 
 const POLL_INTERVAL = 2000;
 
@@ -127,7 +127,7 @@ export function useRunObserver({ threadId }: UseRunObserverOptions): UseRunObser
             setEvents([...eventsRef.current]);
           }
         } else if (event.event === "values") {
-          // Extract orchestrator (decepticon) tool calls from message history
+          // Extract orchestrator (aegiscore) tool calls from message history
           const data = event.data as { messages?: Array<{
             type: string;
             name?: string;
@@ -143,12 +143,12 @@ export function useRunObserver({ threadId }: UseRunObserverOptions): UseRunObser
                 if (tc.name === "task") continue; // Sub-agent delegation — handled by custom events
                 // Key by position too, so parallel calls to the same tool in one
                 // message are not collapsed into a single event.
-                const key = `decepticon-${tc.name}-${i}-${data.messages.length}`;
+                const key = `aegiscore-${tc.name}-${i}-${data.messages.length}`;
                 if (!seenToolCalls.has(key)) {
                   seenToolCalls.add(key);
                   newEvents.push({
                     type: "subagent_tool_call",
-                    agent: "decepticon",
+                    agent: "aegiscore",
                     tool: tc.name,
                     args: tc.args,
                   });
@@ -156,12 +156,12 @@ export function useRunObserver({ threadId }: UseRunObserverOptions): UseRunObser
               }
             } else if (lastMsg?.type === "tool" && lastMsg.name) {
               if (lastMsg.name !== "task") {
-                const key = `decepticon-${lastMsg.name}-result-${data.messages.length}`;
+                const key = `aegiscore-${lastMsg.name}-result-${data.messages.length}`;
                 if (!seenToolCalls.has(key)) {
                   seenToolCalls.add(key);
                   newEvents.push({
                     type: "subagent_tool_result",
-                    agent: "decepticon",
+                    agent: "aegiscore",
                     tool: lastMsg.name,
                   });
                 }

@@ -8,12 +8,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/config"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/opscontrol"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/runtime"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/config"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/opscontrol"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/runtime"
 )
 
-// Compose wraps Docker Compose commands for Decepticon services.
+// Compose wraps Docker Compose commands for Aegiscore services.
 type Compose struct {
 	Home        string
 	ComposeFile string
@@ -24,7 +24,7 @@ type Compose struct {
 	Runtime runtime.Runtime
 }
 
-// New creates a Compose instance using the Decepticon home directory.
+// New creates a Compose instance using the Aegiscore home directory.
 // The container runtime is detected at construction time so every
 // subsequent call uses the same binary. Falls back to "docker" if no
 // runtime is reachable so existing tests and dev workflows that don't
@@ -49,7 +49,7 @@ func New() *Compose {
 
 // Profiles defines the Docker Compose profile names this launcher
 // recognizes. The shipped catalog (cli + every specialist workload)
-// is the union — `cli` is always activated by `decepticon start`;
+// is the union — `cli` is always activated by `aegiscore start`;
 // the specialist workloads come up on demand through ADR-0006's
 // opscontrol daemon. The launcher keeps the names here as constants
 // only so `down` / `stop` can sweep every container regardless of
@@ -125,19 +125,19 @@ func fileExists(path string) bool {
 	return err == nil
 }
 
-// ContainerName builds the docker container name for a Decepticon
+// ContainerName builds the docker container name for a Aegiscore
 // service, mirroring the “${DECEPTICON_STACK_NAME:+-${DECEPTICON_STACK_NAME}}“
 // template used by docker-compose.yml (#216). Unset/empty → today's
-// “decepticon-<svc>“ name verbatim; “stack2“ → “decepticon-stack2-<svc>“.
+// “aegiscore-<svc>“ name verbatim; “stack2“ → “aegiscore-stack2-<svc>“.
 // Keeps the Go launcher and YAML naming convention in lockstep so
 // “docker exec“/“logs“/“stop“ resolve the right container in
 // dual-stack runs.
 func ContainerName(svc string) string {
 	stack := strings.TrimSpace(os.Getenv("DECEPTICON_STACK_NAME"))
 	if stack == "" {
-		return "decepticon-" + svc
+		return "aegiscore-" + svc
 	}
-	return "decepticon-" + stack + "-" + svc
+	return "aegiscore-" + stack + "-" + svc
 }
 
 // readVersion returns the installed version from $DECEPTICON_HOME/.version,
@@ -231,7 +231,7 @@ func (c *Compose) Down() error {
 }
 
 // DownAndPurge tears down containers, networks, and named volumes. Used by
-// `decepticon remove` so a full uninstall doesn't leave gigabytes of
+// `aegiscore remove` so a full uninstall doesn't leave gigabytes of
 // postgres/neo4j data behind.
 func (c *Compose) DownAndPurge() error {
 	args := AllProfiles()
@@ -341,9 +341,9 @@ func (c *Compose) RemoveOrphanedCLI() {
 	// so we don't accidentally match unrelated containers. Use the detected
 	// runtime binary (docker / podman / nerdctl) and its env.
 	stack := strings.TrimSpace(os.Getenv("DECEPTICON_STACK_NAME"))
-	prefix := "decepticon"
+	prefix := "aegiscore"
 	if stack != "" {
-		prefix = "decepticon-" + stack
+		prefix = "aegiscore-" + stack
 	}
 	ps := exec.Command(c.Runtime.Bin, "ps", "-aq", "--filter", fmt.Sprintf("name=^%s-cli", prefix))
 	ps.Env = c.composeEnv()

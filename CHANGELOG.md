@@ -621,7 +621,7 @@ core/framework/sdk split design spec.
     `PluginConflictWarning` + `RoleResolution` introspection types.
 - **`aegiscore-sdk`** (new) — single-import surface for plugin
   authors. Re-exports 23 stable symbols from `aegiscore-core`. Ships
-  `decepticon_sdk.testing` (`FakeBackend` / `FakeLLM` / `FakeSandbox`
+  `aegiscore_sdk.testing` (`FakeBackend` / `FakeLLM` / `FakeSandbox`
   that satisfy their respective `Protocol`s at runtime) and a
   `aegiscore-sdk plugin new` scaffolder covering six plugin kinds
   (tool / middleware / agent / callback / skill / prompt).
@@ -685,7 +685,7 @@ core/framework/sdk split design spec.
   (`[tool.uv] package = false`). Workspace members live under
   `packages/*`. Run `uv sync` from the workspace root to install all
   three packages in lockstep.
-- Framework imports rewritten to consume `decepticon_core.*` directly
+- Framework imports rewritten to consume `aegiscore_core.*` directly
   (71 files). Legacy import paths keep working via thin re-export
   shims for one release; see migration guide.
 - `containers/langgraph.Dockerfile` switches to `uv sync --no-dev
@@ -701,13 +701,13 @@ The following legacy import paths keep working but emit a
 
 | Legacy path | Canonical path |
 |-------------|----------------|
-| `aegiscore.core.schemas` | `decepticon_core.types.engagement` |
-| `aegiscore.llm.models` | `decepticon_core.types.llm` |
-| `aegiscore.tools.research.graph` | `decepticon_core.types.kg` |
-| `aegiscore.plugin_loader` | `decepticon_core.plugin_loader` |
-| `aegiscore.core.config` | `decepticon_core.utils.config` |
-| `aegiscore.core.logging` | `decepticon_core.utils.logging` |
-| `aegiscore.agents.middleware_slots.{MiddlewareSlot, SLOTS_PER_ROLE, SAFETY_CRITICAL_SLOTS}` | `decepticon_core.contracts.slots.*` |
+| `aegiscore.core.schemas` | `aegiscore_core.types.engagement` |
+| `aegiscore.llm.models` | `aegiscore_core.types.llm` |
+| `aegiscore.tools.research.graph` | `aegiscore_core.types.kg` |
+| `aegiscore.plugin_loader` | `aegiscore_core.plugin_loader` |
+| `aegiscore.core.config` | `aegiscore_core.utils.config` |
+| `aegiscore.core.logging` | `aegiscore_core.utils.logging` |
+| `aegiscore.agents.middleware_slots.{MiddlewareSlot, SLOTS_PER_ROLE, SAFETY_CRITICAL_SLOTS}` | `aegiscore_core.contracts.slots.*` |
 
 ### Notes
 

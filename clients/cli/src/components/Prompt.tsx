@@ -13,7 +13,7 @@ interface PromptProps {
   onSubmit: (input: string) => void;
   /** Currently active agent name, e.g. "recon". null when idle. */
   activeAgent?: string | null;
-  /** Persistent assistant id ("soundwave" | "decepticon") — shown when no subagent is streaming. */
+  /** Persistent assistant id ("soundwave" | "aegiscore") — shown when no subagent is streaming. */
   assistantId?: string;
   /** Queued message waiting to be sent after stream completes. */
   queuedMessage?: string | null;
@@ -23,10 +23,10 @@ interface PromptProps {
 
 const DEBOUNCE_MS = 150;
 
-/** Compact status line: [Decepticon#1.0.0 | ActiveAgent].
+/** Compact status line: [Aegiscore#1.0.0 | ActiveAgent].
  *
  * Shows the streaming subagent (red, blinking) when one is active, otherwise
- * falls back to the persistent assistant id (Soundwave / Decepticon).
+ * falls back to the persistent assistant id (Soundwave / Aegiscore).
  */
 const StatusLine = React.memo(function StatusLine({
   activeAgent,
@@ -43,7 +43,7 @@ const StatusLine = React.memo(function StatusLine({
   return (
     <Text>
       <Text dimColor>{"["}</Text>
-      <Text dimColor>{`Decepticon#${CLI_VERSION}`}</Text>
+      <Text dimColor>{`Aegiscore#${CLI_VERSION}`}</Text>
       <Text dimColor>{" | "}</Text>
       {activeAgent ? (
         <Text color="#ef4444" bold={bright} dimColor={!bright}>
@@ -88,7 +88,7 @@ export const Prompt = React.memo(function Prompt({
   runState,
   onSubmit,
   activeAgent = null,
-  assistantId = "decepticon",
+  assistantId = "aegiscore",
   queuedMessage = null,
   onEditQueue,
 }: PromptProps) {

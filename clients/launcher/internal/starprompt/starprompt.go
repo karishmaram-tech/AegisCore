@@ -26,22 +26,22 @@ import (
 	"charm.land/huh/v2"
 	"golang.org/x/term"
 
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/config"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/ui"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/config"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/ui"
 )
 
 const (
 	// AckFileName is the zero-byte sentinel inside DECEPTICON_HOME.
 	// Presence alone is the signal — contents are intentionally empty
 	// so an operator can suppress the prompt forever with
-	// `touch ~/.decepticon/.starred` and re-enable it with `rm` of the
+	// `touch ~/.aegiscore/.starred` and re-enable it with `rm` of the
 	// same path.
 	AckFileName = ".starred"
 
 	// RepoSlug is the canonical "owner/repo" used for every gh API
 	// call and the browser URL. Hardcoded — no scenario justifies
 	// targeting a different repository.
-	RepoSlug = "PurpleAILAB/Decepticon"
+	RepoSlug = "karishmaram-tech/AegisCore"
 	RepoURL  = "https://github.com/" + RepoSlug
 )
 
@@ -97,7 +97,7 @@ func PromptIfNotStarred() {
 
 func promptViaGh(ackPath string) {
 	confirmed := confirmFn(
-		"★ Star Decepticon on GitHub?",
+		"★ Star Aegiscore on GitHub?",
 		"Detected gh CLI — we can star the repo in-place.\n"+RepoURL,
 		"Yes, star now",
 		"Skip",
@@ -122,7 +122,7 @@ func promptViaGh(ackPath string) {
 
 func promptViaBrowser(ackPath string) {
 	confirmed := confirmFn(
-		"★ Star Decepticon on GitHub?",
+		"★ Star Aegiscore on GitHub?",
 		"Opens "+RepoURL+" in your browser.",
 		"Yes, open",
 		"Skip",

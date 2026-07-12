@@ -49,7 +49,7 @@ Plugin contracts come from `aegiscore-core` (or via the
 `aegiscore-sdk` re-export):
 
 ```python
-from decepticon_sdk import (
+from aegiscore_sdk import (
     BackendProtocol, MiddlewareProtocol, ToolProtocol,
     PluginBundle, SubAgentSpec,
     RoleRegistry, PluginRegistry,
@@ -89,7 +89,7 @@ For fine-grained slot replacement (without rewriting the full
 stack), use a `PluginBundle`:
 
 ```python
-from decepticon_sdk import PluginBundle
+from aegiscore_sdk import PluginBundle
 
 
 VENDOR_OVERLAY = PluginBundle(
@@ -136,7 +136,7 @@ Add a new agent role to the framework's catalog. The LLM factory
 and middleware assembler will see it as first-class:
 
 ```python
-from decepticon_sdk import RoleRegistry, MiddlewareSlot
+from aegiscore_sdk import RoleRegistry, MiddlewareSlot
 
 RoleRegistry.register(
     "apt",
@@ -162,7 +162,7 @@ snapshot — hashable, cacheable, suitable as an audit record key per
 run ID:
 
 ```python
-from decepticon_sdk import PluginRegistry
+from aegiscore_sdk import PluginRegistry
 
 reg = PluginRegistry.load()
 

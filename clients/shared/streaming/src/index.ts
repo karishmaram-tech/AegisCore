@@ -1,5 +1,5 @@
 /**
- * @decepticon/streaming — Shared LangGraph streaming infrastructure.
+ * @aegiscore/streaming — Shared LangGraph streaming infrastructure.
  *
  * Provides the canonical event types, stream configuration, and utility
  * functions used by both the Web dashboard and CLI clients.

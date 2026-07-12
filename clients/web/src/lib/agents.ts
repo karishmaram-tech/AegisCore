@@ -58,12 +58,12 @@ export const KILL_CHAIN_PHASES: KillChainPhase[] = [
 // ── Display config (frontend-only visual metadata) ──
 
 export const AGENT_DISPLAY_CONFIG: Record<string, AgentDisplayMeta> = {
-  decepticon: {
-    name: "Decepticon",
+  aegiscore: {
+    name: "Aegiscore",
     description: "Main orchestrator — commands the full kill chain",
     role: "Orchestrator",
     color: "#ef4444",
-    imagePath: "/agents/decepticon.png",
+    imagePath: "/agents/aegiscore.png",
   },
   soundwave: {
     name: "Soundwave",

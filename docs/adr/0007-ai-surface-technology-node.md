@@ -22,7 +22,7 @@ versioned products that CVE cross-referencing assumes as input). Both clusters w
 first-class graph node representing "a named piece of technology running on / behind a service," with a
 category and a detection provenance.
 
-KG node kinds live in `packages/aegiscore-core/decepticon_core/types/kg.py` and are part of the
+KG node kinds live in `packages/aegiscore-core/aegiscore_core/types/kg.py` and are part of the
 public type surface (exercised by `packages/aegiscore-core/tests/test_public_api_stability.py` and
 `packages/aegiscore-core/tests/test_kg_detection_types.py`). Adding one is a deliberate schema
 decision, not an incidental change —

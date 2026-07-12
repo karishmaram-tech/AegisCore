@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * Terminal WebSocket Server — spawns Decepticon CLI in a PTY.
+ * Terminal WebSocket Server — spawns Aegiscore CLI in a PTY.
  *
  * Session-persistent architecture:
  *   PTY processes are keyed by engagement slug and survive WebSocket
  *   disconnects. When the browser reconnects (tab refresh, network blip,
  *   hotswap), it reattaches to the SAME PTY — no new CLI banner, no lost
  *   state, no [Reconnecting...] spam. The key omits the agent id on purpose:
- *   the CLI flips soundwave -> decepticon in-process on engagement_ready, so
+ *   the CLI flips soundwave -> aegiscore in-process on engagement_ready, so
  *   a later connect computing a different agent must still find the live PTY.
  *
  *   PTYs are only destroyed when:

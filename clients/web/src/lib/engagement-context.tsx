@@ -1,12 +1,12 @@
 "use client";
 
 import { createContext, useContext, type ReactNode } from "react";
-import type { SubagentCustomEvent } from "@decepticon/streaming";
+import type { SubagentCustomEvent } from "@aegiscore/streaming";
 
 interface EngagementContextValue {
   engagementId: string;
   engagementSlug: string;
-  agentId: "soundwave" | "decepticon";
+  agentId: "soundwave" | "aegiscore";
   threadId: string | null;
   setThreadId: (id: string) => void;
   events: SubagentCustomEvent[];
@@ -26,7 +26,7 @@ interface EngagementProviderProps {
   children: ReactNode;
   engagementId: string;
   engagementSlug: string;
-  agentId: "soundwave" | "decepticon";
+  agentId: "soundwave" | "aegiscore";
   threadId: string | null;
   setThreadId: (id: string) => void;
   events: SubagentCustomEvent[];

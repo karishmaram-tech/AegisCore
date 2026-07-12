@@ -5,7 +5,7 @@ import type { Command, CommandContext } from "./types.js";
  * `/web` slash command — start, stop, or print the URL of the web dashboard.
  *
  * v1.1.8 dynamic-spawn model: the `web` compose service is gated behind
- * `profiles: [web]` so `decepticon start` no longer brings the dashboard
+ * `profiles: [web]` so `aegiscore start` no longer brings the dashboard
  * up by default. This command runs `docker compose --profile web up -d
  * web` against the host docker daemon (the CLI container has docker.sock
  * + the compose project bind-mounted, see docker-compose.yml `cli:`).
@@ -47,11 +47,11 @@ function printURL(context: CommandContext): void {
 }
 
 function composeArgs(): string[] {
-  const project = process.env["DECEPTICON_COMPOSE_PROJECT"] ?? "decepticon";
+  const project = process.env["DECEPTICON_COMPOSE_PROJECT"] ?? "aegiscore";
   const composeFile =
-    process.env["DECEPTICON_COMPOSE_FILE"] ?? "/decepticon-home/docker-compose.yml";
+    process.env["DECEPTICON_COMPOSE_FILE"] ?? "/aegiscore-home/docker-compose.yml";
   const envFile =
-    process.env["DECEPTICON_COMPOSE_ENV_FILE"] ?? "/decepticon-home/.env";
+    process.env["DECEPTICON_COMPOSE_ENV_FILE"] ?? "/aegiscore-home/.env";
   return ["compose", "-p", project, "-f", composeFile, "--env-file", envFile];
 }
 

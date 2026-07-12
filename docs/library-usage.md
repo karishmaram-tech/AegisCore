@@ -299,7 +299,7 @@ to honor the original semantics.
 | Import | Purpose |
 |--------|---------|
 | `aegiscore.agents.standard.*`, `aegiscore.agents.plugins.*` | Pre-built per-role agent factories |
-| `decepticon_core.contracts.slots` | `MiddlewareSlot` enum, `SLOTS_PER_ROLE`, `DEFAULT_SLOT_FACTORIES` |
+| `aegiscore_core.contracts.slots` | `MiddlewareSlot` enum, `SLOTS_PER_ROLE`, `DEFAULT_SLOT_FACTORIES` |
 | `aegiscore.agents.build` | `build_middleware`, `build_tools`, `resolve_prompt_overrides`, `SafetyOverrideViolation` |
 | `aegiscore.agents.prompts` | `load_prompt`, `PromptBuilder` |
 | `aegiscore.middleware` | `SkillsMiddleware`, `FilesystemMiddleware`, `EngagementContextMiddleware`, `OPPLANMiddleware`, `SandboxNotificationMiddleware`, `OpsControlNotificationMiddleware`, `KGMiddleware`, `SkillogyMiddleware`, … |
@@ -309,11 +309,11 @@ to honor the original semantics.
 | `aegiscore.tools.ops` | `ops_start`, `ops_stop`, `ops_status` (orchestrator-only, ADR-0006) |
 | `aegiscore.backends` | `HTTPSandbox`, `build_sandbox_backend`, `make_agent_backend` |
 | `aegiscore.llm` | `LLMFactory` |
-| `decepticon_core.types.engagement` | `RoE`, `CONOPS`, `DeconflictionPlan`, `OPPLAN`, `ThreatProfile`, `CleanupPlan`, `AbortPlan`, `ContactPlan`, `DataHandlingPlan` |
-| `decepticon_core.types.kg` | `KnowledgeGraph`, `Node`, `Edge`, `EdgeKind` |
-| `decepticon_core.plugin_loader` | `PluginBundle`, `SubAgentSpec`, `is_bundle_enabled`, `load_plugin_*` |
+| `aegiscore_core.types.engagement` | `RoE`, `CONOPS`, `DeconflictionPlan`, `OPPLAN`, `ThreatProfile`, `CleanupPlan`, `AbortPlan`, `ContactPlan`, `DataHandlingPlan` |
+| `aegiscore_core.types.kg` | `KnowledgeGraph`, `Node`, `Edge`, `EdgeKind` |
+| `aegiscore_core.plugin_loader` | `PluginBundle`, `SubAgentSpec`, `is_bundle_enabled`, `load_plugin_*` |
 
-The schema / contract types live in **`aegiscore-core`** (the contracts package); the framework re-exports them via the compat shim in `aegiscore/__init__.py` for one minor cycle (`aegiscore.core.schemas`, `aegiscore.plugin_loader`, `aegiscore.agents.middleware_slots`). New code should import from `decepticon_core.*` directly.
+The schema / contract types live in **`aegiscore-core`** (the contracts package); the framework re-exports them via the compat shim in `aegiscore/__init__.py` for one minor cycle (`aegiscore.core.schemas`, `aegiscore.plugin_loader`, `aegiscore.agents.middleware_slots`). New code should import from `aegiscore_core.*` directly.
 
 ---
 

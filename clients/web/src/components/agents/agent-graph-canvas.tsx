@@ -4,7 +4,7 @@
  * AgentGraphCanvas — force-directed graph visualization of agent execution.
  *
  * Replaces the 3D model panel in the Live page. Shows all agents as nodes
- * in a physics-based layout with the orchestrator (Decepticon) at center.
+ * in a physics-based layout with the orchestrator (Aegiscore) at center.
  * Active agents glow and edges animate with flowing dots.
  *
  * Includes:
@@ -16,7 +16,7 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { Maximize2 } from "lucide-react";
 import type { AgentConfig } from "@/lib/agents";
-import type { SubagentCustomEvent } from "@decepticon/streaming";
+import type { SubagentCustomEvent } from "@aegiscore/streaming";
 import type { GraphNode } from "@/lib/graph/types";
 import { isWaitingState } from "@/lib/graph/types";
 import { useForceSimulation } from "@/hooks/useForceSimulation";

@@ -37,13 +37,13 @@ jobs:
         run: |
           set -euo pipefail
           images=(
-            decepticon-litellm
-            decepticon-langgraph
-            decepticon-sandbox
-            decepticon-cli
-            decepticon-skillogy
-            decepticon-c2-sliver
-            decepticon-web
+            aegiscore-litellm
+            aegiscore-langgraph
+            aegiscore-sandbox
+            aegiscore-cli
+            aegiscore-skillogy
+            aegiscore-c2-sliver
+            aegiscore-web
           )
           for img in "${images[@]}"; do
             ref="ghcr.io/purpleailab/${img}:${VERSION}"
@@ -58,13 +58,13 @@ jobs:
         run: |
           set -euo pipefail
           images=(
-            decepticon-litellm
-            decepticon-langgraph
-            decepticon-sandbox
-            decepticon-cli
-            decepticon-skillogy
-            decepticon-c2-sliver
-            decepticon-web
+            aegiscore-litellm
+            aegiscore-langgraph
+            aegiscore-sandbox
+            aegiscore-cli
+            aegiscore-skillogy
+            aegiscore-c2-sliver
+            aegiscore-web
           )
           for img in "${images[@]}"; do
             src="ghcr.io/purpleailab/${img}:${VERSION}"

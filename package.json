@@ -1,5 +1,5 @@
 {
-  "name": "decepticon",
+  "name": "aegiscore",
   "private": true,
   "workspaces": [
     "clients/*",

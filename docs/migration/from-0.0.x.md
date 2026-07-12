@@ -46,15 +46,15 @@ Opt out of the warning with `DECEPTICON_NO_COMPAT=1` in the environment.
 
 | Legacy path | Canonical path |
 |-------------|----------------|
-| `aegiscore.core.schemas` | `decepticon_core.types.engagement` |
-| `aegiscore.llm.models` | `decepticon_core.types.llm` |
-| `aegiscore.tools.research.graph` | `decepticon_core.types.kg` |
-| `aegiscore.plugin_loader` | `decepticon_core.plugin_loader` |
-| `aegiscore.core.config` | `decepticon_core.utils.config` |
-| `aegiscore.core.logging` | `decepticon_core.utils.logging` |
-| `aegiscore.agents.middleware_slots.MiddlewareSlot` | `decepticon_core.contracts.slots.MiddlewareSlot` |
-| `aegiscore.agents.middleware_slots.SAFETY_CRITICAL_SLOTS` | `decepticon_core.contracts.slots.SAFETY_CRITICAL_SLOTS` |
-| `aegiscore.agents.middleware_slots.SLOTS_PER_ROLE` | `decepticon_core.contracts.slots.SLOTS_PER_ROLE` |
+| `aegiscore.core.schemas` | `aegiscore_core.types.engagement` |
+| `aegiscore.llm.models` | `aegiscore_core.types.llm` |
+| `aegiscore.tools.research.graph` | `aegiscore_core.types.kg` |
+| `aegiscore.plugin_loader` | `aegiscore_core.plugin_loader` |
+| `aegiscore.core.config` | `aegiscore_core.utils.config` |
+| `aegiscore.core.logging` | `aegiscore_core.utils.logging` |
+| `aegiscore.agents.middleware_slots.MiddlewareSlot` | `aegiscore_core.contracts.slots.MiddlewareSlot` |
+| `aegiscore.agents.middleware_slots.SAFETY_CRITICAL_SLOTS` | `aegiscore_core.contracts.slots.SAFETY_CRITICAL_SLOTS` |
+| `aegiscore.agents.middleware_slots.SLOTS_PER_ROLE` | `aegiscore_core.contracts.slots.SLOTS_PER_ROLE` |
 
 The framework's `aegiscore.agents.middleware_slots` module keeps the
 `DEFAULT_SLOT_FACTORIES` and `skills_sources_for()` exports (those
@@ -64,13 +64,13 @@ The shims are **removed at `2.0.0`** — migrate before then.
 
 ## New public surface for plugin authors
 
-Plugin authors should import from `decepticon_sdk`:
+Plugin authors should import from `aegiscore_sdk`:
 
 ```python
 # One import covers protocols, contributions, registries, plugin
 # loader contracts, and slot definitions. Spec §6.3 — the "single
 # import line" promise of the SDK package.
-from decepticon_sdk import (
+from aegiscore_sdk import (
     # Runtime-checkable protocols
     BackendProtocol, MiddlewareProtocol, ToolProtocol,
     CallbackProtocol, LLMProtocol, SandboxProtocol, AgentProtocol,
@@ -90,10 +90,10 @@ from decepticon_sdk import (
 )
 ```
 
-Test fakes live under `decepticon_sdk.testing`:
+Test fakes live under `aegiscore_sdk.testing`:
 
 ```python
-from decepticon_sdk.testing import FakeBackend, FakeLLM, FakeSandbox
+from aegiscore_sdk.testing import FakeBackend, FakeLLM, FakeSandbox
 
 backend = FakeBackend({"/skills/recon/index.md": "..."})
 llm = FakeLLM(responses=["mocked output"])
@@ -130,7 +130,7 @@ and LLM factory see them as first-class. Idempotent on identical
 parameters; multi-process workers all succeed silently.
 
 ```python
-from decepticon_sdk import RoleRegistry, MiddlewareSlot
+from aegiscore_sdk import RoleRegistry, MiddlewareSlot
 
 RoleRegistry.register(
     "apt",
@@ -151,7 +151,7 @@ Read-only audit-log primitive. Returns a `RoleResolution` frozen
 dataclass (hashable + cacheable on run ID per spec §16.4 #1).
 
 ```python
-from decepticon_sdk import PluginRegistry
+from aegiscore_sdk import PluginRegistry
 
 reg = PluginRegistry.load()
 for plugin in reg.list_plugins():
@@ -170,7 +170,7 @@ their own tools / middleware safety-critical, but cannot remove
 safety on OSS names.
 
 ```python
-from decepticon_sdk import SafetyDeclaration
+from aegiscore_sdk import SafetyDeclaration
 
 SAFETY_FOR_MY_PLUGIN = SafetyDeclaration(
     tools=("my_dangerous_tool",),

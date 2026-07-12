@@ -13,7 +13,7 @@ guards. Two are always-on and `SAFETY_CRITICAL` (cannot be silently
 disabled by a plugin); the rest opt in.
 
 Source of record:
-[`contracts/slots.py`](../../packages/aegiscore-core/decepticon_core/contracts/slots.py)
+[`contracts/slots.py`](../../packages/aegiscore-core/aegiscore_core/contracts/slots.py)
 (slot enum, `SAFETY_CRITICAL_SLOTS`, `_BASE_SLOTS`),
 [`middleware/hitl.py`](../../packages/aegiscore/aegiscore/middleware/hitl.py),
 and

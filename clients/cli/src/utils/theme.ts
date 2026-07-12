@@ -53,7 +53,7 @@ export const TODO_ICON: Record<string, StatusStyle> = {
 
 /** Kill-chain agent name → display color. */
 export const AGENT_COLORS: Record<string, string> = {
-  decepticon: "blue",
+  aegiscore: "blue",
   recon: "cyan",
   exploit: "red",
   postexploit: "magenta",

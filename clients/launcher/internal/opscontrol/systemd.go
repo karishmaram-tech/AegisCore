@@ -10,7 +10,7 @@ import (
 )
 
 // SystemdManager owns a systemd user unit at
-// ~/.config/systemd/user/decepticon-opscontrol[-${STACK}].service.
+// ~/.config/systemd/user/aegiscore-opscontrol[-${STACK}].service.
 //
 // User-level (not system-level) is intentional: the daemon runs as
 // the operator's UID, talks to the docker socket as the same user
@@ -18,7 +18,7 @@ import (
 // most OSS installs), and writes only to $DECEPTICON_HOME — there is
 // nothing root-only about the lifecycle.
 type SystemdManager struct {
-	UnitName string // e.g. "decepticon-opscontrol" or "decepticon-opscontrol-stack2"
+	UnitName string // e.g. "aegiscore-opscontrol" or "aegiscore-opscontrol-stack2"
 }
 
 func newSystemdManager() *SystemdManager {
@@ -111,7 +111,7 @@ func (s *SystemdManager) Install(spec InstallSpec) error {
 	// Drop-in `*.conf` files override the unit we're about to write,
 	// and they survive `Uninstall()` because that only removes the
 	// .service file. v1.1.10 dogfood hit exactly this trap: a stale
-	// `override.conf` pinned ExecStart= to /tmp/decepticon-stop-v3
+	// `override.conf` pinned ExecStart= to /tmp/aegiscore-stop-v3
 	// (deleted between test runs), so `enable --now` succeeded but the
 	// daemon failed with no error surfaced to the operator — they saw
 	// `EnsureRunning` 5s socket timeout with no obvious cause.
@@ -278,8 +278,8 @@ func (s *SystemdManager) renderUnit(spec InstallSpec) string {
 	// ports, passwords, …) the launcher saw. The leading `-` keeps
 	// install tolerant of `.env` not existing yet.
 	return fmt.Sprintf(`[Unit]
-Description=Decepticon opscontrol daemon (ADR-0006)
-Documentation=https://github.com/PurpleAILAB/Decepticon/blob/main/docs/adr/0006-agent-driven-container-lifecycle.md
+Description=Aegiscore opscontrol daemon (ADR-0006)
+Documentation=https://github.com/karishmaram-tech/AegisCore/blob/main/docs/adr/0006-agent-driven-container-lifecycle.md
 After=network-online.target
 Wants=network-online.target
 

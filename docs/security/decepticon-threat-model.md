@@ -94,7 +94,7 @@ Per-asset analysis.
 |--------|--------|-----------|--------|
 | **Spoofing** | Sandbox HTTP daemon has no auth by default | `SANDBOX_TOKEN` env enables Bearer auth; loopback-only deploys are fine without | Partial |
 | **Tampering** | Agent's command rewritten by hostile banner | UntrustedOutputMiddleware + injection detector | Done ([prompt-injection-defense](./prompt-injection-defense.md)) |
-| **Tampering** | Out-of-scope target reached | RoEEnforcementMiddleware refuses + chained audit log | Done ([RoE schema + middleware](../../packages/aegiscore-core/decepticon_core/types/roe.py)) |
+| **Tampering** | Out-of-scope target reached | RoEEnforcementMiddleware refuses + chained audit log | Done ([RoE schema + middleware](../../packages/aegiscore-core/aegiscore_core/types/roe.py)) |
 | **Repudiation** | Operator denies engagement actions | HMAC-chained audit ledger (`<workspace>/audit/roe-decisions.jsonl`) | Done |
 | **Information disclosure** | One Kali container shared across engagements | Per-engagement sandbox containers (planned, see Tier 3) | Open |
 | **Denial of service** | Sandbox `pids_limit: 1024` exists; mem unbounded | `mem_limit` per service (planned) | Open |

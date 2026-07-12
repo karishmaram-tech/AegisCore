@@ -305,7 +305,7 @@ func TestPromptIfNotStarred_GhPath_TitleSet(t *testing.T) {
 
 	PromptIfNotStarred()
 
-	if s.confirmTitle != "★ Star Decepticon on GitHub?" {
+	if s.confirmTitle != "★ Star Aegiscore on GitHub?" {
 		t.Errorf("title = %q, want gh-path star ask", s.confirmTitle)
 	}
 }

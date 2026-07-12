@@ -19,7 +19,7 @@ var dockerProbe = func(args ...string) bool {
 	return exec.Command("docker", args...).Run() == nil
 }
 
-// SystemInfo is a one-shot snapshot of the host environment. `decepticon
+// SystemInfo is a one-shot snapshot of the host environment. `aegiscore
 // onboard` renders it so the user can confirm — before configuring any
 // credentials — that the machine they are on is actually able to run the
 // Docker stack, on whichever OS/architecture they happen to be using.
@@ -88,7 +88,7 @@ func (si SystemInfo) OSLabel() string {
 	}
 }
 
-// Ready reports whether the host can run the Decepticon stack right now
+// Ready reports whether the host can run the Aegiscore stack right now
 // (Docker installed, daemon up, Compose v2 present).
 func (si SystemInfo) Ready() bool {
 	return si.DockerInstalled && si.DockerRunning && si.ComposeAvailable

@@ -53,7 +53,7 @@ func TestCompareVersions(t *testing.T) {
 }
 
 func TestResolveChannel(t *testing.T) {
-	// Default + unrecognized → stable (Decepticon's conservative default;
+	// Default + unrecognized → stable (Aegiscore's conservative default;
 	// soak semantics still match Claude Code, only the default differs).
 	tests := map[string]Channel{
 		"":          ChannelStable, // default
@@ -90,7 +90,7 @@ func TestFetchLatestRelease_Mock(t *testing.T) {
 	release := Release{
 		TagName: "v1.2.0",
 		Assets: []Asset{
-			{Name: "decepticon-linux-amd64", BrowserDownloadURL: "https://example.com/binary"},
+			{Name: "aegiscore-linux-amd64", BrowserDownloadURL: "https://example.com/binary"},
 		},
 	}
 
@@ -115,7 +115,7 @@ func TestFetchLatestRelease_Mock(t *testing.T) {
 	if got.TagName != "v1.2.0" {
 		t.Errorf("TagName = %q, want v1.2.0", got.TagName)
 	}
-	if len(got.Assets) != 1 || got.Assets[0].Name != "decepticon-linux-amd64" {
+	if len(got.Assets) != 1 || got.Assets[0].Name != "aegiscore-linux-amd64" {
 		t.Errorf("Assets = %v", got.Assets)
 	}
 }
@@ -355,7 +355,7 @@ func TestSelfUpdate_NoMatchingAsset(t *testing.T) {
 	// operator knows why the binary was not replaced.
 	release := &Release{
 		TagName: "v9.9.9",
-		Assets:  []Asset{{Name: "decepticon-plan9-mips", BrowserDownloadURL: "http://localhost/plan9"}},
+		Assets:  []Asset{{Name: "aegiscore-plan9-mips", BrowserDownloadURL: "http://localhost/plan9"}},
 	}
 	err := SelfUpdate(release)
 	if err == nil {
@@ -372,7 +372,7 @@ func TestSelfUpdate_DownloadHTTPError(t *testing.T) {
 	}))
 	defer server.Close()
 
-	assetName := fmt.Sprintf("decepticon-%s-%s", runtime.GOOS, runtime.GOARCH)
+	assetName := fmt.Sprintf("aegiscore-%s-%s", runtime.GOOS, runtime.GOARCH)
 	release := &Release{
 		TagName: "v9.9.9",
 		Assets:  []Asset{{Name: assetName, BrowserDownloadURL: server.URL + "/binary"}},
@@ -392,7 +392,7 @@ func TestSelfUpdate_WritesAndRenames(t *testing.T) {
 	defer server.Close()
 
 	dir := t.TempDir()
-	fakeBin := filepath.Join(dir, "decepticon")
+	fakeBin := filepath.Join(dir, "aegiscore")
 
 	// Redirect executableFn so SelfUpdate writes into our temp dir instead
 	// of clobbering the running test binary. Matches the isWSLFn pattern.
@@ -400,7 +400,7 @@ func TestSelfUpdate_WritesAndRenames(t *testing.T) {
 	executableFn = func() (string, error) { return fakeBin, nil }
 	t.Cleanup(func() { executableFn = orig })
 
-	assetName := fmt.Sprintf("decepticon-%s-%s", runtime.GOOS, runtime.GOARCH)
+	assetName := fmt.Sprintf("aegiscore-%s-%s", runtime.GOOS, runtime.GOARCH)
 	release := &Release{
 		TagName: "v9.9.9",
 		Assets:  []Asset{{Name: assetName, BrowserDownloadURL: server.URL + "/binary"}},
@@ -465,7 +465,7 @@ func TestApplyUpdate_SelfUpdateErrorPropagates(t *testing.T) {
 	// verify the error is propagated and labelled correctly.
 	release := &Release{
 		TagName: "v9.9.9",
-		Assets:  []Asset{{Name: "decepticon-plan9-mips", BrowserDownloadURL: "http://localhost/plan9"}},
+		Assets:  []Asset{{Name: "aegiscore-plan9-mips", BrowserDownloadURL: "http://localhost/plan9"}},
 	}
 	err := ApplyUpdate(release, "v9.9.9")
 	if err == nil {

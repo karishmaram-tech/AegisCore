@@ -23,7 +23,7 @@ export interface ToolResult {
   content: string;
 }
 
-/** Custom event types emitted by Decepticon agents. */
+/** Custom event types emitted by Aegiscore agents. */
 export enum EventType {
   SubagentStart = "subagent_start",
   SubagentEnd = "subagent_end",
@@ -94,5 +94,5 @@ export interface ActiveQuestion {
   allowOther: boolean;
 }
 
-// SubAgentSession is exported from @decepticon/streaming
-export type { SubAgentSession } from "@decepticon/streaming";
+// SubAgentSession is exported from @aegiscore/streaming
+export type { SubAgentSession } from "@aegiscore/streaming";

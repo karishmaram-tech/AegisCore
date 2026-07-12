@@ -1,18 +1,18 @@
 package cmd
 
 import (
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/cmd/opscontrol"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/compose"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/ui"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/cmd/opscontrol"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/compose"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/ui"
 	"github.com/spf13/cobra"
 )
 
 var stopCmd = &cobra.Command{
 	Use:   "stop",
-	Short: "Stop all Decepticon services",
+	Short: "Stop all Aegiscore services",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c := compose.New()
-		ui.Info("Stopping Decepticon services...")
+		ui.Info("Stopping Aegiscore services...")
 		c.RemoveOrphanedCLI()
 		// Clear legacy root-level scratch/session buffers before tearing the
 		// stack down. Current runs keep these under engagement workspaces.

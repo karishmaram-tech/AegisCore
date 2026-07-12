@@ -94,7 +94,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked,id=sandbox-apt-cache
 # per-session RSS by ~60% vs the previous 50K.
 RUN echo "set-option -g history-limit 20000" > /root/.tmux.conf
 
-# Optional HTTP sandbox daemon — see decepticon/sandbox_server/.
+# Optional HTTP sandbox daemon — see aegiscore/sandbox_server/.
 #
 # The daemon is OFF by default. The existing dev / local-docker / GCE
 # Spot deployments use this image as before (host docker daemon
@@ -105,7 +105,7 @@ RUN echo "set-option -g history-limit 20000" > /root/.tmux.conf
 # instead of `docker exec`.
 #
 # Only `fastapi` + `uvicorn` + `deepagents` are pulled in here; the
-# heavier decepticon agent / LLM / langgraph SDKs are deliberately
+# heavier aegiscore agent / LLM / langgraph SDKs are deliberately
 # left out so the sandbox image doesn't bloat for the >95% of users
 # who never enable the daemon.
 RUN pip3 install --break-system-packages --no-cache-dir \
@@ -114,7 +114,7 @@ RUN pip3 install --break-system-packages --no-cache-dir \
     "deepagents>=0.5.0"
 
 # ── Open-web acquisition engine (insane-search port, ADR-0010) ───────
-# decepticon/sandbox_web runs HERE, inside the sandbox, so all open-web
+# aegiscore/sandbox_web runs HERE, inside the sandbox, so all open-web
 # egress stays in sandbox-net behind the nftables allowlist. Python deps:
 #   * curl_cffi>=0.15 — TLS-impersonation fetch tier. 0.15 is REQUIRED by the
 #                    engine: it ships the current Chrome (146+) JA3/JA4
@@ -123,7 +123,7 @@ RUN pip3 install --break-system-packages --no-cache-dir \
 #   * beautifulsoup4 — success-selector proof + DDG result parsing
 #   * pyyaml       — WAF profile loading
 #   * yt-dlp       — Phase 0 media route (YouTube/Vimeo/… --dump-json)
-#   * pydantic*    — decepticon-core dep so the per-hop RoE scope_check
+#   * pydantic*    — aegiscore-core dep so the per-hop RoE scope_check
 #                    (evaluate_target on <workspace>/plan/roe.json) is live.
 RUN pip3 install --break-system-packages --no-cache-dir \
     "curl_cffi>=0.15.0" \
@@ -136,7 +136,7 @@ RUN pip3 install --break-system-packages --no-cache-dir \
 
 # Playwright browser tier — the engine's last escalation rung for JS/WAF
 # challenges (Cloudflare Turnstile, Akamai, DataDome) that the curl_cffi grid
-# can't clear. The node templates in `decepticon/sandbox_web/templates/` launch
+# can't clear. The node templates in `aegiscore/sandbox_web/templates/` launch
 # Chromium with the puppeteer-extra stealth stack; their npm deps are installed
 # LOCALLY in that dir AFTER the package is COPYed in (see below) — a global
 # install does not resolve the stealth plugin's nested evasion deps. node/npm
@@ -202,32 +202,32 @@ ENV GHIDRA_INSTALL_DIR=/opt/ghidra \
     JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
 
 # Ship only the modules the daemon actually imports:
-#   - decepticon/__init__.py     — package marker (light-weight, just reads __version__)
-#   - decepticon/sandbox_kernel/ — shared sandbox primitives: TmuxSessionManager,
+#   - aegiscore/__init__.py     — package marker (light-weight, just reads __version__)
+#   - aegiscore/sandbox_kernel/ — shared sandbox primitives: TmuxSessionManager,
 #                                  BackgroundJobTracker, SandboxBase, and DaemonSandbox.
 #                                  The daemon instantiates `DaemonSandbox` (exec_prefix=[],
 #                                  pathlib upload/download) — no `docker exec`, no
 #                                  agent-side transport, so the sandbox image stays
 #                                  free of the `backends/` package on purpose.
-#   - decepticon/sandbox_server/ — the FastAPI app + uvicorn entry point.
+#   - aegiscore/sandbox_server/ — the FastAPI app + uvicorn entry point.
 # `backends/` (DockerSandbox + HTTPSandbox + factory) is deliberately
 # absent — that's agent-side code, lives in the langgraph image. Other
 # subtrees (agents / llm / middleware / tools / core) are left out too
 # so the sandbox image doesn't bloat for the >95% of users who never
 # enable the daemon and so the dependency surface stays minimal.
 # Phase 0 of the core/framework/sdk split relocated the framework
-# source tree to packages/decepticon/decepticon/. The sandbox
+# source tree to packages/aegiscore/aegiscore/. The sandbox
 # image stays an exec-only daemon — it only needs ``sandbox_kernel``
 # + ``sandbox_server`` + the bare ``__init__.py`` so they can be
 # imported as a Python package under PYTHONPATH=/opt.
-COPY packages/decepticon/decepticon/__init__.py /opt/decepticon/__init__.py
-COPY packages/decepticon/decepticon/sandbox_kernel /opt/decepticon/sandbox_kernel
-COPY packages/decepticon/decepticon/sandbox_server /opt/decepticon/sandbox_server
+COPY packages/aegiscore/aegiscore/__init__.py /opt/aegiscore/__init__.py
+COPY packages/aegiscore/aegiscore/sandbox_kernel /opt/aegiscore/sandbox_kernel
+COPY packages/aegiscore/aegiscore/sandbox_server /opt/aegiscore/sandbox_server
 # Open-web engine (ADR-0010) + the pure contract layer it uses for the
-# per-hop RoE scope_check. decepticon-core imports only pydantic + stdlib
+# per-hop RoE scope_check. aegiscore-core imports only pydantic + stdlib
 # (never langchain/langgraph), so it is safe to ship to the lean sandbox.
-COPY packages/decepticon/decepticon/sandbox_web /opt/decepticon/sandbox_web
-COPY packages/decepticon-core/decepticon_core /opt/decepticon_core
+COPY packages/aegiscore/aegiscore/sandbox_web /opt/aegiscore/sandbox_web
+COPY packages/aegiscore-core/aegiscore_core /opt/aegiscore_core
 ENV PYTHONPATH=/opt
 
 # Install the Playwright templates' node deps LOCALLY (in their own dir) so the
@@ -235,16 +235,16 @@ ENV PYTHONPATH=/opt
 # a global install + NODE_PATH does not. The executor shells `node` here, so node
 # resolves require() from templates/node_modules. Done after the COPY because the
 # templates' package.json ships inside sandbox_web.
-RUN cd /opt/decepticon/sandbox_web/templates \
+RUN cd /opt/aegiscore/sandbox_web/templates \
     && npm install --no-fund --no-audit --omit=optional \
     && npm cache clean --force
 
 # Skip the framework boot path on this image — the sandbox container
-# ships only sandbox_kernel + sandbox_server, NOT decepticon-core or
-# the rest of the framework. ``decepticon/__init__.py`` checks this
+# ships only sandbox_kernel + sandbox_server, NOT aegiscore-core or
+# the rest of the framework. ``aegiscore/__init__.py`` checks this
 # env var and short-circuits the RoleRegistry + PluginRegistry setup
-# so the sandbox process can ``python -m decepticon.sandbox_server``
-# without importing decepticon-core (which isn't installed here).
+# so the sandbox process can ``python -m aegiscore.sandbox_server``
+# without importing aegiscore-core (which isn't installed here).
 ENV DECEPTICON_SKIP_BOOT=1
 
 # Working directory for the agent's virtual filesystem.
@@ -257,7 +257,7 @@ WORKDIR /workspace
 # langgraph container (see ``containers/langgraph.Dockerfile``), where
 # they are read in-process by ``FilesystemBackend`` via the
 # ``CompositeBackend`` route declared in
-# ``decepticon/backends/__init__.py:make_agent_backend``. Skills are
+# ``aegiscore/backends/__init__.py:make_agent_backend``. Skills are
 # read-only knowledge — they don't need the sandbox's isolated
 # execution environment, and avoiding the HTTP round-trip per skill
 # read saves agent-init latency.

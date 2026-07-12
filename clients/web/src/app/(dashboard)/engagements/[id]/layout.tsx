@@ -9,11 +9,11 @@ import { cn } from "@/lib/utils";
 
 const REQUIRED_PLAN_DOCS = ["roe", "conops", "deconfliction"] as const;
 
-function pickAssistant(planDocs: Record<string, unknown>): "soundwave" | "decepticon" {
+function pickAssistant(planDocs: Record<string, unknown>): "soundwave" | "aegiscore" {
   for (const name of REQUIRED_PLAN_DOCS) {
     if (planDocs[name] == null) return "soundwave";
   }
-  return "decepticon";
+  return "aegiscore";
 }
 
 export default function EngagementLayout({
@@ -26,7 +26,7 @@ export default function EngagementLayout({
   const engagementId = params.id as string;
 
   const [engagement, setEngagement] = useState<{ name: string } | null>(null);
-  const [agentId, setAgentId] = useState<"soundwave" | "decepticon" | null>(null);
+  const [agentId, setAgentId] = useState<"soundwave" | "aegiscore" | null>(null);
   const [threadId, setThreadId] = useState<string | null>(null);
 
   // Resolve engagement metadata — determines agentId and slug for WS

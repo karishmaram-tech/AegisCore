@@ -360,7 +360,7 @@ identical text, enabling prompt caching for the child run.
 Before any offensive dispatch, the **Soundwave** planning agent (and its
 `/skills/standard/soundwave/*` templates) author the JSON planning bundle in
 `plan/`. Each validates against a Pydantic v2 schema in
-`decepticon_core.types`:
+`aegiscore_core.types`:
 
 | File | Skill | Schema |
 |------|-------|--------|

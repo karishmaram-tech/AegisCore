@@ -33,7 +33,7 @@ export async function GET(
   const neo4jUri = process.env.NEO4J_URI ?? "bolt://neo4j:7687";
   const neo4jUser = process.env.NEO4J_USER ?? "neo4j";
   const neo4jPassword = process.env.NEO4J_PASSWORD;
-  if (!neo4jPassword || neo4jPassword === "decepticon-graph") {
+  if (!neo4jPassword || neo4jPassword === "aegiscore-graph") {
     return NextResponse.json(
       {
         error:
@@ -57,7 +57,7 @@ export async function GET(
       //    `engagement` property matching the engagement name are
       //    returned. Edges are filtered to those connecting two
       //    in-engagement nodes. New writes tag nodes via
-      //    decepticon.tools.research._engagement_scope; legacy
+      //    aegiscore.tools.research._engagement_scope; legacy
       //    nodes without the property surface as empty until the
       //    operator runs the migration (see docs/security/neo4j-hardening.md).
       const cypher = `

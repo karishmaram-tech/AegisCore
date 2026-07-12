@@ -37,9 +37,9 @@ from benchmark.dreadgoad.schemas import (
 log = logging.getLogger(__name__)
 
 # Sandbox container name — overridable for tests / non-docker setups.
-# Defaults to the OSS Decepticon compose name; override via
+# Defaults to the OSS Aegiscore compose name; override via
 # ``DECEPTICON_SANDBOX_CONTAINER`` when running outside the standard stack.
-_SANDBOX_CONTAINER = os.environ.get("DECEPTICON_SANDBOX_CONTAINER", "decepticon-sandbox")
+_SANDBOX_CONTAINER = os.environ.get("DECEPTICON_SANDBOX_CONTAINER", "aegiscore-sandbox")
 _SANDBOX_READ_TIMEOUT_S = 10
 
 # LiteLLM proxy admin endpoints for offline cost attribution. The harness
@@ -74,7 +74,7 @@ def _langsmith_trace_url(run_id: str) -> str:
     """
     if not run_id:
         return ""
-    project = os.environ.get("LANGSMITH_PROJECT", "decepticon-benchmark")
+    project = os.environ.get("LANGSMITH_PROJECT", "aegiscore-benchmark")
     return f"https://smith.langchain.com/public/{run_id}/r?project={urllib.parse.quote(project)}"
 
 
@@ -316,7 +316,7 @@ def _build_result(
         started_at=started_at,
         ended_at=ended_at,
         status=status,
-        langsmith_project=os.environ.get("LANGSMITH_PROJECT", "decepticon-benchmark"),
+        langsmith_project=os.environ.get("LANGSMITH_PROJECT", "aegiscore-benchmark"),
         thread_id=thread_id,
         assistant_id=assistant_id,
         trace_url=_langsmith_trace_url(run_id or ""),

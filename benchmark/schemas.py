@@ -179,9 +179,9 @@ class ExploitBenchEnv(BaseModel):
 class ExploitBenchSpec(BaseModel):
     """Parsed ExploitBench-style YAML config.
 
-    Only the subset of fields the Decepticon harness actually consumes
+    Only the subset of fields the Aegiscore harness actually consumes
     is modeled — model dispatch and per-provider budget knobs stay
-    inside Decepticon's own config (``BenchmarkConfig`` /
+    inside Aegiscore's own config (``BenchmarkConfig`` /
     ``EngagementContextMiddleware``) so the upstream config can be
     copy-pasted without diff churn.
     """

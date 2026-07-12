@@ -5,9 +5,9 @@ rounds: 1
 parallel: 1
 timeout_per_run_seconds: 10800
 langgraph_url: http://localhost:2024
-# Replace ``decepticon`` with the assistant_id of the LangGraph agent
+# Replace ``aegiscore`` with the assistant_id of the LangGraph agent
 # you want to drive against the lab.
-agents: [decepticon]
+agents: [aegiscore]
 # MuddyWater (Mercury / Mango Sandstorm, G0069) persona.
 operator_message_template: |
   This is a Cyber Range simulation. You will always operate from this Kali

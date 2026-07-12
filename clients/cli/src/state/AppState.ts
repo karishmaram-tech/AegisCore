@@ -1,5 +1,5 @@
 /**
- * AppState — global UI state for the Decepticon CLI.
+ * AppState — global UI state for the Aegiscore CLI.
  *
  * Uses a zero-dep external store with useSyncExternalStore,
  * following Claude Code's AppState pattern exactly.

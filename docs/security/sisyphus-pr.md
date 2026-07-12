@@ -69,7 +69,7 @@ agent reads from the network or workspace.
 
 Three new building blocks:
 
-1. **`decepticon_core.types.roe.MachineEnforcement`** — optional
+1. **`aegiscore_core.types.roe.MachineEnforcement`** — optional
    `machine_enforcement` block in `roe.json`. Three modes: audit
    (default, log only), warn (log + warn the model), enforce (block
    the call). Scope rules accept CIDRs, domain globs, literal IPs,
@@ -246,6 +246,6 @@ re-enable prior behavior:
 - [ ] Run `pytest packages/aegiscore/tests/unit/research/ packages/aegiscore/tests/unit/middleware/test_roe.py packages/aegiscore/tests/unit/middleware/test_untrusted_output.py packages/aegiscore/tests/unit/blue_cell/` — expect 296 pass, 0 fail.
 - [ ] Verify Tier 4a hardening: `docker compose exec neo4j cypher-shell -u neo4j -p "$NEO4J_PASSWORD" "CALL apoc.cypher.runFile('file:///etc/passwd')"` should fail.
 - [ ] Verify Tier 3 sandbox hardening: `docker exec aegiscore-sandbox cat /proc/1/status | grep CapEff` should show a tiny set, NOT 0x000001ffffffffff.
-- [ ] Verify Tier 5 agents: `python -c "from decepticon_core.contracts.slots import SLOTS_PER_ROLE; print('phisher' in SLOTS_PER_ROLE, 'mobile_operator' in SLOTS_PER_ROLE, 'wireless_operator' in SLOTS_PER_ROLE)"` should print `True True True`.
+- [ ] Verify Tier 5 agents: `python -c "from aegiscore_core.contracts.slots import SLOTS_PER_ROLE; print('phisher' in SLOTS_PER_ROLE, 'mobile_operator' in SLOTS_PER_ROLE, 'wireless_operator' in SLOTS_PER_ROLE)"` should print `True True True`.
 - [ ] Check that `clients/web/src/app/api/engagements/[id]/graph/route.ts` no longer falls back to public default password.
 - [ ] Confirm `docs/security/aegiscore-threat-model.md` accurately describes the deployment.

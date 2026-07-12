@@ -4,4 +4,4 @@
 [submodule "benchmark/MHBench"]
 	path = benchmark/MHBench
 	url = https://github.com/PurpleAILAB/MHBench
-	branch = decepticon
+	branch = aegiscore

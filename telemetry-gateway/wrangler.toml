@@ -1,4 +1,4 @@
-# Decepticon telemetry gateway — Cloudflare Worker config.
+# Aegiscore telemetry gateway — Cloudflare Worker config.
 #
 # Deploy (maintainer-side):
 #   npm install
@@ -7,7 +7,7 @@
 #
 # The OSS client only ever learns the public Worker URL (DECEPTICON_TELEMETRY_ENDPOINT);
 # it never sees POSTHOG_KEY.
-name = "decepticon-telemetry-gateway"
+name = "aegiscore-telemetry-gateway"
 main = "src/index.ts"
 compatibility_date = "2025-06-01"
 

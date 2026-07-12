@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/config"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/config"
 )
 
 // DockerComposeBackend shells out to `docker compose` to fulfill the

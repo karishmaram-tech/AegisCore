@@ -1,4 +1,4 @@
-module github.com/PurpleAILAB/Decepticon/clients/launcher
+module github.com/karishmaram-tech/AegisCore/clients/launcher
 
 go 1.25.8
 

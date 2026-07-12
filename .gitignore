@@ -73,16 +73,16 @@ config/*.local.*
 reference/
 demo.tape
 
-# Decepticon runtime data
-.decepticon/
+# Aegiscore runtime data
+.aegiscore/
 .dogfood/
 workspace/
 !clients/web/src/app/api/workspace/
 .bg-shell/
 
 # Local reference corpus — dev-only, ~34 MB (PayloadsAllTheThings + OWASP WSTG).
-# Runtime corpora are fetched into ~/.decepticon/references/ by
-# decepticon/tools/references/fetch.py. Real skill bundles live in decepticon/skills/.
+# Runtime corpora are fetched into ~/.aegiscore/references/ by
+# aegiscore/tools/references/fetch.py. Real skill bundles live in aegiscore/skills/.
 skills/_corpus/
 
 .langgraph_api/
@@ -95,7 +95,7 @@ skills/_corpus/
 # Project-specific Claude Code instructions (private)
 CLAUDE.md
 references/octogent
-clients/launcher/decepticon
+clients/launcher/aegiscore
 
 # basedpyright JSON output from `make ci-lint` (CI uploads as artifact on failure)
 bp.json

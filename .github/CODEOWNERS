@@ -1,4 +1,4 @@
-# Code owners for the Decepticon repository.
+# Code owners for the Aegiscore repository.
 #
 # Strategy: per-path code-owner review, NOT a blanket `* @owner` rule.
 # Day-to-day PRs (agents/tools/skills/tests/docs) self-merge once CI
@@ -23,9 +23,9 @@ clients/launcher/go.sum          @PurpleCHOIms
 clients/launcher/.goreleaser.yaml @PurpleCHOIms
 
 # Plugin contracts — public API surface for downstream plugin authors
-packages/decepticon-core/decepticon_core/contracts/**    @PurpleCHOIms
-packages/decepticon-core/decepticon_core/protocols/**    @PurpleCHOIms
-packages/decepticon-core/decepticon_core/registry/**     @PurpleCHOIms
+packages/aegiscore-core/aegiscore_core/contracts/**    @PurpleCHOIms
+packages/aegiscore-core/aegiscore_core/protocols/**    @PurpleCHOIms
+packages/aegiscore-core/aegiscore_core/registry/**     @PurpleCHOIms
 
 # Install / bootstrap path — runs as user, root, or sudo on user machines
 scripts/install.sh               @PurpleCHOIms

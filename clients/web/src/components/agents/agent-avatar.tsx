@@ -10,7 +10,7 @@ interface AgentAvatarProps {
 
 /**
  * Agent avatar.
- * Decepticon uses an image; sub-agents render as text initials.
+ * Aegiscore uses an image; sub-agents render as text initials.
  */
 export function AgentAvatar({ agent, size = 64 }: AgentAvatarProps) {
   if (agent.imagePath) {
@@ -21,7 +21,7 @@ export function AgentAvatar({ agent, size = 64 }: AgentAvatarProps) {
         width={size}
         height={size}
         className="select-none object-contain"
-        priority={agent.id === "decepticon"}
+        priority={agent.id === "aegiscore"}
       />
     );
   }

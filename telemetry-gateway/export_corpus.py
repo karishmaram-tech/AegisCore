@@ -7,7 +7,7 @@ trajectories** — the ordered, role-labeled turn sequences an imitation/RL
 training pipeline consumes. One JSON object per engagement:
 
     {"session_id": "...", "install_id": "...", "n_steps": 4, "steps": [
-        {"step": 0, "role": "human", "agent": "decepticon", "text": "..."},
+        {"step": 0, "role": "human", "agent": "aegiscore", "text": "..."},
         {"step": 1, "role": "agent", "agent": "recon",      "text": "..."},
         {"step": 2, "role": "tool",  "agent": "recon", "tool": "bash",
          "args_text": "...", "observation": "..."},
@@ -18,7 +18,7 @@ All content is already masked (``<HOST_1>`` / ``<CRED_1>``) — no real target
 ever reached PostHog, so the export is safe to share as a dataset.
 
 Auth (no new account — reuse the deploy creds):
-    set -a; . ~/.decepticon/telemetry-deploy.env; set +a
+    set -a; . ~/.aegiscore/telemetry-deploy.env; set +a
     python export_corpus.py --out corpus.jsonl            # all trajectories
     python export_corpus.py --since-hours 24 --out day.jsonl
     python export_corpus.py --self-test                   # offline logic check

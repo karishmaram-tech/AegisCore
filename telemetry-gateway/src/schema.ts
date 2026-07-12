@@ -2,7 +2,7 @@
  * Canonical Tier-A telemetry contract.
  *
  * This Zod schema is the *runtime* enforcement of the wire format the
- * Decepticon client emits to the gateway. The language-neutral mirror lives in
+ * Aegiscore client emits to the gateway. The language-neutral mirror lives in
  * `schema.json` (JSON Schema) so the Python client can validate against the
  * same shape — the two MUST stay in sync (see README §Schema).
  *
@@ -14,7 +14,7 @@
  */
 import { z } from "zod";
 
-/** Event types mirror `decepticon.runtime.event_log.EventType` (the dotted values). */
+/** Event types mirror `aegiscore.runtime.event_log.EventType` (the dotted values). */
 export const EVENT_TYPES = [
   "engagement.start",
   "engagement.end",

@@ -11,7 +11,7 @@ Invariants
 1. **Operational services never join the management network.**
    The Kali sandbox, the C2 framework, and the optional Ghidra MCP
    sidecar are sandbox-net only. Adding any of them to
-   ``decepticon-net`` collapses the management/operational boundary
+   ``aegiscore-net`` collapses the management/operational boundary
    that the architecture is built around (see
    ``docs/security/sandbox-isolation.md``).
 
@@ -53,7 +53,7 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parents[1]
 COMPOSE = REPO_ROOT / "docker-compose.yml"
 
-MGMT_NET = "decepticon-net"
+MGMT_NET = "aegiscore-net"
 SANDBOX_NET = "sandbox-net"
 
 # Services that MUST NOT touch the management network under any
@@ -162,7 +162,7 @@ def _service_volumes(service: dict) -> list[str]:
 
 
 def test_operational_services_never_on_management_network():
-    """sandbox, c2-sliver, ghidra-mcp must never appear on decepticon-net.
+    """sandbox, c2-sliver, ghidra-mcp must never appear on aegiscore-net.
 
     A regression here collapses the management/operational boundary —
     a compromised target-facing container would gain a path to LiteLLM
@@ -220,7 +220,7 @@ def test_no_service_mounts_docker_socket():
         "services mounting docker.sock (forbidden):\n  "
         + "\n  ".join(violations)
         + "\n\nFix: use the sandbox HTTP daemon (port 9999) instead "
-        "of docker exec. See packages/decepticon/decepticon/backends/."
+        "of docker exec. See packages/aegiscore/aegiscore/backends/."
     )
 
 

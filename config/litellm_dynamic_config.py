@@ -1,6 +1,6 @@
 """Dynamic LiteLLM config helpers for user-supplied model IDs.
 
-The checked-in ``config/litellm.yaml`` contains the default Decepticon routes.
+The checked-in ``config/litellm.yaml`` contains the default Aegiscore routes.
 Operators can additionally set ``DECEPTICON_MODEL`` / per-role overrides to any
 LiteLLM model string (for example ``openrouter/anthropic/claude-3.7-sonnet`` or
 ``ollama_chat/qwen3-coder:30b``).  This module appends only those requested routes
@@ -8,7 +8,7 @@ at container startup so the proxy accepts the same model names the agents use.
 
 For Ollama only the ``ollama_chat/`` provider is accepted — the legacy
 ``ollama/`` (``/api/generate``) lacks tool calling per LiteLLM's own
-``supports_function_calling`` check, and Decepticon agents always emit tool calls.
+``supports_function_calling`` check, and Aegiscore agents always emit tool calls.
 
 No secret values are read or logged here; generated routes reference environment
 variables using LiteLLM's ``os.environ/NAME`` syntax.
@@ -477,12 +477,12 @@ def validate_model_name(model_name: str) -> None:
         )
     if provider == "ollama":
         # Legacy ``ollama/`` (/api/generate) lacks tool calling — fail
-        # closed since Decepticon agents always emit tool calls.
+        # closed since Aegiscore agents always emit tool calls.
         slug = model_name.split("/", 1)[1]
         raise ValueError(
             f"model {model_name!r} uses the legacy ollama/ provider, which "
             "routes to /api/generate and does not support tool/function "
-            "calling. Decepticon agents always emit tool calls — use "
+            "calling. Aegiscore agents always emit tool calls — use "
             f"ollama_chat/{slug} (routes to /api/chat) instead."
         )
     if provider not in ALLOWED_DYNAMIC_PROVIDERS:
@@ -638,7 +638,7 @@ def build_model_entry(model_name: str) -> dict[str, Any]:
             # The onboarding wizard (onboard.go) and setup docs write the
             # key as OLLAMA_CLOUD_API_KEY; the official Ollama convention is
             # OLLAMA_API_KEY. Accept either, preferring the namespaced
-            # _CLOUD_ form, so a user who followed `decepticon onboard`
+            # _CLOUD_ form, so a user who followed `aegiscore onboard`
             # authenticates instead of sending an empty Bearer token and
             # 401-ing on every turn — the "stuck in the Soundwave interview"
             # loop reported on Ollama Cloud.

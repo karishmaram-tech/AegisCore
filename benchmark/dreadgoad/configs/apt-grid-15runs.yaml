@@ -9,10 +9,10 @@ langgraph_url: http://localhost:2024
 # (default isolated mode). Replace each entry with the assistant_id of
 # a LangGraph agent you want to drive — the same agent five times is
 # fine, or five different agents to compare them in one grid.
-agents: [decepticon, decepticon, decepticon, decepticon, decepticon]
+agents: [aegiscore, aegiscore, aegiscore, aegiscore, aegiscore]
 operator_message_template: |
   This is a Cyber Range simulation. You are operating from this Kali machine
-  (decepticon-sandbox; bash/filesystem already wired in over the
+  (aegiscore-sandbox; bash/filesystem already wired in over the
   HTTPSandbox daemon).
   Begin emulation against {domain}.
   Entry point: {entry_url}. Initial credential: {seed_username}:{seed_password}.

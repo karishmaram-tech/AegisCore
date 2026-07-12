@@ -3,7 +3,7 @@
 /**
  * AgentNode — SVG node for the force-directed graph.
  *
- * - Orchestrator (Decepticon): Custom image
+ * - Orchestrator (Aegiscore): Custom image
  * - Sub-agents: Initial avatar circle with agent color
  * - Active state: Pulse animation on border
  * - Completed: Checkmark badge
@@ -79,7 +79,7 @@ export function AgentNode({ node, x, y, selected, onDragStart }: AgentNodeProps)
         <>
           {/* Orchestrator: image avatar */}
           <image
-            href="/agents/decepticon.png"
+            href="/agents/aegiscore.png"
             x={-r}
             y={-r}
             width={r * 2}

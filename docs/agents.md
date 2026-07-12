@@ -74,7 +74,7 @@ This prevents context window bloat and token accumulation across a long engageme
 
 ## Middleware Stack
 
-Each agent assembles its middleware stack from a fixed set of named **slots** (`MiddlewareSlot`). The enum declaration order is the canonical assembly order — every factory walks the enum top-to-bottom and instantiates only the slots its role opts into via `SLOTS_PER_ROLE`. Plugins replace or disable slots by name (`PluginBundle.replaced_middleware` / `disabled_middleware`); slot definitions and the per-role mapping live in `decepticon_core.contracts.slots`, the langchain-bound factories in `aegiscore.agents.middleware_slots`.
+Each agent assembles its middleware stack from a fixed set of named **slots** (`MiddlewareSlot`). The enum declaration order is the canonical assembly order — every factory walks the enum top-to-bottom and instantiates only the slots its role opts into via `SLOTS_PER_ROLE`. Plugins replace or disable slots by name (`PluginBundle.replaced_middleware` / `disabled_middleware`); slot definitions and the per-role mapping live in `aegiscore_core.contracts.slots`, the langchain-bound factories in `aegiscore.agents.middleware_slots`.
 
 ### Safety stack (every agent)
 

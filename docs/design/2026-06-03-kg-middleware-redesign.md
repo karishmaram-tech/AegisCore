@@ -4,7 +4,7 @@
 - **Status:** Drafted, pending review
 - **Related research:** [`docs/design/neo4j-research-notes.md`](../../design/neo4j-research-notes.md) (13 topics, 5 high-impact recommendations)
 - **Related schema:** [`docs/design/attack-graph-schema.md`](../../design/attack-graph-schema.md) (node labels + relationships — unchanged by this spec)
-- **Prep work (already landed on this branch):** narrow KG tool surface to analyst + AD/Contract specialists; move engagement scope helper to `decepticon_core.utils`
+- **Prep work (already landed on this branch):** narrow KG tool surface to analyst + AD/Contract specialists; move engagement scope helper to `aegiscore_core.utils`
 - **Branch:** continue on `chore/kg-removal-1-engagement-scope-evacuation` (suggest rename to `refactor/kg-narrow-and-research` before push) — implementation work will land on a follow-up branch `feat/kg-middleware`
 - **Audience:** an engineering session that opens `/home/catow/GIT/decepticon_new/` *with no prior context* and is asked "execute this spec." Self-contained on purpose.
 
@@ -33,7 +33,7 @@ Agents opt in by adding `KGMiddleware()` to their middleware stack (or via a new
 
 The middleware replaces the broken `graph_transaction()` pattern with per-operation `Neo4jStore.execute_write` / `execute_read` calls (research note §1, §2), enforces engagement-scope in the query builder (§4), and collapses the 12 `kg_ingest_*` tools into a single `kg_ingest(scanner_kind, path)` dispatcher.
 
-Pre-1.0 status means the OSS plugin contract surface (`decepticon_core.contracts.slots`) is allowed to change: a new `MiddlewareSlot.KG` slot is added so plugin authors can override / disable the KG middleware the same way they override OPPLAN.
+Pre-1.0 status means the OSS plugin contract surface (`aegiscore_core.contracts.slots`) is allowed to change: a new `MiddlewareSlot.KG` slot is added so plugin authors can override / disable the KG middleware the same way they override OPPLAN.
 
 ---
 
@@ -46,7 +46,7 @@ Pre-1.0 status means the OSS plugin contract surface (`decepticon_core.contracts
 | KG-using agents | `analyst`, `ad_operator` (AD_TOOLS only), `contract_auditor` (CONTRACT_TOOLS only). 14 others have zero KG surface. |
 | Tool implementation | Standalone `@tool` functions in `packages/aegiscore/aegiscore/tools/research/tools.py` (2,386 LOC, 34 @tool). All write paths wrap `with graph_transaction()`. |
 | Backend | `Neo4jStore` (`packages/aegiscore/aegiscore/tools/research/neo4j_store.py`, 787 LOC). Has correct per-op `upsert_node`, `upsert_edge`, `batch_upsert_*`, `load_graph`, `query_custom`. Currently called only by `chain.py` and indirectly via the broken `graph_transaction()` wrapper in `_state.py`. |
-| Engagement scope | `decepticon_core.utils.engagement_scope` (post-evacuation). Contextvar + label validator. Honored only on `load_graph()`; **not enforced** on `query_custom()`. |
+| Engagement scope | `aegiscore_core.utils.engagement_scope` (post-evacuation). Contextvar + label validator. Honored only on `load_graph()`; **not enforced** on `query_custom()`. |
 | Middleware surface | No KG middleware. `engagement.py` sets the active-engagement contextvar via `set_active_engagement`. |
 | CART contract | `runtime/cart.py` docstring promises `AttackGraphProtocol` (line 36) — **no class exists**. Vaporware. |
 | Web dashboard | `clients/web/src/app/api/engagements/[id]/graph/route.ts` reads Neo4j directly via `neo4j-driver`. Will keep working as long as analyst writes findings (which it does via the same broken shim — to be replaced). |
@@ -83,7 +83,7 @@ The redesign now starts from a smaller, well-understood blast radius (3 KG-using
 2. **G2 — Correct concurrency**: Replace `graph_transaction()` with per-op `execute_write` / `execute_read`. Remove `_GRAPH_LOCK`. Rely on Neo4j MVCC + driver retry (research note §1).
 3. **G3 — Engagement-scope safety**: Every read AND every write is engagement-scoped by the query-builder layer. `query_custom()` either disappears or grows a mandatory `scoped: bool = True` parameter that injects the filter automatically (research note §4).
 4. **G4 — Tool surface consolidation**: 12 `kg_ingest_*` tools → 1 `kg_ingest(scanner_kind, path)` with internal dispatch and a registry plugin authors can extend. Total agent-facing KG tool count drops from ~30 to ~6.
-5. **G5 — Plugin slot**: Add `MiddlewareSlot.KG` to `decepticon_core.contracts.slots`. Plugin bundles can replace / disable the middleware (e.g. an enterprise plugin substituting a vector-augmented variant).
+5. **G5 — Plugin slot**: Add `MiddlewareSlot.KG` to `aegiscore_core.contracts.slots`. Plugin bundles can replace / disable the middleware (e.g. an enterprise plugin substituting a vector-augmented variant).
 6. **G6 — Fill the `AttackGraphProtocol` vaporware**: Define the protocol the middleware emits SnapshotDelta against so `runtime/cart.py` can subscribe.
 7. **G7 — Composite range indexes**: Three new indexes shipped via a migration file (research note §3): `(engagement, explored)`, `(engagement, severity)`, `(engagement, status)`.
 8. **G8 — Backwards-compatible read for the web dashboard**: `clients/web/src/app/api/engagements/[id]/graph/route.ts` continues to work without changes (it reads via `neo4j-driver` directly; we keep its query shape stable).
@@ -161,7 +161,7 @@ from langchain_core.tools import BaseTool
 
 from aegiscore.middleware.kg_internal.store import KGStore
 from aegiscore.middleware.kg_internal.tools import build_kg_tools
-from decepticon_core.utils.engagement_scope import set_active_engagement
+from aegiscore_core.utils.engagement_scope import set_active_engagement
 
 
 DEFAULT_KG_TOOLS = frozenset({
@@ -290,7 +290,7 @@ class KGStore:
 
     Every public method takes an explicit `engagement` parameter; the
     middleware injects it from kg_engagement state. No contextvar fallback
-    — the contextvar in decepticon_core.utils is kept only for legacy
+    — the contextvar in aegiscore_core.utils is kept only for legacy
     paths during the migration window.
     """
 
@@ -383,7 +383,7 @@ Plugin authors extend via the `aegiscore.kg.ingesters` entry-point group (one of
 
 ### 4.10 Plugin surface — `MiddlewareSlot.KG`
 
-Adds one enum entry to `decepticon_core.contracts.slots.MiddlewareSlot`:
+Adds one enum entry to `aegiscore_core.contracts.slots.MiddlewareSlot`:
 
 ```python
 class MiddlewareSlot(StrEnum):
@@ -417,7 +417,7 @@ The post-1.0 plugin contract needs to absorb the changes:
 | `aegiscore.middleware` | existing | Plugin authors can ship their own `KGMiddleware` subclass and have it picked up via the slot system. |
 | `aegiscore.bundles` | existing | Bundle authors compose middleware sets including / excluding KG. |
 
-Documentation goes in `packages/aegiscore-sdk/decepticon_sdk/scaffold/templates/kg_ingester/` — a `aegiscore-sdk plugin new --kind=kg-ingester` template ships in the SDK.
+Documentation goes in `packages/aegiscore-sdk/aegiscore_sdk/scaffold/templates/kg_ingester/` — a `aegiscore-sdk plugin new --kind=kg-ingester` template ships in the SDK.
 
 ---
 
@@ -441,7 +441,7 @@ Acceptance: `analyst` end-to-end via `make benchmark ARGS="--ids XBEN-095-24"` p
 
 | File | LOC | Disposition in PR-D |
 |---|---:|---|
-| `__init__.py` | 37 | Slim down to re-export from `decepticon_core.types.kg` only. |
+| `__init__.py` | 37 | Slim down to re-export from `aegiscore_core.types.kg` only. |
 | `_state.py` | 89 | Delete. `_load` / `_save` / `graph_transaction` are no longer called by anything inside the framework. |
 | `_engagement_scope.py` | 50 | Delete (it is already a re-export shim post-evacuation). |
 | `_apoc_safety.py` | 145 | Move under `kg_internal/`. Used by the chain planner for Cypher injection defense. |
@@ -498,7 +498,7 @@ For each PR:
 
 ### PR-C
 
-- `MiddlewareSlot.KG` exists in `decepticon_core.contracts.slots`.
+- `MiddlewareSlot.KG` exists in `aegiscore_core.contracts.slots`.
 - `SLOTS_PER_ROLE["analyst"]`, `["ad_operator"]`, `["contract_auditor"]` include `KG`.
 - `analyst.py` no longer imports `RESEARCH_TOOLS`, `BOUNTY_TOOLS`, `REPORTING_TOOLS`, `REFERENCES_TOOLS`. Its `_STANDARD_TOOLS` reduces to `*REFERENCES_TOOLS`, `*BASH_TOOLS` (the references and bash tools are still direct; KG tools come from the slot).
 - `make benchmark ARGS="--ids XBEN-095-24"` (an analyst-heavy challenge) finishes with the same pass/fail shape as the pre-PR baseline. Tool-call latency in LangSmith is **lower** (target: 5× lower for `kg_*` calls vs the broken backend on a graph with 1K+ nodes).

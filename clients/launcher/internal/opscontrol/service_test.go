@@ -67,21 +67,21 @@ func TestDetectServiceManager_ReturnsCorrectShape(t *testing.T) {
 
 func TestComposeProjectName_EnvOverrideWins(t *testing.T) {
 	t.Setenv("DECEPTICON_STACK_NAME", "stack2")
-	t.Setenv(ComposeProjectEnv, "decepticon-vendor-dev")
-	if got := ComposeProjectName(); got != "decepticon-vendor-dev" {
-		t.Errorf("ComposeProjectName = %q; want explicit override %q", got, "decepticon-vendor-dev")
+	t.Setenv(ComposeProjectEnv, "aegiscore-vendor-dev")
+	if got := ComposeProjectName(); got != "aegiscore-vendor-dev" {
+		t.Errorf("ComposeProjectName = %q; want explicit override %q", got, "aegiscore-vendor-dev")
 	}
 }
 
 func TestComposeProjectName_FallsBackToStackName(t *testing.T) {
 	t.Setenv(ComposeProjectEnv, "")
 	t.Setenv("DECEPTICON_STACK_NAME", "stack2")
-	if got := ComposeProjectName(); got != "decepticon-stack2" {
-		t.Errorf("ComposeProjectName = %q; want fallback %q", got, "decepticon-stack2")
+	if got := ComposeProjectName(); got != "aegiscore-stack2" {
+		t.Errorf("ComposeProjectName = %q; want fallback %q", got, "aegiscore-stack2")
 	}
 	t.Setenv("DECEPTICON_STACK_NAME", "")
-	if got := ComposeProjectName(); got != "decepticon" {
-		t.Errorf("ComposeProjectName = %q; want fallback %q", got, "decepticon")
+	if got := ComposeProjectName(); got != "aegiscore" {
+		t.Errorf("ComposeProjectName = %q; want fallback %q", got, "aegiscore")
 	}
 }
 

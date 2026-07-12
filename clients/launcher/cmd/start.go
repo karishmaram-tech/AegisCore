@@ -12,16 +12,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/cmd/opscontrol"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/compose"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/config"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/engagement"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/health"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/migrate"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/platform"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/starprompt"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/ui"
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/updater"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/cmd/opscontrol"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/compose"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/config"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/engagement"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/health"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/migrate"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/platform"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/starprompt"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/ui"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/updater"
 	"github.com/spf13/cobra"
 )
 
@@ -88,7 +88,7 @@ var skipUpdate bool
 
 var startCmd = &cobra.Command{
 	Use:   "start",
-	Short: "Start Decepticon services and launch the CLI",
+	Short: "Start Aegiscore services and launch the CLI",
 	RunE:  runStart,
 }
 
@@ -96,8 +96,8 @@ func init() {
 	rootCmd.AddCommand(startCmd)
 
 	// PersistentFlag on root → inherited by `start`, so both
-	// `decepticon --no-update` (no subcommand → runStart) and
-	// `decepticon start --no-update` accept the flag.
+	// `aegiscore --no-update` (no subcommand → runStart) and
+	// `aegiscore start --no-update` accept the flag.
 	rootCmd.PersistentFlags().BoolVar(&skipUpdate, "no-update", false,
 		"Skip the self-update check for this launch (does not change AUTO_UPDATE in .env)")
 
@@ -175,7 +175,7 @@ func runStart(cmd *cobra.Command, args []string) error {
 		}
 		ui.Info("Downloading configuration files...")
 		// release == nil here: this branch only triggers when compose
-		// files are missing on launch (e.g. user wiped ~/.decepticon), so
+		// files are missing on launch (e.g. user wiped ~/.aegiscore), so
 		// we lack the prefetched Release object that ApplyUpdate carries.
 		// SyncConfigFiles falls back to unverified download with a
 		// warning — the install.sh path is the verified-by-default entry.
@@ -237,7 +237,7 @@ func runStart(cmd *cobra.Command, args []string) error {
 	// otherwise") meant a bug-fix release sat on the user's machine,
 	// un-applied, until they noticed the notice and re-ran. Silent self-
 	// update collapses the "fix shipped" → "fix running on user host" gap
-	// from days/weeks to the next `decepticon start`, which is the same
+	// from days/weeks to the next `aegiscore start`, which is the same
 	// behaviour Discord/Slack/electron-updater apps already use.
 	//
 	// Synchronous on purpose: the prompt + unattended paths apply and re-exec
@@ -284,7 +284,7 @@ func runStart(cmd *cobra.Command, args []string) error {
 	// 5. Start services
 	c := compose.New()
 
-	ui.Info("Starting Decepticon services...")
+	ui.Info("Starting Aegiscore services...")
 	if err := c.Up(compose.Profiles.CLI); err != nil {
 		return fmt.Errorf("start services: %w", err)
 	}
@@ -296,7 +296,7 @@ func runStart(cmd *cobra.Command, args []string) error {
 
 	// 6. Launch CLI
 	fmt.Println()
-	ui.Info("Launching Decepticon CLI...")
+	ui.Info("Launching Aegiscore CLI...")
 
 	cliEnv := map[string]string{
 		"DECEPTICON_VERSION":      version,
@@ -308,7 +308,7 @@ func runStart(cmd *cobra.Command, args []string) error {
 	}
 
 	// Pass through terminal. Services are intentionally left running on CLI exit
-	// so re-entry is fast (cold start is ~75s); use 'decepticon stop' to shut
+	// so re-entry is fast (cold start is ~75s); use 'aegiscore stop' to shut
 	// the stack down.
 	if err := c.RunInteractive(
 		[]string{compose.Profiles.CLI},
@@ -319,7 +319,7 @@ func runStart(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("cli: %w", err)
 	}
 
-	ui.DimText("CLI exited. Services kept running — run 'decepticon stop' to shut down.")
+	ui.DimText("CLI exited. Services kept running — run 'aegiscore stop' to shut down.")
 	return nil
 }
 

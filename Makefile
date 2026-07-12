@@ -1,4 +1,4 @@
-# Decepticon — Pre-release Verification & Development
+# Aegiscore — Pre-release Verification & Development
 #
 # Purpose: dogfood and validate the OSS release flow before tagging. Every
 # Docker target builds from the local checkout (never pulls from GHCR), so
@@ -24,21 +24,21 @@ PROFILES_ALL  := --profile cli --profile c2-sliver
 WEB_DIR       := clients/web
 
 # Dogfood: isolated $DECEPTICON_HOME so the launcher can onboard, write .env,
-# and stand up the stack without touching the user's real ~/.decepticon. The
+# and stand up the stack without touching the user's real ~/.aegiscore. The
 # launcher resolves all relative paths against the compose file's directory,
 # so docker-compose.yml + config/ + containers/ + .env.example are symlinked
 # back to the repo. workspace/ stays a real directory (engagement bind mount).
 DOGFOOD_HOME  := $(CURDIR)/.dogfood
-LAUNCHER_BIN  := clients/launcher/bin/decepticon
+LAUNCHER_BIN  := clients/launcher/bin/aegiscore
 
 # docker compose cannot expand ~ inside compose-file defaults, so resolve it
 # here before any subprocess inherits the env.
-export DECEPTICON_HOME ?= $(HOME)/.decepticon
+export DECEPTICON_HOME ?= $(HOME)/.aegiscore
 
 # Mirror the launcher's start.go credential mount logic so `make dev` (and any
 # other target that calls `docker compose`) populates the litellm container's
 # Claude Code + Codex CLI OAuth tokens without requiring users to run
-# `decepticon onboard`. Existence check at make-time: real file when host has
+# `aegiscore onboard`. Existence check at make-time: real file when host has
 # tokens, /dev/null otherwise so docker doesn't synthesize a bind directory.
 export CLAUDE_CREDENTIALS_VOLUME ?= $(shell test -f $(HOME)/.claude/.credentials.json && echo $(HOME)/.claude/.credentials.json || echo /dev/null)
 export CODEX_AUTH_VOLUME ?= $(shell test -f $(HOME)/.codex/auth.json && echo $(HOME)/.codex/auth.json || echo /dev/null)
@@ -56,7 +56,7 @@ export CODEX_AUTH_VOLUME ?= $(shell test -f $(HOME)/.codex/auth.json && echo $(H
 # ── Help (default target) ────────────────────────────────────────
 
 help:
-	@echo "Decepticon — Pre-release Verification & Development"
+	@echo "Aegiscore — Pre-release Verification & Development"
 	@echo ""
 	@echo "Pre-release verification (release readiness):"
 	@echo "  make dogfood      Full OSS UX (launcher → onboard → CLI) on local code"
@@ -121,19 +121,19 @@ dogfood: launcher
 ## Build the Go launcher binary (version=dev, gates auto-update + config sync).
 launcher:
 	cd clients/launcher && go build \
-		-ldflags '-X github.com/PurpleAILAB/Decepticon/clients/launcher/cmd.version=dev' \
-		-o bin/decepticon
+		-ldflags '-X github.com/karishmaram-tech/AegisCore/clients/launcher/cmd.version=dev' \
+		-o bin/aegiscore
 
 ## Compose-only smoke (no launcher, no onboard wizard) — fastest possible
 ## release-shape check. Replicates only the launcher's compose Up step:
-##   1. Down + purge volumes (parity with `decepticon remove`)
+##   1. Down + purge volumes (parity with `aegiscore remove`)
 ##   2. Build all images from local code (replaces `compose pull` from GHCR)
 ##   3. up -d --no-build --wait --wait-timeout  (identical to launcher Up)
-##   4. Health checks (identical to `decepticon health`)
+##   4. Health checks (identical to `aegiscore health`)
 ## Use dogfood for the full release flow; use smoke when the compose stack
 ## is the only thing you've changed.
 smoke:
-	@echo "=== Decepticon pre-release smoke (compose-only, no launcher) ==="
+	@echo "=== Aegiscore pre-release smoke (compose-only, no launcher) ==="
 	@echo ""
 	@echo "[1/4] Clean state (purging containers + volumes)..."
 	@$(COMPOSE) $(PROFILES_ALL) down --volumes --remove-orphans 2>/dev/null; true
@@ -168,15 +168,15 @@ dev:
 ## Ctrl-C tears both down cleanly.
 cli-dev: infra
 	@$(COMPOSE_WATCH) watch --no-up --quiet langgraph &
-	npm run build --workspace=@decepticon/streaming
+	npm run build --workspace=@aegiscore/streaming
 	cd clients/cli && npm run build
 	cd clients/cli && (npm run dev & DECEPTICON_API_URL=$${DECEPTICON_API_URL:-http://localhost:2024} node --watch dist/index.js & wait)
 
 ## Next.js dev server locally — infra stays in Docker with hot-reload.
 web-dev: infra web-db-ensure node-install
 	# Build streaming first: both the Next dev server and the PTY-spawned CLI
-	# import @decepticon/streaming, which resolves to its dist/ build.
-	npm run build --workspace=@decepticon/streaming
+	# import @aegiscore/streaming, which resolves to its dist/ build.
+	npm run build --workspace=@aegiscore/streaming
 	@$(COMPOSE_WATCH) watch --no-up --quiet langgraph &
 	@echo "[web-dev] Starting terminal server (ws://localhost:3003)..."
 	@cd $(WEB_DIR) && npx tsx server/terminal-server.ts &
@@ -230,24 +230,24 @@ ci-test:
 ## SKILL.md schema validator (warn mode — Phase 0). Exit 0 even if violations found.
 .PHONY: audit-skills
 audit-skills:
-	uv run python -m decepticon.skill_audit --mode warn
+	uv run python -m aegiscore.skill_audit --mode warn
 
 ## SKILL.md schema validator (strict mode — post-Phase-0 CI gate). Exit 1 on any violation.
 .PHONY: audit-skills-strict
 audit-skills-strict:
-	uv run python -m decepticon.skill_audit --mode strict
+	uv run python -m aegiscore.skill_audit --mode strict
 
 ## Skill graph builder (Phase 1a) — compile SKILL.md + seeds + MITRE STIX
-## into packages/decepticon/decepticon/skills/.graph/skills.cypher.
+## into packages/aegiscore/aegiscore/skills/.graph/skills.cypher.
 .PHONY: build-skill-graph
 build-skill-graph:
-	uv run python -m decepticon.skillogy.builder --frozen-built-at
+	uv run python -m aegiscore.skillogy.builder --frozen-built-at
 
 ## CI gate — assert the checked-in skills.cypher matches what the
 ## builder produces from the current SKILL.md + seed YAML + pinned STIX.
 .PHONY: check-skill-graph
 check-skill-graph:
-	uv run python -m decepticon.skillogy.builder --frozen-built-at --check
+	uv run python -m aegiscore.skillogy.builder --frozen-built-at --check
 
 ## main-push lane: slow included, coverage 60% gate (ratcheted from 35% in #380).
 ci-test-coverage:
@@ -266,10 +266,10 @@ ci-test-coverage-report:
 quality-cli: node-install
 	# streaming workspace must be built first — its package.json main
 	# resolves to dist/, which cli's typecheck + build consume.
-	npm run build --workspace=@decepticon/streaming
-	npm run typecheck --workspace=@decepticon/cli
-	npm run build --workspace=@decepticon/cli
-	npm run test --workspace=@decepticon/cli
+	npm run build --workspace=@aegiscore/streaming
+	npm run typecheck --workspace=@aegiscore/cli
+	npm run build --workspace=@aegiscore/cli
+	npm run test --workspace=@aegiscore/cli
 
 ## PR gate — mirrors CI PR lane (errors-only typecheck + fast pytest + CLI + Web).
 ## Use before opening a PR; passing this guarantees CI will pass.
@@ -291,9 +291,9 @@ quality-strict: ci-lint ci-test-coverage quality-cli web-lint web-build
 # into the root node_modules — no separate clients/web/node_modules tree.
 
 web-build: node-install
-	# streaming workspace first — the web resolves @decepticon/streaming to its
+	# streaming workspace first — the web resolves @aegiscore/streaming to its
 	# dist/ via package exports (no src path alias), so next build needs it.
-	npm run build --workspace=@decepticon/streaming
+	npm run build --workspace=@aegiscore/streaming
 	cd $(WEB_DIR) && npx prisma generate && npm run build
 
 ## Hot-swap web dashboard into running container (~15s vs ~5min docker build).
@@ -316,11 +316,11 @@ status:
 logs:
 	$(COMPOSE) logs -f $(or $(SVC),langgraph)
 
-## Health checks: KG backend + Neo4j + Web (parity with `decepticon health`).
+## Health checks: KG backend + Neo4j + Web (parity with `aegiscore health`).
 health:
-	@$(COMPOSE) exec -T langgraph python -m decepticon.tools.research.health >/dev/null 2>&1 \
+	@$(COMPOSE) exec -T langgraph python -m aegiscore.tools.research.health >/dev/null 2>&1 \
 		&& echo "kg:    OK" || (echo "kg:    FAIL" && exit 1)
-	@$(COMPOSE) exec -T neo4j cypher-shell -u neo4j -p "$${NEO4J_PASSWORD:-decepticon-graph}" "RETURN 1 AS ok;" >/dev/null 2>&1 \
+	@$(COMPOSE) exec -T neo4j cypher-shell -u neo4j -p "$${NEO4J_PASSWORD:-aegiscore-graph}" "RETURN 1 AS ok;" >/dev/null 2>&1 \
 		&& echo "neo4j: OK" || (echo "neo4j: FAIL" && exit 1)
 	@curl -sf http://localhost:$${WEB_PORT:-3000} >/dev/null 2>&1 \
 		&& echo "web:   OK (http://localhost:$${WEB_PORT:-3000})" \
@@ -345,7 +345,7 @@ node-install:
 web-db-ensure:
 	@echo "[web-db-ensure] Waiting for PostgreSQL..."
 	@for i in 1 2 3 4 5 6 7 8 9 10; do \
-		docker exec decepticon$${DECEPTICON_STACK_NAME:+-$${DECEPTICON_STACK_NAME}}-postgres pg_isready -U decepticon -q 2>/dev/null && break; \
+		docker exec aegiscore$${DECEPTICON_STACK_NAME:+-$${DECEPTICON_STACK_NAME}}-postgres pg_isready -U aegiscore -q 2>/dev/null && break; \
 		sleep 1; \
 	done
 	@cd $(WEB_DIR) && npx prisma migrate deploy 2>&1 | tail -1
@@ -362,7 +362,7 @@ web-db-ensure:
 ## valid OAuth access token (token TTL ~8h ≫ cycle duration ~30m).
 recreate-litellm:
 	@$(COMPOSE) up -d --no-build --force-recreate litellm
-	@docker exec decepticon$${DECEPTICON_STACK_NAME:+-$${DECEPTICON_STACK_NAME}}-litellm sh -c 'test -s /root/.claude/.credentials.json' \
+	@docker exec aegiscore$${DECEPTICON_STACK_NAME:+-$${DECEPTICON_STACK_NAME}}-litellm sh -c 'test -s /root/.claude/.credentials.json' \
 		&& echo "recreate-litellm: creds mount OK" \
 		|| (echo "recreate-litellm: creds mount EMPTY — onboard first" && exit 1)
 

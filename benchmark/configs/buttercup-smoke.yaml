@@ -2,7 +2,7 @@ name: buttercup-smoke
 description: >
   Smoke run against three AIxCC Buttercup challenges — fast signal on
   the offensive-vaccine pipeline against external, third-party-verified
-  vulnerabilities. Use this config to validate that the Decepticon stack
+  vulnerabilities. Use this config to validate that the Aegiscore stack
   reaches the Buttercup suite cleanly before scheduling a full run.
 
 provider: buttercup
@@ -15,7 +15,7 @@ per_challenge_timeout_seconds: 900
 
 model_profile: eco
 
-assistant: decepticon
+assistant: aegiscore
 
 retain_artifacts:
   - graph.json

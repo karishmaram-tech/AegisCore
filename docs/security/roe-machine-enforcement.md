@@ -17,7 +17,7 @@ the middleware runs in audit-only mode: every gated tool call is logged
 to the [audit ledger](./audit-ledger.md) but nothing is ever refused.
 
 Source of record:
-[`types/roe.py`](../../packages/aegiscore-core/decepticon_core/types/roe.py)
+[`types/roe.py`](../../packages/aegiscore-core/aegiscore_core/types/roe.py)
 (schema + evaluator) and
 [`middleware/roe.py`](../../packages/aegiscore/aegiscore/middleware/roe.py)
 (the gate).

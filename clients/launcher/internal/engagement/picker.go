@@ -22,14 +22,14 @@ import (
 	"charm.land/huh/v2"
 	"charm.land/lipgloss/v2"
 
-	"github.com/PurpleAILAB/Decepticon/clients/launcher/internal/ui"
+	"github.com/karishmaram-tech/AegisCore/clients/launcher/internal/ui"
 )
 
 // AssistantSoundwave drives the document-writing interview for a fresh engagement.
 const AssistantSoundwave = "soundwave"
 
 // AssistantDecepticon drives kill-chain execution against an existing engagement.
-const AssistantDecepticon = "decepticon"
+const AssistantDecepticon = "aegiscore"
 
 // Slug regex: lowercase alphanumeric with internal hyphens, 3-64 chars.
 var slugRe = regexp.MustCompile(`^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]$`)
@@ -170,7 +170,7 @@ func (i pickerItem) Description() string {
 	if i.inProgress {
 		return "Planning incomplete — resume with Soundwave"
 	}
-	return "Resume with Decepticon"
+	return "Resume with Aegiscore"
 }
 
 type pickerKeyMap struct {
@@ -244,7 +244,7 @@ func (m *pickerModel) resizeList() {
 func (m pickerModel) renderConfirmOverlay() string {
 	body := lipgloss.JoinVertical(lipgloss.Left,
 		confirmTextStyle.Render(fmt.Sprintf("Permanently delete '%s'?", m.deleteTarget)),
-		confirmHintStyle.Render("Removes ~/.decepticon/workspace/"+m.deleteTarget+"/ and all contents."),
+		confirmHintStyle.Render("Removes ~/.aegiscore/workspace/"+m.deleteTarget+"/ and all contents."),
 		confirmHintStyle.Render("Press [y] to confirm, [n] / [esc] to cancel."),
 	)
 	return confirmStyle.Render(body)
@@ -254,7 +254,7 @@ func newPickerModel(home string, entries []engagementEntry) pickerModel {
 	items := buildItems(entries)
 	delegate := list.NewDefaultDelegate()
 	l := list.New(items, delegate, 0, 0)
-	l.Title = "Decepticon — pick an engagement"
+	l.Title = "Aegiscore — pick an engagement"
 	l.SetShowHelp(true)
 	l.SetShowStatusBar(false)
 	l.SetFilteringEnabled(false)
