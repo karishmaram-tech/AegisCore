@@ -1,0 +1,24 @@
+<svg width="600" height="600" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>AegisCore bolt mark</title>
+  <desc>A bold bolt glyph on a soft teal, indigo and amber gradient card.</desc>
+  <defs>
+    <clipPath id="cardClip">
+      <rect x="0" y="0" width="600" height="600" rx="28"/>
+    </clipPath>
+    <filter id="soften" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="70"/>
+    </filter>
+  </defs>
+  <g clip-path="url(#cardClip)">
+    <rect x="0" y="0" width="600" height="600" fill="#f4f1ea"/>
+    <g filter="url(#soften)">
+      <ellipse cx="90" cy="120" rx="220" ry="160" fill="#f6c453" opacity="0.85"/>
+      <ellipse cx="480" cy="150" rx="230" ry="190" fill="#5ecfc0" opacity="0.85"/>
+      <ellipse cx="150" cy="470" rx="240" ry="200" fill="#4f6df5" opacity="0.55"/>
+      <ellipse cx="470" cy="480" rx="230" ry="190" fill="#7c3aed" opacity="0.5"/>
+      <ellipse cx="300" cy="300" rx="180" ry="140" fill="#f4f1ea" opacity="0.35"/>
+    </g>
+  </g>
+  <path d="M330 90 L215 340 L285 340 L255 510 L400 250 L325 250 Z"
+        fill="#111111"/>
+</svg>
