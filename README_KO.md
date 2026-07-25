@@ -136,7 +136,7 @@ AI + 해킹 도구들은 대부분 nmap 돌리고 리포트 출력하는 데모�
 ## 아키텍처
 
 <div align="center">
-  <img src="assets/decepticon_infra.svg" alt="Aegiscore Infrastructure" width="680">
+  <img src="assets/aegiscore_infra.svg" alt="Aegiscore Infrastructure" width="680">
 </div>
 
 두 개의 네트워크로 분리된 설계 — 관리 서비스(LiteLLM, PostgreSQL, LangGraph, Web)는 `aegiscore-net`, 샌드박스 / C2 서버 / 타깃은 `sandbox-net`. Neo4j는 양 네트워크에 듀얼-홈으로 두어 관리망의 에이전트가 샌드박스 내부에서 기록한 발견 사항을 영속화할 수 있게 합니다.
