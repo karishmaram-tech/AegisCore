@@ -1,37 +1,103 @@
-<svg width="900" height="260" viewBox="0 0 900 260" xmlns="http://www.w3.org/2000/svg" role="img">
-  <title>AegisCore</title>
-  <desc>A bolt mark on a soft teal, indigo and amber gradient card, beside the wordmark AegisCore and a tagline.</desc>
+<svg width="900" height="220" viewBox="0 0 900 220" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>AegisCore Logo Banner</title>
+  <desc>Futuristic shield with a glowing red AI core and the AegisCore wordmark.</desc>
   <defs>
-    <clipPath id="cardClip2">
-      <rect x="0" y="0" width="220" height="220" rx="24"/>
-    </clipPath>
-    <filter id="soften2" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="45"/>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGrad" cx="25%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#181c24"/>
+      <stop offset="100%" stop-color="#080a0d"/>
+    </radialGradient>
+
+    <!-- Shield Plate Gradient -->
+    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2d333f"/>
+      <stop offset="50%" stop-color="#1c2029"/>
+      <stop offset="100%" stop-color="#0e1015"/>
+    </linearGradient>
+
+    <!-- Core Glow Gradient -->
+    <radialGradient id="coreGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="25%" stop-color="#ff3366"/>
+      <stop offset="70%" stop-color="#aa0022"/>
+      <stop offset="100%" stop-color="#aa0022" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Text Core Gradient -->
+    <linearGradient id="coreTextGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff3366"/>
+      <stop offset="100%" stop-color="#ff003c"/>
+    </linearGradient>
+
+    <!-- Glow Filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur1"/>
+      <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur2"/>
+      <feMerge>
+        <feMergeNode in="blur2"/>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
-    <style>
-      .word2 { fill: #14110f; }
-      .tag2 { fill: #5b5750; }
-      @media (prefers-color-scheme: dark) {
-        .word2 { fill: #f5f3ee; }
-        .tag2 { fill: #b7b2a9; }
-      }
-    </style>
+
+    <!-- Subtle Grid Pattern -->
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="#ff3366" stroke-width="1" opacity="0.04"/>
+    </pattern>
   </defs>
 
-  <g transform="translate(20,20)">
-    <g clip-path="url(#cardClip2)">
-      <rect x="0" y="0" width="220" height="220" fill="#f4f1ea"/>
-      <g filter="url(#soften2)">
-        <ellipse cx="30" cy="40" rx="85" ry="60" fill="#f6c453" opacity="0.85"/>
-        <ellipse cx="180" cy="55" rx="88" ry="70" fill="#5ecfc0" opacity="0.85"/>
-        <ellipse cx="55" cy="175" rx="90" ry="75" fill="#4f6df5" opacity="0.55"/>
-        <ellipse cx="175" cy="180" rx="88" ry="70" fill="#7c3aed" opacity="0.5"/>
-        <ellipse cx="110" cy="110" rx="65" ry="50" fill="#f4f1ea" opacity="0.35"/>
-      </g>
-    </g>
-    <path d="M121 33 L79 125 L104 125 L93 187 L147 92 L119 92 Z" fill="#111111"/>
+  <!-- Banner Background -->
+  <rect width="900" height="220" rx="16" fill="url(#bgGrad)"/>
+  
+  <!-- Grid overlay -->
+  <rect width="900" height="220" rx="16" fill="url(#grid)"/>
+
+  <!-- Subtle ambient glow behind shield -->
+  <circle cx="130" cy="110" r="100" fill="#ff3366" opacity="0.08" filter="url(#glow)"/>
+
+  <!-- Shield Icon Group -->
+  <g transform="translate(130, 110)">
+    <!-- Shield Plates -->
+    <!-- Shield Plates -->
+    <!-- Top Left Plate -->
+    <path d="M -6,-68 L -62,-48 C -72,-30 -72,-10 -62,2 L -6,28 Z" fill="url(#shieldGrad)" stroke="#ff3366" stroke-width="1.5" stroke-opacity="0.8"/>
+    
+    <!-- Top Right Plate -->
+    <path d="M 6,-68 L 62,-48 C 72,-30 72,-10 62,2 L 6,28 Z" fill="url(#shieldGrad)" stroke="#ff3366" stroke-width="1.5" stroke-opacity="0.8"/>
+    
+    <!-- Bottom Left Plate -->
+    <path d="M -62,12 C -62,25 -60,32 -58,38 L -6,78 L -6,38 Z" fill="url(#shieldGrad)" stroke="#ff3366" stroke-width="1.5" stroke-opacity="0.8"/>
+    
+    <!-- Bottom Right Plate -->
+    <path d="M 62,12 C 62,25 60,32 58,38 L 6,78 L 6,38 Z" fill="url(#shieldGrad)" stroke="#ff3366" stroke-width="1.5" stroke-opacity="0.8"/>
+
+    <!-- Glowing AI Core (Center of the Shield) -->
+    <!-- Ambient aura -->
+    <circle cx="0" cy="-5" r="28" fill="#ff003c" opacity="0.3" filter="url(#glow)"/>
+    <!-- Outer tech ring (spinning look) -->
+    <circle cx="0" cy="-5" r="26" fill="none" stroke="#ff3366" stroke-width="1.5" stroke-dasharray="6 8" opacity="0.8"/>
+    <!-- Middle tech ring -->
+    <circle cx="0" cy="-5" r="38" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="12 16" opacity="0.4"/>
+    <!-- Inner glowing core -->
+    <circle cx="0" cy="-5" r="14" fill="url(#coreGrad)" filter="url(#glow)"/>
+    
+    <!-- Cybernetic target lines -->
+    <line x1="0" y1="-55" x2="0" y2="-40" stroke="#ff3366" stroke-width="1.5" opacity="0.6"/>
+    <line x1="0" y1="35" x2="0" y2="50" stroke="#ff3366" stroke-width="1.5" opacity="0.6"/>
+    <line x1="-50" y1="-5" x2="-35" y2="-5" stroke="#ff3366" stroke-width="1.5" opacity="0.6"/>
+    <line x1="35" y1="-5" x2="50" y2="-5" stroke="#ff3366" stroke-width="1.5" opacity="0.6"/>
   </g>
 
-  <text x="270" y="140" font-family="Arial, Helvetica, sans-serif" font-size="60" font-weight="700" class="word2">AegisCore</text>
-  <text x="272" y="175" font-family="Arial, Helvetica, sans-serif" font-size="20" class="tag2">Autonomous AI red team agent</text>
+  <!-- Wordmark Text -->
+  <text x="240" y="120" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="56" letter-spacing="-0.5">
+    <tspan fill="#ffffff" font-weight="800">Aegis</tspan><tspan fill="url(#coreTextGrad)" font-weight="800">Core</tspan>
+  </text>
+
+  <!-- Tagline -->
+  <g transform="translate(242, 148)">
+    <circle cx="4" cy="7" r="3" fill="#ff3366" />
+    <text x="18" y="12" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="14" font-weight="600" fill="#8a94a6" letter-spacing="4">
+      AUTONOMOUS AI RED TEAM AGENT
+    </text>
+  </g>
 </svg>

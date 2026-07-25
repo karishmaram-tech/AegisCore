@@ -2,7 +2,7 @@
 [![한국어](https://img.shields.io/badge/Language-한국어-red?style=for-the-badge)](README_KO.md)
 
 <div align="center">
-  <img src="assets/logo_banner.png" alt="Aegiscore Logo">
+  <img src="assets/aegiscore_logo_banner.svg" alt="Aegiscore Logo">
 </div>
 
 <h1 align="center">Aegiscore — 자율 레드팀 에이전트</h1>
