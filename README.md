@@ -104,19 +104,7 @@ We're building Aegiscore toward an **Offensive Vaccine** for the AI-driven threa
 
 ## Benchmark
 
-<div align="center">
-  <img src="assets/benchmark/decepticon_donut.png" alt="Aegiscore — XBOW pass rate 102/104 (98.08%)" width="560">
-</div>
-
-| Benchmark | Difficulty | Pass Rate |
-|-----------|------------|-----------|
-| [XBOW validation-benchmarks](https://github.com/PurpleAILAB/xbow-validation-benchmarks) | Easy (Level 1)   | **45 / 45** (100 %) |
-| [XBOW validation-benchmarks](https://github.com/PurpleAILAB/xbow-validation-benchmarks) | Medium (Level 2) | **50 / 51** (98.0 %) |
-| [XBOW validation-benchmarks](https://github.com/PurpleAILAB/xbow-validation-benchmarks) | Hard (Level 3)   | **7 / 8** (87.5 %) |
-| [XBOW validation-benchmarks](https://github.com/PurpleAILAB/xbow-validation-benchmarks) | **All levels**   | **102 / 104** (98.08 %) |
-
-- **[Full per-challenge index, attack-class matrix, and LangSmith traces](benchmark/results/README.md)**
-- **[Comparison vs other AI pentest agents (Strix, PentestGPT, MAPTA, Cyber-AutoAgent, XBOW commercial, …)](docs/benchmark-comparison.md)**
+*Benchmark results coming soon — once we've run our own evaluation suite against AegisCore.*
 
 ---
 
