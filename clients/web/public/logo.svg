@@ -1,0 +1,49 @@
+<svg width="512" height="512" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" role="img">
+  <title>AegisCore logo</title>
+  <desc>Sentinel Eye: A cybernetic eye scanning logo icon for AegisCore.</desc>
+  <defs>
+    <!-- Orange-Red Glowing Core Gradient -->
+    <radialGradient id="pupilGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="30%" stop-color="#ff5a1f"/>
+      <stop offset="75%" stop-color="#8a0000"/>
+      <stop offset="100%" stop-color="#8a0000" stop-opacity="0"/>
+    </radialGradient>
+    
+    <!-- Neon Glow Filter -->
+    <filter id="neon" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Outer Radar sweep (White/off-white with opacity) -->
+  <circle cx="250" cy="250" r="200" fill="none" stroke="#ffffff" stroke-width="2" stroke-dasharray="8 20" opacity="0.25" />
+  <circle cx="250" cy="250" r="160" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="40 10 5 10" opacity="0.4" />
+  
+  <!-- Curved HUD Brackets (White) -->
+  <path d="M 110,170 A 130,130 0 0,0 110,330" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
+  <path d="M 390,170 A 130,130 0 0,1 390,330" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.75"/>
+
+  <!-- Scanning crosshair ticks (Orange-Red highlights) -->
+  <line x1="250" y1="30" x2="250" y2="60" stroke="#ff5a1f" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+  <line x1="250" y1="440" x2="250" y2="470" stroke="#ff5a1f" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+  <line x1="30" y1="250" x2="60" y2="250" stroke="#ff5a1f" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+  <line x1="440" y1="250" x2="470" y2="250" stroke="#ff5a1f" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+
+  <!-- Geometric Iris (Hexagon in White/Off-white) -->
+  <polygon points="250,150 336,200 336,300 250,350 164,300 164,200" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.5"/>
+  <polygon points="250,170 319,210 319,290 250,330 181,290 181,210" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.3"/>
+
+  <!-- Central Pupil Core (Orange-Red Glow) -->
+  <circle cx="250" cy="250" r="50" fill="url(#pupilGlow)" filter="url(#neon)" />
+  <circle cx="250" cy="250" r="16" fill="#ffffff" />
+  
+  <!-- Laser targeting beam (Orange-Red) -->
+  <line x1="90" y1="250" x2="410" y2="250" stroke="#ff5a1f" stroke-width="2" opacity="0.6" />
+  <circle cx="150" cy="250" r="3" fill="#ff5a1f" opacity="0.8"/>
+  <circle cx="350" cy="250" r="3" fill="#ff5a1f" opacity="0.8"/>
+</svg>

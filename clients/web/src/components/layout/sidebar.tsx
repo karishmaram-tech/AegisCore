@@ -151,11 +151,11 @@ export function Sidebar() {
     >
       {/* Logo */}
       <div className="flex h-14 items-center gap-2.5 border-b border-border/50 px-4">
-        <img src="/logo.png" alt="PurpleAILab" width={26} height={26} className="shrink-0" />
+        <img src="/logo.svg" alt="AegisCore" width={26} height={26} className="shrink-0" />
         {!collapsed && (
           <span className="text-sm font-bold tracking-tight">
-            <span className="text-purple-400">Purple</span>
-            <span className="text-foreground">AILab</span>
+            <span className="text-purple-400">Aegis</span>
+            <span className="text-foreground">Core</span>
           </span>
         )}
       </div>
