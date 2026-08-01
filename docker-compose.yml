@@ -72,6 +72,8 @@ services:
     # Working set is tiny (LiteLLM spend logs + web state, shared_buffers=32MB).
     # Cap so a runaway query can't starve the host; 2g leaves ample headroom.
     mem_limit: 2g
+    ports:
+      - "127.0.0.1:15432:5432"
     environment:
       POSTGRES_DB: litellm
       POSTGRES_USER: aegiscore
