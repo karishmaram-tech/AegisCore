@@ -131,3 +131,5 @@ benchmark/results/XBEN-*-24/run-loop*.log
 docs/superpowers/
 
 scripts/migration/
+
+docker-compose.override.yml
