@@ -1,13 +1,13 @@
-[![English](https://img.shields.io/badge/Language-English-blue?style=for-the-badge)](README.md)
-[![한국어](https://img.shields.io/badge/Language-한국어-red?style=for-the-badge)](README_KO.md)
+﻿[![English](https://img.shields.io/badge/Language-English-blue?style=for-the-badge)](README.md)
+[![í•œêµ­ì–´](https://img.shields.io/badge/Language-í•œêµ­ì–´-red?style=for-the-badge)](README_KO.md)
 
 <div align="center">
   <img src="assets/aegiscore_logo_banner.svg" alt="Aegiscore Logo">
 </div>
 
-<h1 align="center">Aegiscore — Autonomous Red Team Agent</h1>
+<h1 align="center">Aegiscore â€” Autonomous Red Team Agent</h1>
 
-<p align="center"><i>"Another AI hacker? Let us guess — it runs nmap and writes a report."</i></p>
+<p align="center"><i>"Another AI hacker? Let us guess â€” it runs nmap and writes a report."</i></p>
 
 <div align="center">
 
@@ -28,7 +28,7 @@
 <br/>
 
 <div align="center">
-  <em>Demo video coming soon � recording in progress.</em>
+  <em>Demo video coming soon - recording in progress.</em>
 </div>
 
 
@@ -37,18 +37,18 @@
 
 For installation and local development instructions, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-→ **[Quick start](docs/getting-started.md)** · **[Full setup walkthrough](docs/setup-guide.md)**
+â†’ **[Quick start](docs/getting-started.md)** Â· **[Full setup walkthrough](docs/setup-guide.md)**
 
 ### Use as a library (pip)
 
-Building on top of the agents — a product, a research integration, or a custom orchestrator? Install the SDK from PyPI:
+Building on top of the agents â€” a product, a research integration, or a custom orchestrator? Install the SDK from PyPI:
 
 ```bash
 pip install aegiscore              # core SDK
 pip install "aegiscore[neo4j]"     # + the knowledge-graph attack-chain tools
 ```
 
-`aegiscore` is a **client SDK**: it ships the agent factories, middleware, tools, and skills, and routes LLM calls and sandbox execution to runtime services over HTTP (`DECEPTICON_LLM__PROXY_URL`, `SANDBOX_URL`). Running agents still needs those services — use the Docker stack above, or point the URLs at your own equivalents. See **[Aegiscore as a library](docs/library-usage.md)** for the factory override surface, declarative `PluginBundle` plugins, and the safety gate.
+`aegiscore` is a **client SDK**: it ships the agent factories, middleware, tools, and skills, and routes LLM calls and sandbox execution to runtime services over HTTP (`DECEPTICON_LLM__PROXY_URL`, `SANDBOX_URL`). Running agents still needs those services â€” use the Docker stack above, or point the URLs at your own equivalents. See **[Aegiscore as a library](docs/library-usage.md)** for the factory override surface, declarative `PluginBundle` plugins, and the safety gate.
 
 
 
@@ -56,7 +56,7 @@ pip install "aegiscore[neo4j]"     # + the knowledge-graph attack-chain tools
 
 ## Benchmark
 
-*Benchmark results coming soon — once we've run our own evaluation suite against AegisCore.*
+*Benchmark results coming soon â€” once we've run our own evaluation suite against AegisCore.*
 
 ---
 
@@ -64,23 +64,23 @@ pip install "aegiscore[neo4j]"     # + the knowledge-graph attack-chain tools
 
 The "AI + hacking" space is full of demos that run nmap and print a report. That's not what this is.
 
-**Aegiscore is a professional autonomous Red Team agent.** It executes realistic attack chains — reconnaissance, exploitation, privilege escalation, lateral movement, C2 — the way a real adversary would, not the way a scanner does.
+**Aegiscore is a professional autonomous Red Team agent.** It executes realistic attack chains â€” reconnaissance, exploitation, privilege escalation, lateral movement, C2 â€” the way a real adversary would, not the way a scanner does.
 
-But more importantly: it operates under the discipline that separates red teamers from script kiddies. Before a single packet leaves the wire, Aegiscore generates a complete engagement package — **RoE**, **ConOps**, **Deconfliction Plan**, and **OPPLAN** with MITRE ATT&CK mapping — and every action runs inside those defined rules.
+But more importantly: it operates under the discipline that separates red teamers from script kiddies. Before a single packet leaves the wire, Aegiscore generates a complete engagement package â€” **RoE**, **ConOps**, **Deconfliction Plan**, and **OPPLAN** with MITRE ATT&CK mapping â€” and every action runs inside those defined rules.
 
-→ **[Engagement workflow deep dive](docs/engagement-workflow.md)**
+â†’ **[Engagement workflow deep dive](docs/engagement-workflow.md)**
 
 ---
 
 ## Why Aegiscore?
 
-**Real kill chains, not checkbox scans.** Aegiscore reads an OPPLAN and pursues objectives through whatever path opens up — pivoting, adapting, chaining techniques.
+**Real kill chains, not checkbox scans.** Aegiscore reads an OPPLAN and pursues objectives through whatever path opens up â€” pivoting, adapting, chaining techniques.
 
-**Interactive shells, actually.** Real offensive tools are interactive (`msfconsole`, `sliver-client`, `evil-winrm`). Aegiscore runs every command inside persistent tmux sessions with automatic prompt detection — so when a tool drops into an interactive prompt, the agent sends follow-up commands without workarounds.
+**Interactive shells, actually.** Real offensive tools are interactive (`msfconsole`, `sliver-client`, `evil-winrm`). Aegiscore runs every command inside persistent tmux sessions with automatic prompt detection â€” so when a tool drops into an interactive prompt, the agent sends follow-up commands without workarounds.
 
-**Hardened sandbox isolation.** All commands run inside a Kali Linux sandbox on a dedicated operational network (`sandbox-net`), separate from the management plane (`aegiscore-net`). LangGraph drives the sandbox via the Docker socket. → **[Architecture](docs/architecture.md)**
+**Hardened sandbox isolation.** All commands run inside a Kali Linux sandbox on a dedicated operational network (`sandbox-net`), separate from the management plane (`aegiscore-net`). LangGraph drives the sandbox via the Docker socket. â†’ **[Architecture](docs/architecture.md)**
 
-**Offense serves defense.** The planned [Offensive Vaccine](docs/offensive-vaccine.md) loop will turn findings into defense improvements through an attack → defend → verify cycle.
+**Offense serves defense.** The planned [Offensive Vaccine](docs/offensive-vaccine.md) loop will turn findings into defense improvements through an attack â†’ defend â†’ verify cycle.
 
 ---
 
@@ -90,25 +90,25 @@ But more importantly: it operates under the discipline that separates red teamer
   <img src="assets/aegiscore_infra.svg" alt="Aegiscore Infrastructure" width="680">
 </div>
 
-Two-network design. The **always-on** management plane (LiteLLM, PostgreSQL, Skillogy, LangGraph) and the always-on sandbox plane stay up across the whole engagement; everything else is **dynamic-spawn** — the Web dashboard comes up on `/web` from the CLI, and specialist workloads (BloodHound CE, Sliver C2, Ghidra MCP, …) come up only when the orchestrator calls `ops_start(...)` (see [ADR-0006](docs/adr/0006-agent-driven-container-lifecycle.md)). Networks: management on `aegiscore-net`; sandbox + C2 server + targets on `sandbox-net`. Neo4j is dual-homed so the agent (on management) can persist findings written from inside the sandbox.
+Two-network design. The **always-on** management plane (LiteLLM, PostgreSQL, Skillogy, LangGraph) and the always-on sandbox plane stay up across the whole engagement; everything else is **dynamic-spawn** â€” the Web dashboard comes up on `/web` from the CLI, and specialist workloads (BloodHound CE, Sliver C2, Ghidra MCP, â€¦) come up only when the orchestrator calls `ops_start(...)` (see [ADR-0006](docs/adr/0006-agent-driven-container-lifecycle.md)). Networks: management on `aegiscore-net`; sandbox + C2 server + targets on `sandbox-net`. Neo4j is dual-homed so the agent (on management) can persist findings written from inside the sandbox.
 
-→ **[Architecture deep dive](docs/architecture.md)** · **[Knowledge graph](docs/knowledge-graph.md)**
+â†’ **[Architecture deep dive](docs/architecture.md)** Â· **[Knowledge graph](docs/knowledge-graph.md)**
 
 ---
 
 ## Agents
 
-16 specialist agents organized by kill chain phase, with a fresh context window per objective — no accumulated noise.
+16 specialist agents organized by kill chain phase, with a fresh context window per objective â€” no accumulated noise.
 
-Orchestration · Reconnaissance · Exploitation · Post-Exploitation · Vulnerability Research · Domain Specialists (AD, Cloud, Smart Contracts, Reversing, Analyst).
+Orchestration Â· Reconnaissance Â· Exploitation Â· Post-Exploitation Â· Vulnerability Research Â· Domain Specialists (AD, Cloud, Smart Contracts, Reversing, Analyst).
 
-→ **[Full agent roster and middleware stack](docs/agents.md)**
+â†’ **[Full agent roster and middleware stack](docs/agents.md)**
 
 ---
 
 ## Models & Providers
 
-Tier-based, credentials-aware fallback chain. You declare which credentials you have in priority order; Aegiscore builds the primary→fallback chain at every tier from there.
+Tier-based, credentials-aware fallback chain. You declare which credentials you have in priority order; Aegiscore builds the primaryâ†’fallback chain at every tier from there.
 
 | Profile | Tier per agent | Use case |
 |---------|----------------|----------|
@@ -119,7 +119,7 @@ Tier-based, credentials-aware fallback chain. You declare which credentials you 
 **Tier-mapped providers**: Anthropic, OpenAI, Google Gemini, MiniMax, DeepSeek, xAI, Mistral, OpenRouter, Nvidia NIM, Ollama (local).
 **Subscription OAuth**: Claude Max/Pro/Team, ChatGPT Pro/Plus/Team, Gemini Advanced, Copilot Pro, SuperGrok, Perplexity Pro.
 
-Configure via `aegiscore onboard`. → **[Full model reference & fallback examples](docs/models.md)**
+Configure via `aegiscore onboard`. â†’ **[Full model reference & fallback examples](docs/models.md)**
 
 ---
 
@@ -148,11 +148,11 @@ Configure via `aegiscore onboard`. → **[Full model reference & fallback exampl
 ```bash
 git clone https://github.com/karishmaram-tech/AegisCore.git
 cd Aegiscore
-make dogfood  # Full OSS UX (launcher → onboard → CLI) on local code
-make dev      # Backend hot-reload (compose watch) — daily dev loop
+make dogfood  # Full OSS UX (launcher â†’ onboard â†’ CLI) on local code
+make dev      # Backend hot-reload (compose watch) â€” daily dev loop
 ```
 
-→ **[Contributing guide](docs/contributing.md)**
+â†’ **[Contributing guide](docs/contributing.md)**
 
 
 

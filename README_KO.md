@@ -1,13 +1,13 @@
-[![English](https://img.shields.io/badge/Language-English-blue?style=for-the-badge)](README.md)
-[![한국어](https://img.shields.io/badge/Language-한국어-red?style=for-the-badge)](README_KO.md)
+﻿[![English](https://img.shields.io/badge/Language-English-blue?style=for-the-badge)](README.md)
+[![í•œêµ­ì–´](https://img.shields.io/badge/Language-í•œêµ­ì–´-red?style=for-the-badge)](README_KO.md)
 
 <div align="center">
   <img src="assets/aegiscore_logo_banner.svg" alt="Aegiscore Logo">
 </div>
 
-<h1 align="center">Aegiscore — 자율 레드팀 에이전트</h1>
+<h1 align="center">Aegiscore â€” ìžìœ¨ ë ˆë“œíŒ€ ì—ì´ì „íŠ¸</h1>
 
-<p align="center"><i>"또 AI 해킹 툴이야? nmap 돌리고 리포트 쓰는 거 아니야?"</i></p>
+<p align="center"><i>"ë˜ AI í•´í‚¹ íˆ´ì´ì•¼? nmap ëŒë¦¬ê³  ë¦¬í¬íŠ¸ ì“°ëŠ” ê±° ì•„ë‹ˆì•¼?"</i></p>
 
 <div align="center">
 
@@ -28,143 +28,143 @@
 <br/>
 
 <div align="center">
-  <video src="https://github.com/user-attachments/assets/b3fd40d8-e859-4a39-97f4-bd825694ad96" width="800" controls></video>
+  <em>데모 영상 준비 중 - 녹화가 진행 중입니다.</em>
 </div>
 
 
 
-## 설치
+## ì„¤ì¹˜
 
-설치 및 로컬 개발 환경 구축은 [CONTRIBUTING.md](CONTRIBUTING.md)를 참고하세요.
+ì„¤ì¹˜ ë° ë¡œì»¬ ê°œë°œ í™˜ê²½ êµ¬ì¶•ì€ [CONTRIBUTING.md](CONTRIBUTING.md)ë¥¼ ì°¸ê³ í•˜ì„¸ìš”.
 
-→ **[빠른 시작](docs/getting-started.md)** · **[전체 셋업 가이드](docs/setup-guide.md)**
+â†’ **[ë¹ ë¥¸ ì‹œìž‘](docs/getting-started.md)** Â· **[ì „ì²´ ì…‹ì—… ê°€ì´ë“œ](docs/setup-guide.md)**
 
-### 라이브러리로 사용 (pip)
+### ë¼ì´ë¸ŒëŸ¬ë¦¬ë¡œ ì‚¬ìš© (pip)
 
-에이전트 위에 무언가를 만드시나요 — 제품, 연구 통합, 커스텀 오케스트레이터? SDK 를 PyPI 에서 설치하세요:
+ì—ì´ì „íŠ¸ ìœ„ì— ë¬´ì–¸ê°€ë¥¼ ë§Œë“œì‹œë‚˜ìš” â€” ì œí’ˆ, ì—°êµ¬ í†µí•©, ì»¤ìŠ¤í…€ ì˜¤ì¼€ìŠ¤íŠ¸ë ˆì´í„°? SDK ë¥¼ PyPI ì—ì„œ ì„¤ì¹˜í•˜ì„¸ìš”:
 
 ```bash
-pip install aegiscore              # 코어 SDK
-pip install "aegiscore[neo4j]"     # + 지식그래프 공격체인 도구
+pip install aegiscore              # ì½”ì–´ SDK
+pip install "aegiscore[neo4j]"     # + ì§€ì‹ê·¸ëž˜í”„ ê³µê²©ì²´ì¸ ë„êµ¬
 ```
 
-`aegiscore` 은 **클라이언트 SDK** 입니다 — 에이전트 팩토리·미들웨어·도구·스킬을 담고 있고, LLM 호출과 샌드박스 실행은 런타임 서비스로 HTTP 라우팅합니다 (`DECEPTICON_LLM__PROXY_URL`, `SANDBOX_URL`). 에이전트를 실제로 돌리려면 그 서비스들이 필요합니다 — 위 Docker 스택을 쓰거나 URL 을 직접 가리키세요. 팩토리 오버라이드 surface, 선언적 `PluginBundle` 플러그인, 안전 게이트는 **[라이브러리로서의 Aegiscore](docs/library-usage.md)** 참고.
+`aegiscore` ì€ **í´ë¼ì´ì–¸íŠ¸ SDK** ìž…ë‹ˆë‹¤ â€” ì—ì´ì „íŠ¸ íŒ©í† ë¦¬Â·ë¯¸ë“¤ì›¨ì–´Â·ë„êµ¬Â·ìŠ¤í‚¬ì„ ë‹´ê³  ìžˆê³ , LLM í˜¸ì¶œê³¼ ìƒŒë“œë°•ìŠ¤ ì‹¤í–‰ì€ ëŸ°íƒ€ìž„ ì„œë¹„ìŠ¤ë¡œ HTTP ë¼ìš°íŒ…í•©ë‹ˆë‹¤ (`DECEPTICON_LLM__PROXY_URL`, `SANDBOX_URL`). ì—ì´ì „íŠ¸ë¥¼ ì‹¤ì œë¡œ ëŒë¦¬ë ¤ë©´ ê·¸ ì„œë¹„ìŠ¤ë“¤ì´ í•„ìš”í•©ë‹ˆë‹¤ â€” ìœ„ Docker ìŠ¤íƒì„ ì“°ê±°ë‚˜ URL ì„ ì§ì ‘ ê°€ë¦¬í‚¤ì„¸ìš”. íŒ©í† ë¦¬ ì˜¤ë²„ë¼ì´ë“œ surface, ì„ ì–¸ì  `PluginBundle` í”ŒëŸ¬ê·¸ì¸, ì•ˆì „ ê²Œì´íŠ¸ëŠ” **[ë¼ì´ë¸ŒëŸ¬ë¦¬ë¡œì„œì˜ Aegiscore](docs/library-usage.md)** ì°¸ê³ .
 
 
 
 ---
 
-## 벤치마크
+## ë²¤ì¹˜ë§ˆí¬
 
-*벤치마크 결과 준비 중 — AegisCore에 자체 평가 스위트를 실행한 후 업데이트될 예정입니다.*
-
----
-
-## Decepticon이란?
-
-AI + 해킹 도구들은 대부분 nmap 돌리고 리포트 출력하는 데모입니다. Decepticon은 다릅니다.
-
-**Decepticon은 전문 자율 레드팀 에이전트입니다.** 실제 공격자처럼 현실적인 공격 체인을 실행합니다 — 정찰, 초기 침투, 권한 상승, 횡이동, C2 — 스캐너가 아닌 실제 공격자의 방식으로.
-
-더 중요한 것은: 스크립트 키디와 레드티머를 구분하는 전문성을 갖추고 있다는 점입니다. 첫 번째 패킷이 나가기 전에 Decepticon은 완전한 인게이지먼트 패키지 — **RoE**, **ConOps**, **디컨플릭션 플랜**, MITRE ATT&CK 매핑이 포함된 **OPPLAN** — 을 생성하고, 모든 행동은 그 규칙 안에서만 동작합니다.
-
-→ **[인게이지먼트 워크플로 상세](docs/engagement-workflow.md)**
+*ë²¤ì¹˜ë§ˆí¬ ê²°ê³¼ ì¤€ë¹„ ì¤‘ â€” AegisCoreì— ìžì²´ í‰ê°€ ìŠ¤ìœ„íŠ¸ë¥¼ ì‹¤í–‰í•œ í›„ ì—…ë°ì´íŠ¸ë  ì˜ˆì •ìž…ë‹ˆë‹¤.*
 
 ---
 
-## 왜 Decepticon인가?
+## Decepticonì´ëž€?
 
-**체크리스트 스캔이 아닌 실제 킬체인.** Decepticon은 OPPLAN을 읽고 열린 경로를 통해 목표를 추적합니다 — 피벗, 적응, 기술 체이닝.
+AI + í•´í‚¹ ë„êµ¬ë“¤ì€ ëŒ€ë¶€ë¶„ nmap ëŒë¦¬ê³  ë¦¬í¬íŠ¸ ì¶œë ¥í•˜ëŠ” ë°ëª¨ìž…ë‹ˆë‹¤. Decepticonì€ ë‹¤ë¦…ë‹ˆë‹¤.
 
-**진짜 인터랙티브 셸.** 실제 공격 도구들은 인터랙티브합니다 (`msfconsole`, `sliver-client`, `evil-winrm`). Decepticon은 영구 tmux 세션에서 명령을 실행하고 인터랙티브 프롬프트를 자동 감지합니다 — 도구가 프롬프트를 띄우면 우회책 없이 후속 명령을 보냅니다.
+**Decepticonì€ ì „ë¬¸ ìžìœ¨ ë ˆë“œíŒ€ ì—ì´ì „íŠ¸ìž…ë‹ˆë‹¤.** ì‹¤ì œ ê³µê²©ìžì²˜ëŸ¼ í˜„ì‹¤ì ì¸ ê³µê²© ì²´ì¸ì„ ì‹¤í–‰í•©ë‹ˆë‹¤ â€” ì •ì°°, ì´ˆê¸° ì¹¨íˆ¬, ê¶Œí•œ ìƒìŠ¹, íš¡ì´ë™, C2 â€” ìŠ¤ìºë„ˆê°€ ì•„ë‹Œ ì‹¤ì œ ê³µê²©ìžì˜ ë°©ì‹ìœ¼ë¡œ.
 
-**하드닝된 샌드박스 격리.** 모든 명령은 운영 네트워크(`sandbox-net`)의 Kali Linux 샌드박스에서 실행되며, 관리망(`aegiscore-net`)과 분리되어 있습니다. LangGraph는 Docker 소켓으로 샌드박스를 제어합니다. → **[아키텍처](docs/architecture.md)**
+ë” ì¤‘ìš”í•œ ê²ƒì€: ìŠ¤í¬ë¦½íŠ¸ í‚¤ë””ì™€ ë ˆë“œí‹°ë¨¸ë¥¼ êµ¬ë¶„í•˜ëŠ” ì „ë¬¸ì„±ì„ ê°–ì¶”ê³  ìžˆë‹¤ëŠ” ì ìž…ë‹ˆë‹¤. ì²« ë²ˆì§¸ íŒ¨í‚·ì´ ë‚˜ê°€ê¸° ì „ì— Decepticonì€ ì™„ì „í•œ ì¸ê²Œì´ì§€ë¨¼íŠ¸ íŒ¨í‚¤ì§€ â€” **RoE**, **ConOps**, **ë””ì»¨í”Œë¦­ì…˜ í”Œëžœ**, MITRE ATT&CK ë§¤í•‘ì´ í¬í•¨ëœ **OPPLAN** â€” ì„ ìƒì„±í•˜ê³ , ëª¨ë“  í–‰ë™ì€ ê·¸ ê·œì¹™ ì•ˆì—ì„œë§Œ ë™ìž‘í•©ë‹ˆë‹¤.
 
-**공격이 방어를 만든다.** 계획 중인 [공격형 백신](docs/offensive-vaccine.md) 루프는 발견된 취약점을 공격 → 방어 → 검증 사이클로 전환하는 방향입니다.
+â†’ **[ì¸ê²Œì´ì§€ë¨¼íŠ¸ ì›Œí¬í”Œë¡œ ìƒì„¸](docs/engagement-workflow.md)**
 
 ---
 
-## 아키텍처
+## ì™œ Decepticonì¸ê°€?
+
+**ì²´í¬ë¦¬ìŠ¤íŠ¸ ìŠ¤ìº”ì´ ì•„ë‹Œ ì‹¤ì œ í‚¬ì²´ì¸.** Decepticonì€ OPPLANì„ ì½ê³  ì—´ë¦° ê²½ë¡œë¥¼ í†µí•´ ëª©í‘œë¥¼ ì¶”ì í•©ë‹ˆë‹¤ â€” í”¼ë²—, ì ì‘, ê¸°ìˆ  ì²´ì´ë‹.
+
+**ì§„ì§œ ì¸í„°ëž™í‹°ë¸Œ ì…¸.** ì‹¤ì œ ê³µê²© ë„êµ¬ë“¤ì€ ì¸í„°ëž™í‹°ë¸Œí•©ë‹ˆë‹¤ (`msfconsole`, `sliver-client`, `evil-winrm`). Decepticonì€ ì˜êµ¬ tmux ì„¸ì…˜ì—ì„œ ëª…ë ¹ì„ ì‹¤í–‰í•˜ê³  ì¸í„°ëž™í‹°ë¸Œ í”„ë¡¬í”„íŠ¸ë¥¼ ìžë™ ê°ì§€í•©ë‹ˆë‹¤ â€” ë„êµ¬ê°€ í”„ë¡¬í”„íŠ¸ë¥¼ ë„ìš°ë©´ ìš°íšŒì±… ì—†ì´ í›„ì† ëª…ë ¹ì„ ë³´ëƒ…ë‹ˆë‹¤.
+
+**í•˜ë“œë‹ëœ ìƒŒë“œë°•ìŠ¤ ê²©ë¦¬.** ëª¨ë“  ëª…ë ¹ì€ ìš´ì˜ ë„¤íŠ¸ì›Œí¬(`sandbox-net`)ì˜ Kali Linux ìƒŒë“œë°•ìŠ¤ì—ì„œ ì‹¤í–‰ë˜ë©°, ê´€ë¦¬ë§(`aegiscore-net`)ê³¼ ë¶„ë¦¬ë˜ì–´ ìžˆìŠµë‹ˆë‹¤. LangGraphëŠ” Docker ì†Œì¼“ìœ¼ë¡œ ìƒŒë“œë°•ìŠ¤ë¥¼ ì œì–´í•©ë‹ˆë‹¤. â†’ **[ì•„í‚¤í…ì²˜](docs/architecture.md)**
+
+**ê³µê²©ì´ ë°©ì–´ë¥¼ ë§Œë“ ë‹¤.** ê³„íš ì¤‘ì¸ [ê³µê²©í˜• ë°±ì‹ ](docs/offensive-vaccine.md) ë£¨í”„ëŠ” ë°œê²¬ëœ ì·¨ì•½ì ì„ ê³µê²© â†’ ë°©ì–´ â†’ ê²€ì¦ ì‚¬ì´í´ë¡œ ì „í™˜í•˜ëŠ” ë°©í–¥ìž…ë‹ˆë‹¤.
+
+---
+
+## ì•„í‚¤í…ì²˜
 
 <div align="center">
   <img src="assets/aegiscore_infra.svg" alt="Aegiscore Infrastructure" width="680">
 </div>
 
-두 개의 네트워크로 분리된 설계 — 관리 서비스(LiteLLM, PostgreSQL, LangGraph, Web)는 `aegiscore-net`, 샌드박스 / C2 서버 / 타깃은 `sandbox-net`. Neo4j는 양 네트워크에 듀얼-홈으로 두어 관리망의 에이전트가 샌드박스 내부에서 기록한 발견 사항을 영속화할 수 있게 합니다.
+ë‘ ê°œì˜ ë„¤íŠ¸ì›Œí¬ë¡œ ë¶„ë¦¬ëœ ì„¤ê³„ â€” ê´€ë¦¬ ì„œë¹„ìŠ¤(LiteLLM, PostgreSQL, LangGraph, Web)ëŠ” `aegiscore-net`, ìƒŒë“œë°•ìŠ¤ / C2 ì„œë²„ / íƒ€ê¹ƒì€ `sandbox-net`. Neo4jëŠ” ì–‘ ë„¤íŠ¸ì›Œí¬ì— ë“€ì–¼-í™ˆìœ¼ë¡œ ë‘ì–´ ê´€ë¦¬ë§ì˜ ì—ì´ì „íŠ¸ê°€ ìƒŒë“œë°•ìŠ¤ ë‚´ë¶€ì—ì„œ ê¸°ë¡í•œ ë°œê²¬ ì‚¬í•­ì„ ì˜ì†í™”í•  ìˆ˜ ìžˆê²Œ í•©ë‹ˆë‹¤.
 
-→ **[아키텍처 상세](docs/architecture.md)** · **[지식 그래프](docs/knowledge-graph.md)**
-
----
-
-## 에이전트
-
-킬체인 단계별로 구성된 16개의 전문 에이전트. 각 에이전트는 목표마다 새로운 컨텍스트 윈도우로 시작 — 누적 노이즈 없음.
-
-오케스트레이션 · 정찰 · 초기 침투 · 사후 익스플로잇 · 취약점 연구 · 도메인 스페셜리스트 (AD, Cloud, 스마트 컨트랙트, 리버싱, Analyst).
-
-→ **[에이전트 전체 목록 및 미들웨어 스택](docs/agents.md)**
+â†’ **[ì•„í‚¤í…ì²˜ ìƒì„¸](docs/architecture.md)** Â· **[ì§€ì‹ ê·¸ëž˜í”„](docs/knowledge-graph.md)**
 
 ---
 
-## 모델 & 프로바이더
+## ì—ì´ì „íŠ¸
 
-Tier 기반 자격증명-aware 폴백 체인. 사용 가능한 자격증명을 우선순위 순으로 알려주면, 모든 tier에서 primary→fallback 체인이 자동 구성됩니다.
+í‚¬ì²´ì¸ ë‹¨ê³„ë³„ë¡œ êµ¬ì„±ëœ 16ê°œì˜ ì „ë¬¸ ì—ì´ì „íŠ¸. ê° ì—ì´ì „íŠ¸ëŠ” ëª©í‘œë§ˆë‹¤ ìƒˆë¡œìš´ ì»¨í…ìŠ¤íŠ¸ ìœˆë„ìš°ë¡œ ì‹œìž‘ â€” ëˆ„ì  ë…¸ì´ì¦ˆ ì—†ìŒ.
 
-| 프로파일 | 에이전트당 tier | 사용 케이스 |
+ì˜¤ì¼€ìŠ¤íŠ¸ë ˆì´ì…˜ Â· ì •ì°° Â· ì´ˆê¸° ì¹¨íˆ¬ Â· ì‚¬í›„ ìµìŠ¤í”Œë¡œìž‡ Â· ì·¨ì•½ì  ì—°êµ¬ Â· ë„ë©”ì¸ ìŠ¤íŽ˜ì…œë¦¬ìŠ¤íŠ¸ (AD, Cloud, ìŠ¤ë§ˆíŠ¸ ì»¨íŠ¸ëž™íŠ¸, ë¦¬ë²„ì‹±, Analyst).
+
+â†’ **[ì—ì´ì „íŠ¸ ì „ì²´ ëª©ë¡ ë° ë¯¸ë“¤ì›¨ì–´ ìŠ¤íƒ](docs/agents.md)**
+
+---
+
+## ëª¨ë¸ & í”„ë¡œë°”ì´ë”
+
+Tier ê¸°ë°˜ ìžê²©ì¦ëª…-aware í´ë°± ì²´ì¸. ì‚¬ìš© ê°€ëŠ¥í•œ ìžê²©ì¦ëª…ì„ ìš°ì„ ìˆœìœ„ ìˆœìœ¼ë¡œ ì•Œë ¤ì£¼ë©´, ëª¨ë“  tierì—ì„œ primaryâ†’fallback ì²´ì¸ì´ ìžë™ êµ¬ì„±ë©ë‹ˆë‹¤.
+
+| í”„ë¡œíŒŒì¼ | ì—ì´ì „íŠ¸ë‹¹ tier | ì‚¬ìš© ì¼€ì´ìŠ¤ |
 |----------|------------------|-------------|
-| **eco** (기본) | 에이전트별 (orchestrator/exploiter/patcher/analyst=HIGH, execution=MID, recon/soundwave=LOW) | 프로덕션 |
-| **max** | 모든 에이전트 HIGH | 고가치 타깃 |
-| **test** | 모든 에이전트 LOW | 개발 / CI |
+| **eco** (ê¸°ë³¸) | ì—ì´ì „íŠ¸ë³„ (orchestrator/exploiter/patcher/analyst=HIGH, execution=MID, recon/soundwave=LOW) | í”„ë¡œë•ì…˜ |
+| **max** | ëª¨ë“  ì—ì´ì „íŠ¸ HIGH | ê³ ê°€ì¹˜ íƒ€ê¹ƒ |
+| **test** | ëª¨ë“  ì—ì´ì „íŠ¸ LOW | ê°œë°œ / CI |
 
-**Tier가 매핑된 프로바이더**: Anthropic, OpenAI, Google Gemini, MiniMax, DeepSeek, xAI, Mistral, OpenRouter, Nvidia NIM, Ollama (로컬).
-**구독 OAuth**: Claude Max/Pro/Team, ChatGPT Pro/Plus/Team, Gemini Advanced, Copilot Pro, SuperGrok, Perplexity Pro.
+**Tierê°€ ë§¤í•‘ëœ í”„ë¡œë°”ì´ë”**: Anthropic, OpenAI, Google Gemini, MiniMax, DeepSeek, xAI, Mistral, OpenRouter, Nvidia NIM, Ollama (ë¡œì»¬).
+**êµ¬ë… OAuth**: Claude Max/Pro/Team, ChatGPT Pro/Plus/Team, Gemini Advanced, Copilot Pro, SuperGrok, Perplexity Pro.
 
-`aegiscore onboard`로 설정. → **[모델 전체 레퍼런스 및 폴백 예시](docs/models.md)**
+`aegiscore onboard`ë¡œ ì„¤ì •. â†’ **[ëª¨ë¸ ì „ì²´ ë ˆí¼ëŸ°ìŠ¤ ë° í´ë°± ì˜ˆì‹œ](docs/models.md)**
 
 ---
 
-## 문서
+## ë¬¸ì„œ
 
-| 주제 | 문서 |
+| ì£¼ì œ | ë¬¸ì„œ |
 |------|------|
-| 설치 및 첫 인게이지먼트 | [시작하기](docs/getting-started.md) |
-| 셋업 / OAuth / 프로바이더 / 대시보드 전체 | [셋업 가이드](docs/setup-guide.md) |
-| 모든 CLI 커맨드와 단축키 | [CLI 레퍼런스](docs/cli-reference.md) |
-| 모든 `make` 타깃 | [Makefile 레퍼런스](docs/makefile-reference.md) |
-| 에이전트 목록 및 미들웨어 | [에이전트](docs/agents.md) |
-| 모델 프로필과 폴백 체인 | [모델](docs/models.md) |
-| 스킬 시스템과 포맷 스펙 | [스킬](docs/skills.md) |
-| 웹 대시보드 기능 및 설정 | [웹 대시보드](docs/web-dashboard.md) |
-| 시스템 아키텍처와 네트워크 격리 | [아키텍처](docs/architecture.md) |
-| Neo4j 지식 그래프 | [지식 그래프](docs/knowledge-graph.md) |
-| 엔드투엔드 인게이지먼트 워크플로 | [인게이지먼트 워크플로](docs/engagement-workflow.md) |
-| 공격형 백신 루프 | [공격형 백신](docs/offensive-vaccine.md) |
-| Aegiscore 기여하기 | [기여 가이드](docs/contributing.md) |
+| ì„¤ì¹˜ ë° ì²« ì¸ê²Œì´ì§€ë¨¼íŠ¸ | [ì‹œìž‘í•˜ê¸°](docs/getting-started.md) |
+| ì…‹ì—… / OAuth / í”„ë¡œë°”ì´ë” / ëŒ€ì‹œë³´ë“œ ì „ì²´ | [ì…‹ì—… ê°€ì´ë“œ](docs/setup-guide.md) |
+| ëª¨ë“  CLI ì»¤ë§¨ë“œì™€ ë‹¨ì¶•í‚¤ | [CLI ë ˆí¼ëŸ°ìŠ¤](docs/cli-reference.md) |
+| ëª¨ë“  `make` íƒ€ê¹ƒ | [Makefile ë ˆí¼ëŸ°ìŠ¤](docs/makefile-reference.md) |
+| ì—ì´ì „íŠ¸ ëª©ë¡ ë° ë¯¸ë“¤ì›¨ì–´ | [ì—ì´ì „íŠ¸](docs/agents.md) |
+| ëª¨ë¸ í”„ë¡œí•„ê³¼ í´ë°± ì²´ì¸ | [ëª¨ë¸](docs/models.md) |
+| ìŠ¤í‚¬ ì‹œìŠ¤í…œê³¼ í¬ë§· ìŠ¤íŽ™ | [ìŠ¤í‚¬](docs/skills.md) |
+| ì›¹ ëŒ€ì‹œë³´ë“œ ê¸°ëŠ¥ ë° ì„¤ì • | [ì›¹ ëŒ€ì‹œë³´ë“œ](docs/web-dashboard.md) |
+| ì‹œìŠ¤í…œ ì•„í‚¤í…ì²˜ì™€ ë„¤íŠ¸ì›Œí¬ ê²©ë¦¬ | [ì•„í‚¤í…ì²˜](docs/architecture.md) |
+| Neo4j ì§€ì‹ ê·¸ëž˜í”„ | [ì§€ì‹ ê·¸ëž˜í”„](docs/knowledge-graph.md) |
+| ì—”ë“œíˆ¬ì—”ë“œ ì¸ê²Œì´ì§€ë¨¼íŠ¸ ì›Œí¬í”Œë¡œ | [ì¸ê²Œì´ì§€ë¨¼íŠ¸ ì›Œí¬í”Œë¡œ](docs/engagement-workflow.md) |
+| ê³µê²©í˜• ë°±ì‹  ë£¨í”„ | [ê³µê²©í˜• ë°±ì‹ ](docs/offensive-vaccine.md) |
+| Aegiscore ê¸°ì—¬í•˜ê¸° | [ê¸°ì—¬ ê°€ì´ë“œ](docs/contributing.md) |
 
 ---
 
-## 기여하기
+## ê¸°ì—¬í•˜ê¸°
 
 ```bash
 git clone https://github.com/karishmaram-tech/AegisCore.git
 cd Aegiscore
-make dev     # 핫 리로드로 시작
-make cli     # 인터랙티브 CLI 열기 (별도 터미널)
+make dev     # í•« ë¦¬ë¡œë“œë¡œ ì‹œìž‘
+make cli     # ì¸í„°ëž™í‹°ë¸Œ CLI ì—´ê¸° (ë³„ë„ í„°ë¯¸ë„)
 ```
 
-→ **[기여 가이드](docs/contributing.md)**
+â†’ **[ê¸°ì—¬ ê°€ì´ë“œ](docs/contributing.md)**
 
 
 
 ---
 
-## 면책조항
+## ë©´ì±…ì¡°í•­
 
-시스템 소유자로부터 명시적인 서면 허가 없이 어떠한 시스템이나 네트워크에도 이 프로젝트를 사용하지 마십시오. 컴퓨터 시스템에 대한 무단 접근은 불법입니다. 귀하의 행동에 대한 책임은 전적으로 귀하에게 있습니다. 이 프로젝트의 저자와 기여자는 오용에 대한 어떠한 책임도 지지 않습니다.
+ì‹œìŠ¤í…œ ì†Œìœ ìžë¡œë¶€í„° ëª…ì‹œì ì¸ ì„œë©´ í—ˆê°€ ì—†ì´ ì–´ë– í•œ ì‹œìŠ¤í…œì´ë‚˜ ë„¤íŠ¸ì›Œí¬ì—ë„ ì´ í”„ë¡œì íŠ¸ë¥¼ ì‚¬ìš©í•˜ì§€ ë§ˆì‹­ì‹œì˜¤. ì»´í“¨í„° ì‹œìŠ¤í…œì— ëŒ€í•œ ë¬´ë‹¨ ì ‘ê·¼ì€ ë¶ˆë²•ìž…ë‹ˆë‹¤. ê·€í•˜ì˜ í–‰ë™ì— ëŒ€í•œ ì±…ìž„ì€ ì „ì ìœ¼ë¡œ ê·€í•˜ì—ê²Œ ìžˆìŠµë‹ˆë‹¤. ì´ í”„ë¡œì íŠ¸ì˜ ì €ìžì™€ ê¸°ì—¬ìžëŠ” ì˜¤ìš©ì— ëŒ€í•œ ì–´ë– í•œ ì±…ìž„ë„ ì§€ì§€ ì•ŠìŠµë‹ˆë‹¤.
 
 ---
 
-## 라이선스
+## ë¼ì´ì„ ìŠ¤
 
 [Apache-2.0](LICENSE)
 
