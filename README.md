@@ -11,14 +11,14 @@
 
 <div align="center">
 
-<a href="https://github.com/PurpleAILAB/Aegiscore/blob/main/LICENSE">
-  <img src="https://img.shields.io/github/license/PurpleAILAB/Aegiscore?style=for-the-badge&color=blue" alt="License: Apache 2.0">
+<a href="https://github.com/karishmaram-tech/AegisCore/blob/main/LICENSE">
+  <img src="https://img.shields.io/github/license/karishmaram-tech/AegisCore?style=for-the-badge&color=blue" alt="License: Apache 2.0">
 </a>
-<a href="https://github.com/PurpleAILAB/Aegiscore/stargazers">
-  <img src="https://img.shields.io/github/stars/PurpleAILAB/Aegiscore?style=for-the-badge&color=yellow" alt="Stargazers">
+<a href="https://github.com/karishmaram-tech/AegisCore/stargazers">
+  <img src="https://img.shields.io/github/stars/karishmaram-tech/AegisCore?style=for-the-badge&color=yellow" alt="Stargazers">
 </a>
-<a href="https://github.com/PurpleAILAB/Aegiscore/graphs/contributors">
-  <img src="https://img.shields.io/github/contributors/PurpleAILAB/Aegiscore?style=for-the-badge&color=orange" alt="Contributors">
+<a href="https://github.com/karishmaram-tech/AegisCore/graphs/contributors">
+  <img src="https://img.shields.io/github/contributors/karishmaram-tech/AegisCore?style=for-the-badge&color=orange" alt="Contributors">
 </a>
 
 
@@ -28,7 +28,7 @@
 <br/>
 
 <div align="center">
-  <video src="https://github.com/user-attachments/assets/b3fd40d8-e859-4a39-97f4-bd825694ad96" width="800" controls></video>
+  <em>Demo video coming soon � recording in progress.</em>
 </div>
 
 
@@ -146,7 +146,7 @@ Configure via `aegiscore onboard`. → **[Full model reference & fallback exampl
 ## Contributing
 
 ```bash
-git clone https://github.com/PurpleAILAB/Aegiscore.git
+git clone https://github.com/karishmaram-tech/AegisCore.git
 cd Aegiscore
 make dogfood  # Full OSS UX (launcher → onboard → CLI) on local code
 make dev      # Backend hot-reload (compose watch) — daily dev loop
