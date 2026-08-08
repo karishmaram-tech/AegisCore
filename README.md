@@ -21,20 +21,7 @@
   <img src="https://img.shields.io/github/contributors/PurpleAILAB/Aegiscore?style=for-the-badge&color=orange" alt="Contributors">
 </a>
 
-<br/>
 
-<a href="https://discord.gg/TZUYsZgrRG">
-  <img src="https://img.shields.io/badge/Discord-Join%20Us-7289DA?logo=discord&logoColor=white&style=for-the-badge" alt="Join us on Discord">
-</a>
-<a href="https://aegiscore.red">
-  <img src="https://img.shields.io/badge/Website-aegiscore.red-brightgreen?logo=vercel&logoColor=white&style=for-the-badge" alt="Website">
-</a>
-<a href="https://docs.aegiscore.red">
-  <img src="https://img.shields.io/badge/Docs-docs.aegiscore.red-8B5CF6?logo=bookstack&logoColor=white&style=for-the-badge" alt="Documentation">
-</a>
-<a href="https://github.com/karishmaram-tech/AegisCore">
-  <img src="https://img.shields.io/badge/Live%20App-github.com/karishmaram-tech/AegisCore-FF2D55?logo=rocket&logoColor=white&style=for-the-badge" alt="Live hosted app">
-</a>
 
 </div>
 
@@ -44,40 +31,11 @@
   <video src="https://github.com/user-attachments/assets/b3fd40d8-e859-4a39-97f4-bd825694ad96" width="800" controls></video>
 </div>
 
-<div align="center">
 
-### ☁️ Don't want to self-host? **Aegiscore is live in the cloud.**
-
-Skip the Docker setup — run autonomous red-team engagements right from your browser.
-
-<a href="https://github.com/karishmaram-tech/AegisCore">
-  <img src="https://img.shields.io/badge/Launch%20the%20Live%20App-github.com/karishmaram-tech/AegisCore-FF2D55?logo=rocket&logoColor=white&style=for-the-badge" alt="Launch the live app at github.com/karishmaram-tech/AegisCore">
-</a>
-
-</div>
-
----
 
 ## Install
 
-**Prerequisites**: [Docker](https://docs.docker.com/get-docker/) and Docker Compose v2.
-Supported on macOS (Apple Silicon + Intel), Linux (amd64 + arm64), and Windows (amd64 + arm64) — native via PowerShell or via WSL2 (Ubuntu / Kali).
-
-**macOS / Linux / WSL2**
-```bash
-curl -fsSL https://aegiscore.red/install | bash
-aegiscore onboard   # Interactive setup wizard (provider, API key, model profile)
-aegiscore           # Start the core stack and drop into the terminal CLI
-```
-
-The default start brings up the core management plane (LiteLLM, PostgreSQL, Neo4j, Skillogy, LangGraph, sandbox) and launches the terminal CLI. Specialist workloads (BloodHound CE, Sliver C2, Ghidra MCP, …) and the web dashboard come up on demand — the orchestrator spawns specialists via `ops_start("ad")` etc., and you bring up the dashboard from inside the CLI with `/web` (see [Web Dashboard](docs/web-dashboard.md)).
-
-**Windows (PowerShell, native)**
-```powershell
-irm https://aegiscore.red/install.ps1 | iex
-aegiscore onboard
-aegiscore
-```
+For installation and local development instructions, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 → **[Quick start](docs/getting-started.md)** · **[Full setup walkthrough](docs/setup-guide.md)**
 
@@ -92,13 +50,7 @@ pip install "aegiscore[neo4j]"     # + the knowledge-graph attack-chain tools
 
 `aegiscore` is a **client SDK**: it ships the agent factories, middleware, tools, and skills, and routes LLM calls and sandbox execution to runtime services over HTTP (`DECEPTICON_LLM__PROXY_URL`, `SANDBOX_URL`). Running agents still needs those services — use the Docker stack above, or point the URLs at your own equivalents. See **[Aegiscore as a library](docs/library-usage.md)** for the factory override surface, declarative `PluginBundle` plugins, and the safety gate.
 
----
 
-## 💖 Support Aegiscore
-
-[![Sponsor](https://img.shields.io/badge/Sponsor-Aegiscore-red?style=for-the-badge&logo=github)](https://github.com/sponsors/PurpleCHOIms)
-
-We're building Aegiscore toward an **Offensive Vaccine** for the AI-driven threat landscape. If you believe in autonomous red teaming as a path to stronger defense, consider supporting the project.
 
 ---
 
@@ -202,11 +154,7 @@ make dev      # Backend hot-reload (compose watch) — daily dev loop
 
 → **[Contributing guide](docs/contributing.md)**
 
----
 
-## Community
-
-Join the [Discord](https://discord.gg/TZUYsZgrRG) — ask questions, share engagement logs, discuss techniques.
 
 ---
 

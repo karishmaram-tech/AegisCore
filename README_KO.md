@@ -21,20 +21,7 @@
   <img src="https://img.shields.io/github/contributors/PurpleAILAB/Aegiscore?style=for-the-badge&color=orange" alt="Contributors">
 </a>
 
-<br/>
 
-<a href="https://discord.gg/TZUYsZgrRG">
-  <img src="https://img.shields.io/badge/Discord-참여하기-7289DA?logo=discord&logoColor=white&style=for-the-badge" alt="Discord">
-</a>
-<a href="https://aegiscore.red">
-  <img src="https://img.shields.io/badge/웹사이트-aegiscore.red-brightgreen?logo=vercel&logoColor=white&style=for-the-badge" alt="Website">
-</a>
-<a href="https://docs.aegiscore.red">
-  <img src="https://img.shields.io/badge/문서-docs.aegiscore.red-8B5CF6?logo=bookstack&logoColor=white&style=for-the-badge" alt="Docs">
-</a>
-<a href="https://app.aegiscore.red">
-  <img src="https://img.shields.io/badge/라이브%20앱-app.aegiscore.red-FF2D55?logo=rocket&logoColor=white&style=for-the-badge" alt="라이브 호스팅 앱">
-</a>
 
 </div>
 
@@ -44,29 +31,11 @@
   <video src="https://github.com/user-attachments/assets/b3fd40d8-e859-4a39-97f4-bd825694ad96" width="800" controls></video>
 </div>
 
-<div align="center">
 
-### ☁️ 직접 설치하기 번거롭다면? **Decepticon이 클라우드에서 라이브로 돌아갑니다.**
-
-Docker 설치 없이 — 브라우저에서 바로 자율 레드팀 엔게이지먼트를 실행하세요.
-
-<a href="https://app.aegiscore.red">
-  <img src="https://img.shields.io/badge/라이브%20앱%20실행하기-app.aegiscore.red-FF2D55?logo=rocket&logoColor=white&style=for-the-badge" alt="app.aegiscore.red 라이브 앱 실행">
-</a>
-
-</div>
-
----
 
 ## 설치
 
-**사전 요구사항**: [Docker](https://docs.docker.com/get-docker/) 와 Docker Compose v2.
-
-```bash
-curl -fsSL https://aegiscore.red/install | bash
-aegiscore onboard   # 대화형 설정 위자드 (프로바이더, API 키, 모델 프로필)
-aegiscore           # 전체 실행: 터미널 CLI + 웹 대시보드 (http://localhost:3000)
-```
+설치 및 로컬 개발 환경 구축은 [CONTRIBUTING.md](CONTRIBUTING.md)를 참고하세요.
 
 → **[빠른 시작](docs/getting-started.md)** · **[전체 셋업 가이드](docs/setup-guide.md)**
 
@@ -81,13 +50,7 @@ pip install "aegiscore[neo4j]"     # + 지식그래프 공격체인 도구
 
 `aegiscore` 은 **클라이언트 SDK** 입니다 — 에이전트 팩토리·미들웨어·도구·스킬을 담고 있고, LLM 호출과 샌드박스 실행은 런타임 서비스로 HTTP 라우팅합니다 (`DECEPTICON_LLM__PROXY_URL`, `SANDBOX_URL`). 에이전트를 실제로 돌리려면 그 서비스들이 필요합니다 — 위 Docker 스택을 쓰거나 URL 을 직접 가리키세요. 팩토리 오버라이드 surface, 선언적 `PluginBundle` 플러그인, 안전 게이트는 **[라이브러리로서의 Aegiscore](docs/library-usage.md)** 참고.
 
----
 
-## 💖 Aegiscore 후원
-
-[![Sponsor](https://img.shields.io/badge/후원하기-Aegiscore-red?style=for-the-badge&logo=github)](https://github.com/sponsors/PurpleCHOIms)
-
-AI 기반 위협 환경에 맞선 **공격형 백신**을 지향하고 있습니다. 자율 레드팀이 더 강한 방어로 이어진다고 믿으신다면 후원으로 함께해 주세요.
 
 ---
 
@@ -191,11 +154,7 @@ make cli     # 인터랙티브 CLI 열기 (별도 터미널)
 
 → **[기여 가이드](docs/contributing.md)**
 
----
 
-## 커뮤니티
-
-[Discord](https://discord.gg/TZUYsZgrRG)에서 질문하고, 인게이지먼트 로그를 공유하고, 기술을 토론하세요.
 
 ---
 

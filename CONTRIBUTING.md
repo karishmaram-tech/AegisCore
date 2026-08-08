@@ -14,7 +14,7 @@ Thank you for your interest in contributing to Aegiscore! Whether you're a secur
 ### Development Setup
 
 ```bash
-git clone https://github.com/PurpleAILAB/Aegiscore.git
+git clone https://github.com/karishmaram-tech/AegisCore.git
 cd Aegiscore
 
 # Start with hot-reload (builds Docker images + watches for source changes)
@@ -37,14 +37,14 @@ make lint-fix      # Auto-fix lint issues
 
 ### Reporting Bugs
 
-Use the [Bug Report](https://github.com/PurpleAILAB/Aegiscore/issues/new?template=bug_report.yml) issue template. Include:
+Use the [Bug Report](https://github.com/karishmaram-tech/AegisCore/issues/new?template=bug_report.yml) issue template. Include:
 - Steps to reproduce
 - Expected vs actual behavior
 - Docker and Python version info
 
 ### Suggesting Features
 
-Use the [Feature Request](https://github.com/PurpleAILAB/Aegiscore/issues/new?template=feature_request.yml) issue template.
+Use the [Feature Request](https://github.com/karishmaram-tech/AegisCore/issues/new?template=feature_request.yml) issue template.
 
 ### Submitting Pull Requests
 
