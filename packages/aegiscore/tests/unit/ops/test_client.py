@@ -126,6 +126,10 @@ def test_ops_available_false_when_socket_absent(tmp_path, monkeypatch) -> None:
 
 
 def test_ops_available_false_when_socket_node_but_no_daemon(tmp_path, monkeypatch) -> None:
+    import socket as _socket
+
+    if not hasattr(_socket, "AF_UNIX"):
+        pytest.skip("AF_UNIX is not supported on this platform")
     # A stale/leftover node at the path (or an unrelated file in a hosted
     # container) must NOT count: no daemon is accepting, so a connect fails and
     # the ops_* tools must stay unregistered. This is the hosted-SaaS case where
@@ -141,6 +145,9 @@ def test_ops_available_true_when_daemon_accepting(tmp_path, monkeypatch) -> None
     # `aegiscore start` topology — a live daemon is bound to + accepting on the
     # socket. Only a successful connect flips this True.
     import socket as _socket
+
+    if not hasattr(_socket, "AF_UNIX"):
+        pytest.skip("AF_UNIX is not supported on this platform")
 
     sock_path = tmp_path / "live.sock"
     server = _socket.socket(_socket.AF_UNIX, _socket.SOCK_STREAM)

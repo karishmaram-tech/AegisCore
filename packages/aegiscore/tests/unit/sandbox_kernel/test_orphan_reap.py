@@ -21,18 +21,18 @@ from aegiscore.sandbox_kernel.daemon import DaemonSandbox
 
 
 def test_compute_orphans_returns_discovered_minus_tracked() -> None:
-    discovered = {"dcptn_eng-abc_main", "dcptn_eng-abc_recon", "dcptn_eng-xyz_main"}
-    tracked = {"dcptn_eng-abc_main"}
+    discovered = {"aegiscore_eng-abc_main", "aegiscore_eng-abc_recon", "aegiscore_eng-xyz_main"}
+    tracked = {"aegiscore_eng-abc_main"}
 
     assert _compute_orphan_tmux_sessions(discovered, tracked) == {
-        "dcptn_eng-abc_recon",
-        "dcptn_eng-xyz_main",
+        "aegiscore_eng-abc_recon",
+        "aegiscore_eng-xyz_main",
     }
 
 
 def test_compute_orphans_spares_every_tracked_session() -> None:
-    discovered = {"dcptn_eng-abc_main", "dcptn_eng-abc_recon"}
-    tracked = {"dcptn_eng-abc_main", "dcptn_eng-abc_recon"}
+    discovered = {"aegiscore_eng-abc_main", "aegiscore_eng-abc_recon"}
+    tracked = {"aegiscore_eng-abc_main", "aegiscore_eng-abc_recon"}
 
     assert _compute_orphan_tmux_sessions(discovered, tracked) == set()
 
@@ -41,14 +41,14 @@ def test_compute_orphans_ignores_non_aegiscore_sockets() -> None:
     # The reap path must scope to aegiscore-named sockets only — never
     # touch a session that some other process (e.g. an operator's shell)
     # might own on a shared host.
-    discovered = {"dcptn_eng-abc_main", "user-tmux", "main", "agent-session-1"}
+    discovered = {"aegiscore_eng-abc_main", "user-tmux", "main", "agent-session-1"}
     tracked: set[str] = set()
 
-    assert _compute_orphan_tmux_sessions(discovered, tracked) == {"dcptn_eng-abc_main"}
+    assert _compute_orphan_tmux_sessions(discovered, tracked) == {"aegiscore_eng-abc_main"}
 
 
 def test_compute_orphans_with_empty_discovered_is_empty() -> None:
-    assert _compute_orphan_tmux_sessions(set(), {"dcptn_eng-abc_main"}) == set()
+    assert _compute_orphan_tmux_sessions(set(), {"aegiscore_eng-abc_main"}) == set()
 
 
 # ── reap method (seams mocked) ─────────────────────────────────────────
@@ -63,7 +63,7 @@ def test_reap_kills_only_orphans(monkeypatch: pytest.MonkeyPatch) -> None:
     live_session = live_mgr.session
     assert live_session.startswith("aegiscore_")
 
-    discovered = [live_session, "dcptn_eng-abc_recon", "dcptn_eng-xyz_main"]
+    discovered = [live_session, "aegiscore_eng-abc_recon", "aegiscore_eng-xyz_main"]
     killed: list[str] = []
 
     monkeypatch.setattr(
@@ -77,7 +77,7 @@ def test_reap_kills_only_orphans(monkeypatch: pytest.MonkeyPatch) -> None:
 
     reaped = sandbox.reap_orphaned_tmux_sessions()
 
-    assert sorted(killed) == ["dcptn_eng-abc_recon", "dcptn_eng-xyz_main"]
+    assert sorted(killed) == ["aegiscore_eng-abc_recon", "aegiscore_eng-xyz_main"]
     assert reaped == 2
 
 
@@ -98,13 +98,13 @@ def test_reap_swallows_kill_failures(monkeypatch: pytest.MonkeyPatch) -> None:
     # One stuck socket must not block the rest from being reaped.
     monkeypatch.setattr(
         "aegiscore.sandbox_kernel.base._list_aegiscore_tmux_sockets",
-        lambda: ["dcptn_eng-abc_main", "dcptn_eng-abc_recon"],
+        lambda: ["aegiscore_eng-abc_main", "aegiscore_eng-abc_recon"],
     )
 
     killed: list[str] = []
 
     def flaky_kill(session: str) -> None:
-        if session == "dcptn_eng-abc_main":
+        if session == "aegiscore_eng-abc_main":
             raise RuntimeError("simulated tmux failure")
         killed.append(session)
 
@@ -112,5 +112,5 @@ def test_reap_swallows_kill_failures(monkeypatch: pytest.MonkeyPatch) -> None:
 
     reaped = DaemonSandbox().reap_orphaned_tmux_sessions()
     # The successful kill is counted; the failure is logged + swallowed.
-    assert killed == ["dcptn_eng-abc_recon"]
+    assert killed == ["aegiscore_eng-abc_recon"]
     assert reaped == 1

@@ -206,7 +206,7 @@ class SandboxBase(BaseSandbox):
             return SandboxBase._safe_session_name(session)
         workspace_key = SandboxBase._workspace_slug(workspace_path)
         safe_session = SandboxBase._safe_session_name(session)
-        return f"dcptn_{workspace_key}_{safe_session}"
+        return f"aegiscore_{workspace_key}_{safe_session}"
 
     @staticmethod
     def _safe_session_name(session: str) -> str:

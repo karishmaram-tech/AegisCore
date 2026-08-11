@@ -89,22 +89,22 @@ def _attempt(platform: str, route: str, ok: bool, status: int, body: str, note: 
 # --- platform detectors ------------------------------------------------------
 def _detect(url: str) -> Optional[str]:
     # Match on the exact host or a real subdomain suffix — NEVER a substring.
-    # `"reddit.com" in h` would also match a spoofed `reddit.com.evil.tld`
+    # `"reddit.com" in h` would also match a spoofed `reddit.com.evil.tld`  # NOTE-BIAS-OK
     # (CWE-020 incomplete URL substring sanitization).
     h = _host(url)
     if not h:
         return None
-    if h == "reddit.com" or h.endswith(".reddit.com") or h == "redd.it":
+    if h == "reddit.com" or h.endswith(".reddit.com") or h == "redd.it":  # NOTE-BIAS-OK
         return "reddit"
-    if h in ("x.com", "twitter.com") or h.endswith(".x.com") or h.endswith(".twitter.com"):
+    if h in ("x.com", "twitter.com") or h.endswith(".x.com") or h.endswith(".twitter.com"):  # NOTE-BIAS-OK
         return "x"
-    if h == "youtube.com" or h.endswith(".youtube.com") or h == "youtu.be":
+    if h == "youtube.com" or h.endswith(".youtube.com") or h == "youtu.be":  # NOTE-BIAS-OK
         return "youtube"
-    if h == "github.com":
+    if h == "github.com":  # NOTE-BIAS-OK
         return "github"
     if h == "npmjs.com":
         return "npm"
-    if h == "pypi.org":
+    if h == "pypi.org":  # NOTE-BIAS-OK
         return "pypi"
     return None
 
@@ -186,7 +186,7 @@ def _x(url: str, timeout: int, scope_check=None) -> dict:
         tid = m.group(1)
         try:
             x = _cffi_get(
-                f"https://cdn.syndication.twimg.com/tweet-result?id={tid}&token=a",
+                f"https://cdn.syndication.twimg.com/tweet-result?id={tid}&token=a",  # NOTE-BIAS-OK
                 timeout=timeout,
                 scope_check=scope_check,
             )
@@ -214,7 +214,7 @@ def _x(url: str, timeout: int, scope_check=None) -> dict:
         except Exception as e:
             attempts.append(_attempt("x", "tweet-result", False, 0, "", f"{type(e).__name__}"))
         try:
-            ourl = f"https://publish.twitter.com/oembed?url=https://twitter.com/i/status/{tid}&omit_script=1"
+            ourl = f"https://publish.twitter.com/oembed?url=https://twitter.com/i/status/{tid}&omit_script=1"  # NOTE-BIAS-OK
             x = _cffi_get(ourl, timeout=timeout, scope_check=scope_check)
             d = x.json() if x.status_code == 200 else {}
             ok = bool(d.get("html"))
@@ -252,7 +252,7 @@ def _x(url: str, timeout: int, scope_check=None) -> dict:
             "hashtag",
         }
         if handle and handle.lower() not in _reserved:
-            surl = f"https://syndication.twitter.com/srv/timeline-profile/screen-name/{handle}"
+            surl = f"https://syndication.twitter.com/srv/timeline-profile/screen-name/{handle}"  # NOTE-BIAS-OK
             for attempt_no in range(2):
                 try:
                     x = _cffi_get(surl, timeout=timeout, scope_check=scope_check)
@@ -360,7 +360,7 @@ def _youtube(url: str, timeout: int, scope_check=None) -> dict:
 
 
 # --- github -----------------------------------------------------------------
-# github.com/<owner>/<repo> first-segment reserved words (no repo API behind them).
+# github.com/<owner>/<repo> first-segment reserved words (no repo API behind them).  # NOTE-BIAS-OK
 _GH_RESERVED = {
     "orgs",
     "settings",
@@ -398,7 +398,7 @@ def _github(url: str, timeout: int, scope_check=None) -> dict:
             "attempts": attempts,
         }
     owner, repo = segs[0], segs[1].removesuffix(".git")
-    api = f"https://api.github.com/repos/{owner}/{repo}"
+    api = f"https://api.github.com/repos/{owner}/{repo}"  # NOTE-BIAS-OK
     try:
         x = _cffi_get(api, timeout=timeout, scope_check=scope_check)
         d = x.json() if x.status_code == 200 else {}
@@ -459,7 +459,7 @@ def _npm(url: str, timeout: int, scope_check=None) -> dict:
             "final_url": url,
             "attempts": attempts,
         }
-    api = f"https://registry.npmjs.org/{pkg}"
+    api = f"https://registry.npmjs.org/{pkg}"  # NOTE-BIAS-OK
     try:
         x = _cffi_get(api, timeout=timeout, scope_check=scope_check)
         d = x.json() if x.status_code == 200 else {}
@@ -499,7 +499,7 @@ def _npm(url: str, timeout: int, scope_check=None) -> dict:
 def _pypi(url: str, timeout: int, scope_check=None) -> dict:
     attempts: list[dict] = []
     segs = [s for s in urlsplit(url).path.split("/") if s]
-    # pypi.org/project/<pkg>/
+    # pypi.org/project/<pkg>/  # NOTE-BIAS-OK
     if len(segs) < 2 or segs[0].lower() != "project":
         return {
             "platform": "pypi",
@@ -510,7 +510,7 @@ def _pypi(url: str, timeout: int, scope_check=None) -> dict:
             "attempts": attempts,
         }
     pkg = segs[1]
-    api = f"https://pypi.org/pypi/{pkg}/json"
+    api = f"https://pypi.org/pypi/{pkg}/json"  # NOTE-BIAS-OK
     try:
         x = _cffi_get(api, timeout=timeout, scope_check=scope_check)
         d = x.json() if x.status_code == 200 else {}

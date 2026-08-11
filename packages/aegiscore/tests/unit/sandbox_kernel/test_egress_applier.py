@@ -79,6 +79,10 @@ def test_discover_management_cidrs_survives_total_failure(tmp_path):
 
 def test_discover_management_cidrs_default_proc_path_is_readable():
     # Smoke: the real /proc/net/route parses without raising on this host.
+    if not os.path.exists("/proc/net/route"):
+        import pytest
+
+        pytest.skip("/proc/net/route is not present on this host")
     assert os.path.exists("/proc/net/route")
     cidrs = discover_management_cidrs(route_reader=lambda: "")
     assert "127.0.0.0/8" in cidrs

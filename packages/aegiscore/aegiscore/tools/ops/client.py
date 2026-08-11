@@ -48,6 +48,8 @@ def ops_available() -> bool:
     path = resolve_socket_path()
     if not os.path.exists(path):
         return False
+    if not hasattr(_socket, "AF_UNIX"):
+        return False
     try:
         with _socket.socket(_socket.AF_UNIX, _socket.SOCK_STREAM) as sock:
             sock.settimeout(0.5)
@@ -106,7 +108,7 @@ class OpsControlClient:
         try:
             with self._client() as client:
                 resp = client.request(method, path, **kwargs)
-        except (FileNotFoundError, httpx.ConnectError) as exc:
+        except (FileNotFoundError, httpx.ConnectError, RuntimeError) as exc:
             raise OpsControlUnreachableError(
                 f"opscontrol daemon not reachable at {self._socket_path}: {exc}. "
                 "Was the stack brought up via `aegiscore start`? "
