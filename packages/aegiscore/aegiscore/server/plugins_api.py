@@ -14,14 +14,14 @@ Aegiscore's graph manifest is split into two bundles by
   - ``standard``: official OSS agents (aegiscore + 9 specialists).
     Always loaded at startup.
   - ``plugins``: vulnresearch family (orchestrator + 5 specialists).
-    Off by default. Activated either via ``DECEPTICON_PLUGINS`` env
+    Off by default. Activated either via ``AEGISCORE_PLUGINS`` env
     (next-restart) or this API (immediately).
 
 Endpoints
 ---------
-GET  ``/_decepticon/bundles``                 — list bundles + enabled state
-POST ``/_decepticon/bundles/{name}/enable``   — register every graph in bundle
-POST ``/_decepticon/bundles/{name}/disable``  — drop every graph in bundle
+GET  ``/_aegiscore/bundles``                 — list bundles + enabled state
+POST ``/_aegiscore/bundles/{name}/enable``   — register every graph in bundle
+POST ``/_aegiscore/bundles/{name}/disable``  — drop every graph in bundle
 
 Enable is idempotent (``register_graph`` uses ``if_exists="do_nothing"``
 in the Assistants table). Disable mutates the in-memory ``GRAPHS`` dict
@@ -32,7 +32,7 @@ Persistence
 -----------
 This API is **runtime-only** in this iteration. Bundles re-enabled here
 do NOT persist across ``aegiscore restart`` — for permanent activation
-set ``DECEPTICON_PLUGINS=standard,plugins`` in ``~/.aegiscore/.env``.
+set ``AEGISCORE_PLUGINS=standard,plugins`` in ``~/.aegiscore/.env``.
 A future iteration will add a state file so the API also persists.
 """
 
@@ -137,7 +137,7 @@ app = FastAPI(
 )
 
 
-@app.get("/_decepticon/bundles", response_model=BundlesResponse)
+@app.get("/_aegiscore/bundles", response_model=BundlesResponse)
 async def list_bundles() -> BundlesResponse:
     """List every known bundle plus its current enabled state.
 
@@ -159,7 +159,7 @@ async def list_bundles() -> BundlesResponse:
     )
 
 
-@app.post("/_decepticon/bundles/{name}/enable", response_model=ToggleResponse)
+@app.post("/_aegiscore/bundles/{name}/enable", response_model=ToggleResponse)
 async def enable_bundle(
     name: Annotated[str, Path(min_length=1, max_length=64)],
 ) -> ToggleResponse:
@@ -200,7 +200,7 @@ async def enable_bundle(
     )
 
 
-@app.post("/_decepticon/bundles/{name}/disable", response_model=ToggleResponse)
+@app.post("/_aegiscore/bundles/{name}/disable", response_model=ToggleResponse)
 async def disable_bundle(
     name: Annotated[str, Path(min_length=1, max_length=64)],
 ) -> ToggleResponse:
@@ -220,7 +220,7 @@ async def disable_bundle(
             status_code=400,
             detail=(
                 "'standard' bundle cannot be disabled — it carries the "
-                "core orchestrator. Set DECEPTICON_PLUGINS at startup to "
+                "core orchestrator. Set AEGISCORE_PLUGINS at startup to "
                 "ship a custom baseline."
             ),
         )

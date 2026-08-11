@@ -17,7 +17,7 @@
 >   `sandbox_kernel/egress.py` (renderer + applier) + `/provision_egress`
 >   endpoint + `HTTPSandbox.provision_egress` + a once-per-workspace hook
 >   in the guardrail middleware. **On by default** for `enforce` mode
->   (opt out with `DECEPTICON_EGRESS_DISABLE`); in-sandbox nftables
+>   (opt out with `AEGISCORE_EGRESS_DISABLE`); in-sandbox nftables
 >   (NET_ADMIN already granted), management subnet discovered sandbox-side
 >   from `/proc/net/route` (the OSS sandbox image ships no `ip` binary) so
 >   a scope rule can't sever the agent↔management link.

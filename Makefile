@@ -23,7 +23,7 @@ COMPOSE_WATCH := docker compose -f docker-compose.yml -f docker-compose.dev.yml 
 PROFILES_ALL  := --profile cli --profile c2-sliver
 WEB_DIR       := clients/web
 
-# Dogfood: isolated $DECEPTICON_HOME so the launcher can onboard, write .env,
+# Dogfood: isolated $AEGISCORE_HOME so the launcher can onboard, write .env,
 # and stand up the stack without touching the user's real ~/.aegiscore. The
 # launcher resolves all relative paths against the compose file's directory,
 # so docker-compose.yml + config/ + containers/ + .env.example are symlinked
@@ -33,7 +33,7 @@ LAUNCHER_BIN  := clients/launcher/bin/aegiscore
 
 # docker compose cannot expand ~ inside compose-file defaults, so resolve it
 # here before any subprocess inherits the env.
-export DECEPTICON_HOME ?= $(HOME)/.aegiscore
+export AEGISCORE_HOME ?= $(HOME)/.aegiscore
 
 # Mirror the launcher's start.go credential mount logic so `make dev` (and any
 # other target that calls `docker compose`) populates the litellm container's
@@ -112,11 +112,11 @@ dogfood: launcher
 	@ln -sfn $(CURDIR)/.env.example        $(DOGFOOD_HOME)/.env.example
 	@echo ""
 	@echo "[dogfood] Building images from local code (tag :dev)..."
-	DECEPTICON_VERSION=dev $(COMPOSE) --profile cli build
+	AEGISCORE_VERSION=dev $(COMPOSE) --profile cli build
 	@echo ""
-	@echo "[dogfood] Launching ./$(LAUNCHER_BIN) (DECEPTICON_HOME=$(DOGFOOD_HOME))"
+	@echo "[dogfood] Launching ./$(LAUNCHER_BIN) (AEGISCORE_HOME=$(DOGFOOD_HOME))"
 	@echo ""
-	DECEPTICON_VERSION=dev DECEPTICON_HOME=$(DOGFOOD_HOME) ./$(LAUNCHER_BIN)
+	AEGISCORE_VERSION=dev AEGISCORE_HOME=$(DOGFOOD_HOME) ./$(LAUNCHER_BIN)
 
 ## Build the Go launcher binary (version=dev, gates auto-update + config sync).
 launcher:
@@ -143,7 +143,7 @@ smoke:
 	@echo ""
 	@echo "[3/4] Starting services (--no-build --wait, OSS launcher flow)..."
 	$(COMPOSE) --profile cli up -d --no-build --wait \
-		--wait-timeout $${DECEPTICON_STARTUP_TIMEOUT_SECONDS:-600}
+		--wait-timeout $${AEGISCORE_STARTUP_TIMEOUT_SECONDS:-600}
 	@echo ""
 	@echo "[4/4] Health checks..."
 	@$(MAKE) -s health
@@ -170,7 +170,7 @@ cli-dev: infra
 	@$(COMPOSE_WATCH) watch --no-up --quiet langgraph &
 	npm run build --workspace=@aegiscore/streaming
 	cd clients/cli && npm run build
-	cd clients/cli && (npm run dev & DECEPTICON_API_URL=$${DECEPTICON_API_URL:-http://localhost:2024} node --watch dist/index.js & wait)
+	cd clients/cli && (npm run dev & AEGISCORE_API_URL=$${AEGISCORE_API_URL:-http://localhost:2024} node --watch dist/index.js & wait)
 
 ## Next.js dev server locally — infra stays in Docker with hot-reload.
 web-dev: infra web-db-ensure node-install
@@ -339,13 +339,13 @@ clean:
 node-install:
 	@test -d node_modules || npm install
 
-# postgres-init/01-create-web-db.sql auto-creates decepticon_web on fresh
+# postgres-init/01-create-web-db.sql auto-creates aegiscore_web on fresh
 # volumes. This target only waits for postgres readiness and applies
 # Prisma migrations.
 web-db-ensure:
 	@echo "[web-db-ensure] Waiting for PostgreSQL..."
 	@for i in 1 2 3 4 5 6 7 8 9 10; do \
-		docker exec aegiscore$${DECEPTICON_STACK_NAME:+-$${DECEPTICON_STACK_NAME}}-postgres pg_isready -U aegiscore -q 2>/dev/null && break; \
+		docker exec aegiscore$${AEGISCORE_STACK_NAME:+-$${AEGISCORE_STACK_NAME}}-postgres pg_isready -U aegiscore -q 2>/dev/null && break; \
 		sleep 1; \
 	done
 	@cd $(WEB_DIR) && npx prisma migrate deploy 2>&1 | tail -1
@@ -362,7 +362,7 @@ web-db-ensure:
 ## valid OAuth access token (token TTL ~8h ≫ cycle duration ~30m).
 recreate-litellm:
 	@$(COMPOSE) up -d --no-build --force-recreate litellm
-	@docker exec aegiscore$${DECEPTICON_STACK_NAME:+-$${DECEPTICON_STACK_NAME}}-litellm sh -c 'test -s /root/.claude/.credentials.json' \
+	@docker exec aegiscore$${AEGISCORE_STACK_NAME:+-$${AEGISCORE_STACK_NAME}}-litellm sh -c 'test -s /root/.claude/.credentials.json' \
 		&& echo "recreate-litellm: creds mount OK" \
 		|| (echo "recreate-litellm: creds mount EMPTY — onboard first" && exit 1)
 

@@ -59,7 +59,7 @@ _MODULE_PATH = Path(__file__).resolve().parents[5] / "config" / "gemini_handler.
 
 
 def _load_module():
-    spec = importlib.util.spec_from_file_location("decepticon_gemini_handler", _MODULE_PATH)
+    spec = importlib.util.spec_from_file_location("aegiscore_gemini_handler", _MODULE_PATH)
     assert spec and spec.loader
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)

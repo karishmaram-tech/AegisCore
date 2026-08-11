@@ -60,7 +60,7 @@ def test_langgraph_registers_blue_cell_graph() -> None:
     )
 
 
-def test_blue_cell_published_as_decepticon_subagent() -> None:
+def test_blue_cell_published_as_aegiscore_subagent() -> None:
     """The orchestrator only delegates to specs published under the
     ``aegiscore.subagents`` entry-point group (load_subagents_for_parent).
     Without this line Blue Cell is graph-served but never delegated — the

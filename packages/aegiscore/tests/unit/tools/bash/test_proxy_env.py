@@ -1,4 +1,4 @@
-"""Sandbox tmux-session env passthrough — proxy + DECEPTICON_* allowlist.
+"""Sandbox tmux-session env passthrough — proxy + AEGISCORE_* allowlist.
 
 The bash tool routes commands through tmux shells managed by
 ``TmuxSessionManager``. For traffic-intercept workflows (Caido / Burp /
@@ -30,18 +30,18 @@ _PROXY_NAMES_UPPER = ("HTTPS_PROXY", "HTTP_PROXY", "NO_PROXY", "ALL_PROXY")
 _PROXY_NAMES_LOWER = ("https_proxy", "http_proxy", "no_proxy", "all_proxy")
 
 
-def _clear_proxy_and_decepticon_env(monkeypatch: pytest.MonkeyPatch) -> None:
+def _clear_proxy_and_aegiscore_env(monkeypatch: pytest.MonkeyPatch) -> None:
     for key in (*_PROXY_NAMES_UPPER, *_PROXY_NAMES_LOWER):
         monkeypatch.delenv(key, raising=False)
     for key in list(os.environ):
-        if key.startswith("DECEPTICON_"):
+        if key.startswith("AEGISCORE_"):
             monkeypatch.delenv(key, raising=False)
 
 
 def test_allowed_passthrough_env_includes_uppercase_proxy_vars(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _clear_proxy_and_decepticon_env(monkeypatch)
+    _clear_proxy_and_aegiscore_env(monkeypatch)
     monkeypatch.setenv("HTTPS_PROXY", "http://proxy.example:8080")
     monkeypatch.setenv("HTTP_PROXY", "http://proxy.example:8080")
     monkeypatch.setenv("NO_PROXY", "localhost,127.0.0.1")
@@ -62,7 +62,7 @@ def test_allowed_passthrough_env_includes_uppercase_proxy_vars(
 def test_allowed_passthrough_env_includes_lowercase_proxy_vars(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _clear_proxy_and_decepticon_env(monkeypatch)
+    _clear_proxy_and_aegiscore_env(monkeypatch)
     monkeypatch.setenv("https_proxy", "http://lower.example:8080")
     monkeypatch.setenv("http_proxy", "http://lower.example:8080")
     monkeypatch.setenv("no_proxy", "localhost")
@@ -76,40 +76,40 @@ def test_allowed_passthrough_env_includes_lowercase_proxy_vars(
     assert env["all_proxy"] == "socks5://lower.example:1080"
 
 
-def test_allowed_passthrough_env_includes_decepticon_prefixed_vars(
+def test_allowed_passthrough_env_includes_aegiscore_prefixed_vars(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _clear_proxy_and_decepticon_env(monkeypatch)
-    monkeypatch.setenv("DECEPTICON_ENGAGEMENT", "eng-1")
-    monkeypatch.setenv("DECEPTICON_TEST_TOKEN", "tok-2")
+    _clear_proxy_and_aegiscore_env(monkeypatch)
+    monkeypatch.setenv("AEGISCORE_ENGAGEMENT", "eng-1")
+    monkeypatch.setenv("AEGISCORE_TEST_TOKEN", "tok-2")
 
     env = _allowed_passthrough_env()
 
-    assert env["DECEPTICON_ENGAGEMENT"] == "eng-1"
-    assert env["DECEPTICON_TEST_TOKEN"] == "tok-2"
+    assert env["AEGISCORE_ENGAGEMENT"] == "eng-1"
+    assert env["AEGISCORE_TEST_TOKEN"] == "tok-2"
 
 
 def test_allowed_passthrough_env_excludes_unrelated_vars(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _clear_proxy_and_decepticon_env(monkeypatch)
+    _clear_proxy_and_aegiscore_env(monkeypatch)
     monkeypatch.setenv("HTTPS_PROXY", "http://proxy:8080")
     monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "do-not-forward")
     monkeypatch.setenv("UNRELATED_SECRET", "do-not-forward")
-    monkeypatch.setenv("DECEPTICON_TOKEN", "ok")
+    monkeypatch.setenv("AEGISCORE_TOKEN", "ok")
 
     env = _allowed_passthrough_env()
 
     assert "AWS_SECRET_ACCESS_KEY" not in env
     assert "UNRELATED_SECRET" not in env
     assert "HTTPS_PROXY" in env
-    assert "DECEPTICON_TOKEN" in env
+    assert "AEGISCORE_TOKEN" in env
 
 
 def test_allowed_passthrough_env_returns_empty_when_nothing_to_forward(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _clear_proxy_and_decepticon_env(monkeypatch)
+    _clear_proxy_and_aegiscore_env(monkeypatch)
     assert _allowed_passthrough_env() == {}
 
 
@@ -117,7 +117,7 @@ def test_shell_export_command_value_round_trips_through_shlex() -> None:
     raw = {
         "HTTPS_PROXY": "http://user:p@ss word@proxy:8080",
         "NO_PROXY": "localhost,127.0.0.1",
-        "DECEPTICON_ENGAGEMENT": "eng with spaces",
+        "AEGISCORE_ENGAGEMENT": "eng with spaces",
     }
     cmd = _shell_export_command(raw)
 
@@ -131,7 +131,7 @@ def test_shell_export_command_is_empty_for_empty_input() -> None:
 
 
 def test_shell_export_command_emits_keys_in_sorted_order() -> None:
-    inputs = {"https_proxy": "v1", "HTTPS_PROXY": "v2", "DECEPTICON_X": "v3"}
+    inputs = {"https_proxy": "v1", "HTTPS_PROXY": "v2", "AEGISCORE_X": "v3"}
     cmd = _shell_export_command(inputs)
     expected = "export " + " ".join(f"{k}={shlex.quote(v)}" for k, v in sorted(inputs.items()))
     assert cmd == expected
@@ -153,9 +153,9 @@ def test_shell_export_command_shell_quotes_injection_attempts() -> None:
 def test_sync_passthrough_env_sends_export_into_tmux_when_allowlist_nonempty(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _clear_proxy_and_decepticon_env(monkeypatch)
+    _clear_proxy_and_aegiscore_env(monkeypatch)
     monkeypatch.setenv("HTTPS_PROXY", "http://proxy:8080")
-    monkeypatch.setenv("DECEPTICON_ENGAGEMENT", "eng-7")
+    monkeypatch.setenv("AEGISCORE_ENGAGEMENT", "eng-7")
 
     sent: list[tuple[str, bool]] = []
     mgr = TmuxSessionManager(session="s1", container_name="ctn")
@@ -171,13 +171,13 @@ def test_sync_passthrough_env_sends_export_into_tmux_when_allowlist_nonempty(
     assert enter is True
     assert text.startswith("export ")
     assert f"HTTPS_PROXY={shlex.quote('http://proxy:8080')}" in text
-    assert f"DECEPTICON_ENGAGEMENT={shlex.quote('eng-7')}" in text
+    assert f"AEGISCORE_ENGAGEMENT={shlex.quote('eng-7')}" in text
 
 
 def test_sync_passthrough_env_is_noop_when_nothing_allowed(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _clear_proxy_and_decepticon_env(monkeypatch)
+    _clear_proxy_and_aegiscore_env(monkeypatch)
 
     sent: list[tuple[str, bool]] = []
     mgr = TmuxSessionManager(session="s2", container_name="ctn")
@@ -194,7 +194,7 @@ def test_sync_passthrough_env_is_noop_when_nothing_allowed(
 def test_sync_passthrough_env_swallows_send_errors_without_raising(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _clear_proxy_and_decepticon_env(monkeypatch)
+    _clear_proxy_and_aegiscore_env(monkeypatch)
     monkeypatch.setenv("HTTPS_PROXY", "http://proxy:8080")
 
     mgr = TmuxSessionManager(session="s3", container_name="ctn")
@@ -209,7 +209,7 @@ def test_initialize_skips_sync_passthrough_env_when_cached_session_is_alive(
     # marker races the user command's marker (see tmux.py initialize()).
     # The env was synced at session creation and persists, so the fast
     # path must NOT re-sync.
-    _clear_proxy_and_decepticon_env(monkeypatch)
+    _clear_proxy_and_aegiscore_env(monkeypatch)
     monkeypatch.setenv("HTTPS_PROXY", "http://proxy:8080")
 
     mgr = TmuxSessionManager(session="cached", container_name="ctn")
@@ -226,7 +226,7 @@ def test_initialize_skips_sync_passthrough_env_when_cached_session_is_alive(
 def test_initialize_calls_sync_passthrough_env_after_creating_new_session(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    _clear_proxy_and_decepticon_env(monkeypatch)
+    _clear_proxy_and_aegiscore_env(monkeypatch)
     monkeypatch.setenv("HTTPS_PROXY", "http://proxy:8080")
 
     mgr = TmuxSessionManager(session="fresh", container_name="ctn")

@@ -26,7 +26,7 @@ def _reset_singleton() -> Iterator[None]:
 
 
 @pytest.fixture(autouse=True)
-def _propagate_decepticon_logger() -> Iterator[None]:
+def _propagate_aegiscore_logger() -> Iterator[None]:
     # aegiscore_core.utils.logging sets propagate=False on the "aegiscore"
     # root, which blocks pytest's caplog. Restore propagation per test.
     parent = logging.getLogger("aegiscore")

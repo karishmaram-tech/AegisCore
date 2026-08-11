@@ -21,7 +21,7 @@ import (
 //                     systemd, Linux without per-user systemd)
 //
 // Every method is idempotent. Install on an already-installed unit
-// re-writes the unit file (so binary-path / DECEPTICON_HOME drift
+// re-writes the unit file (so binary-path / AEGISCORE_HOME drift
 // gets corrected on the next install run), then re-enables and
 // re-starts. Uninstall on a never-installed unit is a no-op.
 type ServiceManager interface {
@@ -63,7 +63,7 @@ type ServiceManager interface {
 // InstallSpec carries every value the manager needs to template the
 // unit file. Built once by `aegiscore opscontrol install` from the
 // launcher's resolved config (binary path via os.Executable(), home
-// path via config.DecepticonHome()).
+// path via config.AegiscoreHome()).
 type InstallSpec struct {
 	// BinaryPath is the absolute path of the `aegiscore` binary the
 	// service will exec. Resolved via os.Executable() so the service
@@ -71,12 +71,12 @@ type InstallSpec struct {
 	// /usr/local/bin/aegiscore, ~/.local/bin/aegiscore).
 	BinaryPath string
 
-	// HomePath is the absolute $DECEPTICON_HOME directory. Templated
+	// HomePath is the absolute $AEGISCORE_HOME directory. Templated
 	// into Environment= / EnvironmentVariables= so the daemon resolves
 	// the same socket path the launcher does.
 	HomePath string
 
-	// StackName is the DECEPTICON_STACK_NAME at install time (or
+	// StackName is the AEGISCORE_STACK_NAME at install time (or
 	// empty). Templated into the unit name + Environment so two
 	// stacks coexist without colliding socket paths or unit names.
 	StackName string

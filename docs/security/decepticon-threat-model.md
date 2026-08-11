@@ -85,7 +85,7 @@ Per-asset analysis.
 | **Tampering** | LiteLLM admin UI mutates routing | Master key never exposed to sandbox network | Done |
 | **Information disclosure** | OAuth credential files bind-mounted (Claude/Codex) | Bind RO; LiteLLM container itself is on `aegiscore-net` only | Done |
 | **Information disclosure** | Health endpoint hardcoded master key as fallback | Removed; health refuses without explicit `LITELLM_API_KEY` | Done |
-| **Denial of service** | Per-engagement model-tier spend not capped | `BudgetEnforcementMiddleware` (in `_BASE_SLOTS`) hard-pauses at the per-engagement / per-agent USD cap | Done — opt-in via `DECEPTICON_BUDGET__*` ([security-controls](./security-controls.md)) |
+| **Denial of service** | Per-engagement model-tier spend not capped | `BudgetEnforcementMiddleware` (in `_BASE_SLOTS`) hard-pauses at the per-engagement / per-agent USD cap | Done — opt-in via `AEGISCORE_BUDGET__*` ([security-controls](./security-controls.md)) |
 | **Elevation of privilege** | Compromised LiteLLM → upstream provider impersonation | Provider keys held server-side; client can't extract | Done (LiteLLM design) |
 
 ### Asset: Sandbox container
@@ -104,7 +104,7 @@ Per-asset analysis.
 
 | Threat | Vector | Mitigation | Status |
 |--------|--------|-----------|--------|
-| **Spoofing** | Plugin entry-point hijack | `DECEPTICON_PLUGINS` env explicit allowlist; signed bundles (planned) | Partial |
+| **Spoofing** | Plugin entry-point hijack | `AEGISCORE_PLUGINS` env explicit allowlist; signed bundles (planned) | Partial |
 | **Tampering** | Prompt-injection in subagent output reaches orchestrator | UntrustedOutputMiddleware wraps every `task()` result | Done |
 | **Repudiation** | OPPLAN object reordered post-hoc | OPPLAN edits via tool calls land in the RoE audit ledger as decision records | Done |
 | **Information disclosure** | OPPLAN dumped to a tool that reads `/workspace` content | EngagementFilesystemBackend scopes paths to engagement workspace | Done |
@@ -127,8 +127,8 @@ Per-asset analysis.
 
 | Threat | Vector | Mitigation | Status |
 |--------|--------|-----------|--------|
-| **Spoofing** | `pip install aegiscore-plugin-evil` typosquat | Operator-explicit `DECEPTICON_PLUGINS` allowlist; no auto-enable | Done |
-| **Tampering** | PluginBundle replaces ENGAGEMENT_CONTEXT or RoE middleware | `SAFETY_CRITICAL_SLOTS` gate requires `DECEPTICON_ALLOW_SAFETY_OVERRIDES=1` | Done |
+| **Spoofing** | `pip install aegiscore-plugin-evil` typosquat | Operator-explicit `AEGISCORE_PLUGINS` allowlist; no auto-enable | Done |
+| **Tampering** | PluginBundle replaces ENGAGEMENT_CONTEXT or RoE middleware | `SAFETY_CRITICAL_SLOTS` gate requires `AEGISCORE_ALLOW_SAFETY_OVERRIDES=1` | Done |
 | **Repudiation** | Plugin issues tool calls without audit | All tool calls flow through middleware stack; ledger captures them | Done |
 | **Information disclosure** | Plugin reads `~/.config/aegiscore/` | Plugin code runs in agent process; no FS sandboxing | Open |
 | **Denial of service** | Plugin import hangs | Entry-point loading timeout (planned) | Open |
@@ -144,7 +144,7 @@ The chains that matter, ranked by realistic damage:
 
 3. **Operator workstation → LiteLLM OAuth file read.** Operator's `~/.claude/.credentials.json` is bind-mounted RO into LiteLLM. Compromised host with read on that file gets the OAuth token. **Mitigation**: the file is RO mounted only into LiteLLM, not into sandbox; standard OS file perms (600) apply to operator host. **Status**: partial — relies on operator host hygiene.
 
-4. **Plugin entry-point poisoning.** Operator runs `pip install aegiscore-plugin-foo` from a typosquat. Bundle's `__init__.py` exfiltrates `.env` at agent startup. **Closed** by `DECEPTICON_PLUGINS` allowlist; **Open** signed-bundle verification.
+4. **Plugin entry-point poisoning.** Operator runs `pip install aegiscore-plugin-foo` from a typosquat. Bundle's `__init__.py` exfiltrates `.env` at agent startup. **Closed** by `AEGISCORE_PLUGINS` allowlist; **Open** signed-bundle verification.
 
 5. **Prompt-injection-driven RCE via docker socket.** The old `DockerSandbox` transport mounted `/var/run/docker.sock` into the LangGraph container; any agent-controlled command could escape to the host. **Closed** by the HTTP-only sandbox transport rewrite (predates this PR; see [`backends/factory.py`](../../packages/aegiscore/aegiscore/backends/factory.py)).
 
@@ -154,7 +154,7 @@ Tracked in this PR's roadmap, in order of priority:
 
 1. **Per-engagement Cypher user** (`aegiscore-sandbox-<engagement>`, rotating Bolt token). Caps the impact of a single sandbox compromise to that engagement's portion of the graph.
 2. **Per-engagement sandbox container** (Docker SDK based lifecycle, one container per engagement open). Eliminates the "Engagement A's `.scratch/` is visible to Engagement B" leak. Tier 3 of this PR ships the design + compose hardening; full lifecycle ships in a follow-up.
-3. ~~**Per-engagement budget cap**~~ — **shipped.** `BudgetEnforcementMiddleware` (in `_BASE_SLOTS`) soft-warns at a configurable fraction of the cap and hard-pauses the run at 100%, scoped per-engagement and per-agent. Enable via `DECEPTICON_BUDGET__ENGAGEMENT_USD` / `DECEPTICON_BUDGET__PER_AGENT_USD`; see [security-controls](./security-controls.md). Automatic model-tier downgrade at threshold is not implemented.
+3. ~~**Per-engagement budget cap**~~ — **shipped.** `BudgetEnforcementMiddleware` (in `_BASE_SLOTS`) soft-warns at a configurable fraction of the cap and hard-pauses the run at 100%, scoped per-engagement and per-agent. Enable via `AEGISCORE_BUDGET__ENGAGEMENT_USD` / `AEGISCORE_BUDGET__PER_AGENT_USD`; see [security-controls](./security-controls.md). Automatic model-tier downgrade at threshold is not implemented.
 4. **Plugin bundle signature** (PluginBundle ships an Ed25519 signature; operator pins trust set; `pip install` of an unpinned bundle is rejected at boot).
 5. **Firecracker microVM sandbox** (one ~125ms-boot microVM per objective). Kernel boundary instead of namespace boundary. Multi-tenant deployments only; OSS keeps Docker.
 6. **Sigstore-style transparent log** for the RoE audit ledger. Today the ledger lives next to the engagement workspace; the HMAC key is operator-held. For paid engagements, ship the chain hash to a third-party transparency log (Rekor) so even the operator can't rewrite history.

@@ -125,9 +125,9 @@ def test_initialize_warns_when_mkdir_fails(caplog):
     )
     TmuxSessionManager._initialized.discard("dcptn_test-scan-3")
 
-    decepticon_logger = logging.getLogger("aegiscore")
-    original_propagate = decepticon_logger.propagate
-    decepticon_logger.propagate = True
+    aegiscore_logger = logging.getLogger("aegiscore")
+    original_propagate = aegiscore_logger.propagate
+    aegiscore_logger.propagate = True
     try:
         with (
             patch.object(mgr, "_tmux") as mock_tmux,
@@ -149,7 +149,7 @@ def test_initialize_warns_when_mkdir_fails(caplog):
             with caplog.at_level(logging.WARNING):
                 mgr.initialize()
     finally:
-        decepticon_logger.propagate = original_propagate
+        aegiscore_logger.propagate = original_propagate
 
     assert any("pipe-pane setup failed" in r.message for r in caplog.records), (
         f"Expected warning log; got {[r.message for r in caplog.records]}"

@@ -31,7 +31,7 @@ class TestPostInitHmacKeyEnvFallback:
     def test_env_key_used_when_hmac_key_none(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        monkeypatch.setenv("DECEPTICON_AUDIT_HMAC_KEY", "env-secret")
+        monkeypatch.setenv("AEGISCORE_AUDIT_HMAC_KEY", "env-secret")
         sink = RoEAuditSink(path=tmp_path / "a.jsonl")
         assert sink.hmac_key == b"env-secret"
         sink.append({"event": "x"})
@@ -41,7 +41,7 @@ class TestPostInitHmacKeyEnvFallback:
     def test_env_key_absent_hmac_key_stays_none(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        monkeypatch.delenv("DECEPTICON_AUDIT_HMAC_KEY", raising=False)
+        monkeypatch.delenv("AEGISCORE_AUDIT_HMAC_KEY", raising=False)
         sink = RoEAuditSink(path=tmp_path / "a.jsonl")
         assert sink.hmac_key is None
         stamped = sink.append({"event": "x"})
@@ -50,7 +50,7 @@ class TestPostInitHmacKeyEnvFallback:
     def test_explicit_hmac_key_not_overridden_by_env(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        monkeypatch.setenv("DECEPTICON_AUDIT_HMAC_KEY", "env-secret")
+        monkeypatch.setenv("AEGISCORE_AUDIT_HMAC_KEY", "env-secret")
         sink = RoEAuditSink(path=tmp_path / "a.jsonl", hmac_key=b"explicit-key")
         assert sink.hmac_key == b"explicit-key"
 
@@ -94,16 +94,16 @@ class TestEnsureHydratedSkipsBlanksAndCorrupt:
                 raise OSError("no read")
             return original_open(self_, mode, **kwargs)
 
-        decepticon_logger = logging.getLogger("aegiscore")
-        original_propagate = decepticon_logger.propagate
-        decepticon_logger.propagate = True
+        aegiscore_logger = logging.getLogger("aegiscore")
+        original_propagate = aegiscore_logger.propagate
+        aegiscore_logger.propagate = True
         try:
             monkeypatch.setattr(Path, "open", raising_open)
             sink._hydrated = False
             with caplog.at_level(logging.WARNING):
                 sink._ensure_hydrated()
         finally:
-            decepticon_logger.propagate = original_propagate
+            aegiscore_logger.propagate = original_propagate
         assert sink._state == AuditChainState()
         assert "failed to hydrate" in caplog.text
 
@@ -131,16 +131,16 @@ class TestAppendFsyncAndWriteErrors:
                 raise OSError("disk full")
             return original_open(self_, mode, **kwargs)
 
-        decepticon_logger = logging.getLogger("aegiscore")
-        original_propagate = decepticon_logger.propagate
-        decepticon_logger.propagate = True
+        aegiscore_logger = logging.getLogger("aegiscore")
+        original_propagate = aegiscore_logger.propagate
+        aegiscore_logger.propagate = True
         try:
             monkeypatch.setattr(Path, "open", raising_write_open)
             with caplog.at_level(logging.ERROR):
                 with pytest.raises(OSError):
                     sink.append({"event": "x"})
         finally:
-            decepticon_logger.propagate = original_propagate
+            aegiscore_logger.propagate = original_propagate
         assert "failed to write" in caplog.text
 
 

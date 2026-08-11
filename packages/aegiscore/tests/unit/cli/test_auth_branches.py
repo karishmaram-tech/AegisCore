@@ -13,8 +13,8 @@ _PROVIDER_ENV_VARS = (
     *factory._API_METHOD_ENV.values(),
     *factory._OAUTH_METHOD_ENV.values(),
     *factory._LOCAL_METHOD_ENV.values(),
-    "DECEPTICON_AUTH_PRIORITY",
-    "DECEPTICON_HOME",
+    "AEGISCORE_AUTH_PRIORITY",
+    "AEGISCORE_HOME",
     "OLLAMA_MODEL",
     "OLLAMA_CLOUD_MODEL",
     "LMSTUDIO_MODEL",
@@ -132,8 +132,8 @@ def test_load_env_file_oserror_returns_zero(tmp_path):
     assert result == 0
 
 
-def test_default_env_path_with_decepticon_home(monkeypatch, tmp_path):
-    monkeypatch.setenv("DECEPTICON_HOME", str(tmp_path))
+def test_default_env_path_with_aegiscore_home(monkeypatch, tmp_path):
+    monkeypatch.setenv("AEGISCORE_HOME", str(tmp_path))
     monkeypatch.setenv("HOME", str(tmp_path / "emptyhome"))
     monkeypatch.setenv("USERPROFILE", str(tmp_path / "emptyhome"))
     env_file = tmp_path / ".env"
@@ -142,13 +142,13 @@ def test_default_env_path_with_decepticon_home(monkeypatch, tmp_path):
     assert result == env_file
 
 
-def test_default_env_path_decepticon_home_whitespace_falls_through(monkeypatch, tmp_path):
-    monkeypatch.setenv("DECEPTICON_HOME", "   ")
+def test_default_env_path_aegiscore_home_whitespace_falls_through(monkeypatch, tmp_path):
+    monkeypatch.setenv("AEGISCORE_HOME", "   ")
     fake_home = tmp_path / "home"
     fake_home.mkdir()
-    decepticon_dir = fake_home / ".aegiscore"
-    decepticon_dir.mkdir()
-    env_file = decepticon_dir / ".env"
+    aegiscore_dir = fake_home / ".aegiscore"
+    aegiscore_dir.mkdir()
+    env_file = aegiscore_dir / ".env"
     env_file.write_text("K=v\n", encoding="utf-8")
     monkeypatch.setenv("HOME", str(fake_home))
     monkeypatch.setenv("USERPROFILE", str(fake_home))
@@ -157,7 +157,7 @@ def test_default_env_path_decepticon_home_whitespace_falls_through(monkeypatch, 
 
 
 def test_default_env_path_returns_none_when_nothing_exists(monkeypatch, tmp_path):
-    monkeypatch.delenv("DECEPTICON_HOME", raising=False)
+    monkeypatch.delenv("AEGISCORE_HOME", raising=False)
     monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.setenv("USERPROFILE", str(tmp_path))
     result = auth._default_env_path()
@@ -180,11 +180,11 @@ def test_render_text_no_resolved_chain_shows_warning():
             method=AuthMethod.GOOGLE_OAUTH,
             kind="subscription",
             label="Google OAuth",
-            env_var="DECEPTICON_AUTH_GEMINI",
+            env_var="AEGISCORE_AUTH_GEMINI",
             configured=False,
             in_priority=False,
             active=False,
-            detail="set DECEPTICON_AUTH_GEMINI",
+            detail="set AEGISCORE_AUTH_GEMINI",
         ),
         _make_status(
             method=AuthMethod.OLLAMA_LOCAL,
@@ -282,7 +282,7 @@ def test_main_env_file_existing_is_loaded(clean_env, tmp_path, capsys):
 
 
 def test_main_default_env_discovery_loads_env(clean_env, tmp_path, monkeypatch, capsys):
-    monkeypatch.setenv("DECEPTICON_HOME", str(tmp_path))
+    monkeypatch.setenv("AEGISCORE_HOME", str(tmp_path))
     env_file = tmp_path / ".env"
     env_file.write_text("OPENAI_API_KEY=sk-" + "z" * 48 + "\n", encoding="utf-8")
     rc = auth_main(["status"])

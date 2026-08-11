@@ -6,7 +6,7 @@
 
 Claude Code의 V2 Task 시스템(`TaskCreate`, `TaskGet`, `TaskUpdate`, `TaskList`)은
 코딩 작업을 위한 개별 CRUD 기반 태스크 추적 도구다.
-Decepticon은 레드팀 테스트 도메인에 특화된 에이전트이므로,
+Aegiscore은 레드팀 테스트 도메인에 특화된 에이전트이므로,
 **OPPLAN(Operations Plan)** 이라는 도메인 특화 태스크 추적 시스템을 구현한다.
 
 ### Claude Code Task 시스템 → OPPLAN 매핑
@@ -566,7 +566,7 @@ def after_model(self, state, runtime):
 ```python
 # Before
 middleware = [
-    DecepticonSkillsMiddleware(...),
+    AegiscoreSkillsMiddleware(...),
     FilesystemMiddlewareNoExecute(...),
     SubAgentMiddleware(..., subagents=[planner, recon, exploit, postexploit]),
     TodoListMiddleware(),  # ← 제거
@@ -575,7 +575,7 @@ middleware = [
 # After
 middleware = [
     EngagementContextMiddleware(),
-    DecepticonSkillsMiddleware(...),
+    AegiscoreSkillsMiddleware(...),
     FilesystemMiddlewareNoExecute(...),
     SubAgentMiddleware(..., subagents=[recon, exploit, postexploit, analyst, reverser, contract_auditor, cloud_hunter, ad_operator]),
     OPPLANMiddleware(),  # ← 교체 (5-tool CRUD)
@@ -659,7 +659,7 @@ Aegiscore OPPLANMiddleware:
 ### 6. Verification Nudge
 
 Claude Code는 3+ 태스크 완료 시 검증 에이전트 spawn 권고.
-Decepticon은 모든 objective 완료 시 최종 보고서 생성 권고:
+Aegiscore은 모든 objective 완료 시 최종 보고서 생성 권고:
 
 ```python
 # list_objectives 응답에서

@@ -59,7 +59,7 @@ agent reads from the network or workspace.
   exfil-markdown match.
 - Static system-prompt policy block (Anthropic prompt-cached) tells
   the model to treat envelope content as DATA, not COMMANDS.
-- Optional JSONL quarantine ledger when `DECEPTICON_QUARANTINE_LEDGER`
+- Optional JSONL quarantine ledger when `AEGISCORE_QUARANTINE_LEDGER`
   is set: every `risk="high"` event appended with SHA-256 fingerprint,
   match excerpts, and engagement context.
 
@@ -118,7 +118,7 @@ to the six tiers but discovered during the audit pass:
    refuses LiteLLM check without explicit env.
 4. `packages/aegiscore/aegiscore/tools/web/tools.py` initialized
    the global HTTP session with `verify=False`. Now defaults to ON;
-   CTF runs opt out via `DECEPTICON_HTTP_VERIFY_TLS=true`.
+   CTF runs opt out via `AEGISCORE_HTTP_VERIFY_TLS=true`.
 
 ### Tier 4b — Per-engagement Neo4j scoping + Aegiscore self-threat-model (commit 6)
 
@@ -233,11 +233,11 @@ re-enable prior behavior:
 | Tier | Roll-back |
 |------|-----------|
 | 4a APOC | Revert the compose env block; the client-side check stays as defense-in-depth |
-| 1 prompt-injection | Set `DECEPTICON_ALLOW_SAFETY_OVERRIDES=1` + disable the slot via PluginBundle |
+| 1 prompt-injection | Set `AEGISCORE_ALLOW_SAFETY_OVERRIDES=1` + disable the slot via PluginBundle |
 | 2 RoE | Omit `machine_enforcement` block from `roe.json` (defaults to audit-only, zero behavior change) |
 | 4b engagement scope | Roll back the upsert patches; the read-side filter degrades to empty result (operator notices immediately) |
 | 3 sandbox caps | Revert the compose block (re-adds default caps) |
-| 5 new agents | The agents are entry-point registered; uninstall the package OR set `DECEPTICON_PLUGINS` to exclude `standard` |
+| 5 new agents | The agents are entry-point registered; uninstall the package OR set `AEGISCORE_PLUGINS` to exclude `standard` |
 | 6 Blue Cell | The package is import-only with no auto-wiring; nothing changes until the follow-up agent factory ships |
 
 ## Reviewer checklist

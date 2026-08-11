@@ -59,7 +59,7 @@ separators, so the hash is stable regardless of field insertion order.
 ## The HMAC binder
 
 The `hmac` field binds the chain to an operator-held secret read from
-`DECEPTICON_AUDIT_HMAC_KEY` (UTF-8 encoded). When the key is set, a party
+`AEGISCORE_AUDIT_HMAC_KEY` (UTF-8 encoded). When the key is set, a party
 that tampers with the file can recompute the hash chain but cannot forge
 a valid `hmac` without the secret. When the key is unset, the `hmac`
 field stays `""` and integrity rests only on the hash chain.
@@ -90,8 +90,8 @@ silently.
 
 | Knob | Effect |
 |------|--------|
-| `DECEPTICON_ROE_AUDIT_PATH` | Pins the ledger to a deterministic path. When unset, the default sink writes to `<workspace>/audit/roe-decisions.jsonl`; with no workspace yet, the sink is `None` (no-op). |
-| `DECEPTICON_AUDIT_HMAC_KEY` | The HMAC secret. Set it to bind the chain to an operator-held key. |
+| `AEGISCORE_ROE_AUDIT_PATH` | Pins the ledger to a deterministic path. When unset, the default sink writes to `<workspace>/audit/roe-decisions.jsonl`; with no workspace yet, the sink is `None` (no-op). |
+| `AEGISCORE_AUDIT_HMAC_KEY` | The HMAC secret. Set it to bind the chain to an operator-held key. |
 
 ## Limitations
 

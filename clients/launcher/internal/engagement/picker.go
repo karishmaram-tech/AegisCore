@@ -28,8 +28,8 @@ import (
 // AssistantSoundwave drives the document-writing interview for a fresh engagement.
 const AssistantSoundwave = "soundwave"
 
-// AssistantDecepticon drives kill-chain execution against an existing engagement.
-const AssistantDecepticon = "aegiscore"
+// AssistantAegiscore drives kill-chain execution against an existing engagement.
+const AssistantAegiscore = "aegiscore"
 
 // Slug regex: lowercase alphanumeric with internal hyphens, 3-64 chars.
 var slugRe = regexp.MustCompile(`^[a-z0-9][a-z0-9-]{1,62}[a-z0-9]$`)
@@ -407,7 +407,7 @@ func Select(home string) (Choice, error) {
 	slug := final.chosen.slug
 	assistant := AssistantSoundwave
 	if isReady(home, slug) {
-		assistant = AssistantDecepticon
+		assistant = AssistantAegiscore
 	}
 	return Choice{
 		AssistantID:   assistant,
@@ -428,7 +428,7 @@ func promptNewSlug(home string) (string, error) {
 				Value(&slug).
 				Validate(func(s string) error { return validateSlug(home, s) }),
 		).Title("New engagement").Description("Create the engagement workspace"),
-	).WithTheme(huh.ThemeFunc(ui.DecepticonTheme))
+	).WithTheme(huh.ThemeFunc(ui.AegiscoreTheme))
 	if err := form.Run(); err != nil {
 		return "", fmt.Errorf("slug input cancelled: %w", err)
 	}

@@ -12,7 +12,7 @@ from aegiscore.agents.standard.analyst import create_analyst_agent
 from aegiscore.agents.standard.blue_cell import create_blue_cell_agent
 from aegiscore.agents.standard.cloud_hunter import create_cloud_hunter_agent
 from aegiscore.agents.standard.contract_auditor import create_contract_auditor_agent
-from aegiscore.agents.standard.aegiscore import create_decepticon_agent
+from aegiscore.agents.standard.aegiscore import create_aegiscore_agent
 from aegiscore.agents.standard.exploit import create_exploit_agent
 from aegiscore.agents.standard.forensicator import create_forensicator_agent
 from aegiscore.agents.standard.ics_operator import create_ics_operator_agent
@@ -33,7 +33,7 @@ __all__ = [
     "create_analyst_agent",
     "create_exploit_agent",
     "create_postexploit_agent",
-    "create_decepticon_agent",
+    "create_aegiscore_agent",
     "create_reverser_agent",
     "create_contract_auditor_agent",
     "create_cloud_hunter_agent",

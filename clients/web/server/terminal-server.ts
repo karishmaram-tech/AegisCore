@@ -107,7 +107,7 @@ async function createThread(engagementId: string, agentId: string): Promise<stri
     const res = await fetch(`${LANGGRAPH_API_URL}/threads`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ metadata: { engagement_id: engagementId, decepticon_assistant: agentId } }),
+      body: JSON.stringify({ metadata: { engagement_id: engagementId, aegiscore_assistant: agentId } }),
       signal: controller.signal,
     });
     if (!res.ok) throw new Error(`Thread create: ${res.status}`);
@@ -208,12 +208,12 @@ wss.on("connection", async (ws: WebSocket, req) => {
     ...process.env as Record<string, string>,
     TERM: "xterm-256color",
     FORCE_COLOR: "1",
-    DECEPTICON_ASSISTANT_ID: agentId,
-    DECEPTICON_ENGAGEMENT: engagementSlug,
-    DECEPTICON_WORKSPACE_PATH: engagementSlug ? `/workspace/${engagementSlug}` : "/workspace",
-    DECEPTICON_API_URL: LANGGRAPH_API_URL,
+    AEGISCORE_ASSISTANT_ID: agentId,
+    AEGISCORE_ENGAGEMENT: engagementSlug,
+    AEGISCORE_WORKSPACE_PATH: engagementSlug ? `/workspace/${engagementSlug}` : "/workspace",
+    AEGISCORE_API_URL: LANGGRAPH_API_URL,
   };
-  if (threadId) env.DECEPTICON_THREAD_ID = threadId;
+  if (threadId) env.AEGISCORE_THREAD_ID = threadId;
 
   let term: pty.IPty;
   try {

@@ -51,7 +51,7 @@ _CONFIG_DIR = Path(__file__).resolve().parents[5] / "config"
 if str(_CONFIG_DIR) not in sys.path:
     sys.path.insert(0, str(_CONFIG_DIR))
 _MODULE_PATH = _CONFIG_DIR / "oauth_token_store.py"
-_spec = importlib.util.spec_from_file_location("decepticon_oauth_token_store", _MODULE_PATH)
+_spec = importlib.util.spec_from_file_location("aegiscore_oauth_token_store", _MODULE_PATH)
 assert _spec is not None
 assert _spec.loader is not None
 _module = importlib.util.module_from_spec(_spec)

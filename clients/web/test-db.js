@@ -9,11 +9,11 @@ async function test() {
     { user: 'aegiscore', password: 'aegis-core', database: 'litellm' },
     { user: 'aegiscore', password: '', database: 'postgres' },
     
-    // decepticon options
-    { user: 'decepticon', password: 'decepticon', database: 'postgres' },
-    { user: 'decepticon', password: 'decepticon', database: 'decepticon_web' },
-    { user: 'decepticon', password: 'decepticon', database: 'aegiscore_web' },
-    { user: 'decepticon', password: 'aegis-core', database: 'postgres' },
+    // aegiscore options
+    { user: 'aegiscore', password: 'aegiscore', database: 'postgres' },
+    { user: 'aegiscore', password: 'aegiscore', database: 'aegiscore_web' },
+    { user: 'aegiscore', password: 'aegiscore', database: 'aegiscore_web' },
+    { user: 'aegiscore', password: 'aegis-core', database: 'postgres' },
     
     // postgres options
     { user: 'postgres', password: 'postgres', database: 'postgres' },

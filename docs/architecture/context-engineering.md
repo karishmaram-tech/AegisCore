@@ -52,7 +52,7 @@
 
 ### 2.1 Observation Masking
 
-Tool output은 컨텍스트 소비의 최대 원인입니다. Decepticon은 두 레벨에서 masking을 적용합니다:
+Tool output은 컨텍스트 소비의 최대 원인입니다. Aegiscore은 두 레벨에서 masking을 적용합니다:
 
 **Level 1 — DockerSandbox Truncation** (`docker_sandbox.py`):
 - 30,000자 초과 출력을 비대칭 절단 (head 60% / tail 40%)

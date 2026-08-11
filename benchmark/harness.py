@@ -321,7 +321,7 @@ class Harness:
         _run_docker(["docker", "compose", "restart", "langgraph"], timeout=60)
         # Reconnect networks (compose restart usually preserves them but be
         # defensive — same pattern as _ensure_services_healthy).
-        for net in ("benchmark_decepticon-net", "benchmark_sandbox-net"):
+        for net in ("benchmark_aegiscore-net", "benchmark_sandbox-net"):
             _run_docker(["docker", "network", "connect", net, "aegiscore-langgraph"])
         # Wait up to 60s for /ok
         for _ in range(30):
@@ -448,7 +448,7 @@ class Harness:
         log.warning("LangGraph unreachable — restarting container")
         _run_docker(["docker", "compose", "up", "-d", "--no-deps", "langgraph"])
         # Reconnect networks (lost after container recreation)
-        for net in ("benchmark_decepticon-net", "benchmark_sandbox-net"):
+        for net in ("benchmark_aegiscore-net", "benchmark_sandbox-net"):
             _run_docker(["docker", "network", "connect", net, "aegiscore-langgraph"])
         # Wait for LangGraph to become healthy
         for _ in range(30):
@@ -477,7 +477,7 @@ class Harness:
         _run_docker(["docker", "compose", "restart", "sandbox"], timeout=60)
         # Reconnect to required networks (compose restart usually preserves them
         # but be defensive for benchmark / make dev variants)
-        for net in ("benchmark_decepticon-net", "benchmark_sandbox-net"):
+        for net in ("benchmark_aegiscore-net", "benchmark_sandbox-net"):
             _run_docker(["docker", "network", "connect", net, "aegiscore-sandbox"])
         # Wait for `docker exec true` to succeed before returning
         for attempt in range(40):

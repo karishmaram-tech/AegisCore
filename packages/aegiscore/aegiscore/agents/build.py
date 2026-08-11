@@ -23,7 +23,7 @@ of a plugin's override for a specific agent without uninstalling it.
 
 Safety: a small allowlist of slots and tools are flagged
 ``safety_critical``. Disabling or replacing them requires
-``DECEPTICON_ALLOW_SAFETY_OVERRIDES=1`` in the environment; otherwise
+``AEGISCORE_ALLOW_SAFETY_OVERRIDES=1`` in the environment; otherwise
 ``SafetyOverrideViolation`` is raised at agent-construction time.
 """
 
@@ -67,7 +67,7 @@ SAFETY_CRITICAL_TOOLS: frozenset[str] = frozenset(
 # Environment variable that unlocks safety-critical overrides for the
 # current process. Single-value (not per-component) on purpose — easier
 # to audit, harder to mis-configure.
-SAFETY_OVERRIDE_ENV: str = "DECEPTICON_ALLOW_SAFETY_OVERRIDES"
+SAFETY_OVERRIDE_ENV: str = "AEGISCORE_ALLOW_SAFETY_OVERRIDES"
 
 # Entry-point group for declarative ``PluginBundle`` overrides. The
 # existing ``aegiscore.tools`` / ``aegiscore.middleware`` /
@@ -84,7 +84,7 @@ BUNDLES_GROUP: str = "aegiscore.bundles"
 
 class SafetyOverrideViolation(RuntimeError):
     """Raised when a plugin or library caller tries to disable or replace
-    a safety-critical slot/tool without the ``DECEPTICON_ALLOW_SAFETY_OVERRIDES``
+    a safety-critical slot/tool without the ``AEGISCORE_ALLOW_SAFETY_OVERRIDES``
     env gate set."""
 
 
@@ -409,7 +409,7 @@ def build_middleware(
     # a middleware on the end without replacing anything.
     result.extend(load_plugin_middleware(role=role, backend=backend))
 
-    # Swap SkillsMiddleware -> SkillogyMiddleware when DECEPTICON_USE_SKILLOGY
+    # Swap SkillsMiddleware -> SkillogyMiddleware when AEGISCORE_USE_SKILLOGY
     # is set. No-op otherwise, so the default runtime is unchanged. Role is
     # threaded through so the SkillogyMiddleware can scope its MoC summary
     # block to the agent's phase (see _PHASE_FOR_ROLE in middleware/skillogy.py).

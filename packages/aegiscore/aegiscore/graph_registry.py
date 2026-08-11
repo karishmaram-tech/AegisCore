@@ -23,7 +23,7 @@ import json
 from aegiscore_core.plugin_loader import is_bundle_enabled, load_plugin_agents
 
 # Built-in graphs split by bundle. ``build_langserve_graphs`` merges only
-# the bundles active under DECEPTICON_PLUGINS / config file (see
+# the bundles active under AEGISCORE_PLUGINS / config file (see
 # ``aegiscore_core.plugin_loader._enabled_bundles``). External plugin
 # packages register agents under the ``aegiscore.agents`` entry-point
 # group and are always loaded when installed.
@@ -52,7 +52,7 @@ STANDARD_GRAPHS: dict[str, str] = {
 }
 
 # Plugins bundle — vulnresearch family (community-plugin shape demonstrated
-# from inside OSS). Opt-in via ``DECEPTICON_PLUGINS=standard,plugins`` or
+# from inside OSS). Opt-in via ``AEGISCORE_PLUGINS=standard,plugins`` or
 # ``[plugins] enabled = ["standard", "plugins"]`` in ``.aegiscore.toml``.
 PLUGIN_GRAPHS: dict[str, str] = {
     "vulnresearch": "./aegiscore/agents/plugins/vulnresearch.py:graph",
@@ -70,7 +70,7 @@ _BUNDLE_TO_GRAPHS: dict[str, dict[str, str]] = {
 }
 
 # Backward-compat alias — full unfiltered manifest (every OSS-shipped graph).
-# Prefer ``build_langserve_graphs()`` which respects DECEPTICON_PLUGINS.
+# Prefer ``build_langserve_graphs()`` which respects AEGISCORE_PLUGINS.
 BUILTIN_GRAPHS: dict[str, str] = {**STANDARD_GRAPHS, **PLUGIN_GRAPHS}
 
 
@@ -78,7 +78,7 @@ def build_langserve_graphs() -> dict[str, str]:
     """Return ``{name: module:graph}`` for active bundles + discovered plugins.
 
     OSS-internal bundles (``standard``, ``plugins``) are filtered by
-    ``DECEPTICON_PLUGINS`` / config-file allowlist. Plugin-contributed
+    ``AEGISCORE_PLUGINS`` / config-file allowlist. Plugin-contributed
     agents (registered under the ``aegiscore.agents`` entry-point group
     by external packages) are always merged in — installing the package
     is the user's opt-in.

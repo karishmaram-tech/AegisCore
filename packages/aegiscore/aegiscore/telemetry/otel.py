@@ -30,13 +30,13 @@ _INITIALIZED: bool = False
 _TRACER: Any = None
 
 _current_engagement_id: ContextVar[str | None] = ContextVar(
-    "decepticon_engagement_id", default=None
+    "aegiscore_engagement_id", default=None
 )
-_current_agent: ContextVar[str | None] = ContextVar("decepticon_agent", default=None)
-_current_objective_id: ContextVar[str | None] = ContextVar("decepticon_objective_id", default=None)
-_active_llm_span: ContextVar[Any | None] = ContextVar("decepticon_active_llm_span", default=None)
+_current_agent: ContextVar[str | None] = ContextVar("aegiscore_agent", default=None)
+_current_objective_id: ContextVar[str | None] = ContextVar("aegiscore_objective_id", default=None)
+_active_llm_span: ContextVar[Any | None] = ContextVar("aegiscore_active_llm_span", default=None)
 _active_engagement_span: ContextVar[Any | None] = ContextVar(
-    "decepticon_active_engagement_span", default=None
+    "aegiscore_active_engagement_span", default=None
 )
 
 

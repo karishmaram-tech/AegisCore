@@ -195,7 +195,7 @@ RoE enforcement is layered (defense-in-depth), and the names reflect it:
    cannot leave the sandbox even when the parser missed the target. One
    scope definition, two enforcement points. **On by default** for
    `enforce` mode — no extra config; the operator can opt out with
-   `DECEPTICON_EGRESS_DISABLE=1`. The sandbox discovers its own
+   `AEGISCORE_EGRESS_DISABLE=1`. The sandbox discovers its own
    management subnet locally (from `/proc/net/route`, needing no `ip`
    binary) so a scope rule can never sever the agent↔management (Neo4j /
    daemon) link.

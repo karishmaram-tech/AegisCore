@@ -45,8 +45,8 @@ Manual testing procedures for verifying the LLM gateway features.
 ### Steps
 1. Set a custom model and matching provider key in your environment file:
    ```bash
-   DECEPTICON_MODEL_PROFILE=custom
-   DECEPTICON_MODEL=openrouter/anthropic/claude-3.7-sonnet
+   AEGISCORE_MODEL_PROFILE=custom
+   AEGISCORE_MODEL=openrouter/anthropic/claude-3.7-sonnet
    OPENROUTER_API_KEY=sk-or-v1-...
    ```
 2. Start services: `make dev`
@@ -65,7 +65,7 @@ Manual testing procedures for verifying the LLM gateway features.
 
 ### Troubleshooting
 - 401: Check the provider-specific API key variable (`OPENROUTER_API_KEY`, `GROQ_API_KEY`, etc.)
-- 404: Check `DECEPTICON_MODEL` uses LiteLLM `provider/model` format
+- 404: Check `AEGISCORE_MODEL` uses LiteLLM `provider/model` format
 
 
 ## Scenario 3: OpenAI-Compatible Gateway or Local Model
@@ -76,8 +76,8 @@ Manual testing procedures for verifying the LLM gateway features.
 ### Steps
 1. Configure a custom gateway:
    ```bash
-   DECEPTICON_MODEL_PROFILE=custom
-   DECEPTICON_MODEL=custom/qwen3-coder
+   AEGISCORE_MODEL_PROFILE=custom
+   AEGISCORE_MODEL=custom/qwen3-coder
    CUSTOM_OPENAI_API_BASE=https://gateway.example.test/v1
    CUSTOM_OPENAI_API_KEY=...
    ```
@@ -85,8 +85,8 @@ Manual testing procedures for verifying the LLM gateway features.
    the legacy `ollama/` provider hits `/api/generate` and does not
    support tool calling, which every Aegiscore agent depends on):
    ```bash
-   DECEPTICON_MODEL_PROFILE=custom
-   DECEPTICON_MODEL=ollama_chat/llama3.2
+   AEGISCORE_MODEL_PROFILE=custom
+   AEGISCORE_MODEL=ollama_chat/llama3.2
    OLLAMA_API_BASE=http://host.docker.internal:11434
    ```
 3. Start services and call the selected model through LiteLLM.
@@ -117,8 +117,8 @@ Manual testing procedures for verifying the LLM gateway features.
    ```
 2. Set in `.env` (always `ollama_chat/`, never `ollama/`):
    ```
-   DECEPTICON_MODEL_PROFILE=custom
-   DECEPTICON_MODEL=ollama_chat/llama3.2
+   AEGISCORE_MODEL_PROFILE=custom
+   AEGISCORE_MODEL=ollama_chat/llama3.2
    OLLAMA_API_BASE=http://host.docker.internal:11434
    ```
 3. Start services: `make dev`
@@ -178,9 +178,9 @@ Manual testing procedures for verifying the LLM gateway features.
 ### Steps
 1. Set a primary and fallback model in `.env`:
    ```bash
-   DECEPTICON_MODEL_PROFILE=custom
-   DECEPTICON_MODEL=openrouter/provider-that-will-fail
-   DECEPTICON_MODEL_FALLBACK=openai/gpt-4.1
+   AEGISCORE_MODEL_PROFILE=custom
+   AEGISCORE_MODEL=openrouter/provider-that-will-fail
+   AEGISCORE_MODEL_FALLBACK=openai/gpt-4.1
    OPENAI_API_KEY=sk-...
    ```
 2. Start services.
@@ -192,7 +192,7 @@ Manual testing procedures for verifying the LLM gateway features.
 - Logs show retry/fallback behavior without printing API keys
 
 ### Troubleshooting
-- If fallback doesn't activate: Check `router_settings.num_retries` in `config/litellm.yaml` and the model assignment in `DECEPTICON_MODEL*` variables
+- If fallback doesn't activate: Check `router_settings.num_retries` in `config/litellm.yaml` and the model assignment in `AEGISCORE_MODEL*` variables
 
 
 ## Scenario 7: Authorized OAuth / Subscription Use

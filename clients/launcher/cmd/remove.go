@@ -51,7 +51,7 @@ func runRemove(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	home := config.DecepticonHome()
+	home := config.AegiscoreHome()
 	c := compose.New()
 
 	// Phase 1: Stop containers + drop named volumes (postgres / neo4j /

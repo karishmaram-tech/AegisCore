@@ -7,7 +7,7 @@ const VALID_BATCH = {
   schema_version: "1.0",
   tier: "A",
   install_id: "1e9a73a6-c8bd-4e1e-be02-78f4b11de4e1",
-  client: { decepticon_version: "1.1.13", os: "linux" },
+  client: { aegiscore_version: "1.1.13", os: "linux" },
   events: [{ type: "tool.call", ts: 1718880000, tool: "nmap", status: "ok" }],
 };
 

@@ -31,14 +31,14 @@ def _make_proxy() -> _ProxiedChatOpenAI:
 
 
 @pytest.fixture
-def propagate_decepticon_logs(monkeypatch: pytest.MonkeyPatch):
+def propagate_aegiscore_logs(monkeypatch: pytest.MonkeyPatch):
     # ``aegiscore_core.utils.logging`` defaults the parent ``aegiscore``
     # logger to ``propagate=False`` so library output doesn't double up
     # in apps that own the root handler. caplog hooks the root logger,
     # so without re-enabling propagation our attribution record never
     # reaches the capture buffer.
-    decepticon_log = logging.getLogger("aegiscore")
-    monkeypatch.setattr(decepticon_log, "propagate", True)
+    aegiscore_log = logging.getLogger("aegiscore")
+    monkeypatch.setattr(aegiscore_log, "propagate", True)
 
 
 class TestProviderAttributionLogging:
@@ -46,7 +46,7 @@ class TestProviderAttributionLogging:
         self,
         monkeypatch: pytest.MonkeyPatch,
         caplog: pytest.LogCaptureFixture,
-        propagate_decepticon_logs,
+        propagate_aegiscore_logs,
     ) -> None:
         served = "anthropic/claude-haiku-4-5-20251022"
         fake = AIMessage(content="ok", response_metadata={"model_name": served})
@@ -70,7 +70,7 @@ class TestProviderAttributionLogging:
         self,
         monkeypatch: pytest.MonkeyPatch,
         caplog: pytest.LogCaptureFixture,
-        propagate_decepticon_logs,
+        propagate_aegiscore_logs,
     ) -> None:
         served = "openai/gpt-5-nano-2025-10-01"
         fake = AIMessage(content="ok", response_metadata={"model_name": served})
@@ -91,7 +91,7 @@ class TestProviderAttributionLogging:
         )
 
     def test_invoke_missing_metadata_does_not_raise(
-        self, monkeypatch: pytest.MonkeyPatch, propagate_decepticon_logs
+        self, monkeypatch: pytest.MonkeyPatch, propagate_aegiscore_logs
     ) -> None:
         # Result with no response_metadata must still flow through cleanly.
         fake = AIMessage(content="ok")
@@ -106,7 +106,7 @@ class TestProviderAttributionLogging:
         assert model.invoke("hi") is fake
 
     def test_invoke_broken_metadata_does_not_raise(
-        self, monkeypatch: pytest.MonkeyPatch, propagate_decepticon_logs
+        self, monkeypatch: pytest.MonkeyPatch, propagate_aegiscore_logs
     ) -> None:
         # Pathological return value (non-AIMessage) — attribution is
         # best-effort and must never propagate exceptions to callers.

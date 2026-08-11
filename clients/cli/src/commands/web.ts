@@ -47,11 +47,11 @@ function printURL(context: CommandContext): void {
 }
 
 function composeArgs(): string[] {
-  const project = process.env["DECEPTICON_COMPOSE_PROJECT"] ?? "aegiscore";
+  const project = process.env["AEGISCORE_COMPOSE_PROJECT"] ?? "aegiscore";
   const composeFile =
-    process.env["DECEPTICON_COMPOSE_FILE"] ?? "/aegiscore-home/docker-compose.yml";
+    process.env["AEGISCORE_COMPOSE_FILE"] ?? "/aegiscore-home/docker-compose.yml";
   const envFile =
-    process.env["DECEPTICON_COMPOSE_ENV_FILE"] ?? "/aegiscore-home/.env";
+    process.env["AEGISCORE_COMPOSE_ENV_FILE"] ?? "/aegiscore-home/.env";
   return ["compose", "-p", project, "-f", composeFile, "--env-file", envFile];
 }
 

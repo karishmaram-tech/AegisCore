@@ -59,7 +59,7 @@ var executableFn = os.Executable
 // Aegiscore defaults to stable (conservative for an offensive-security
 // tool); the channel semantics match Claude Code's soak model, only the
 // default differs (Claude Code defaults to latest). Selected via the
-// "DECEPTICON_CHANNEL" key in ".env".
+// "AEGISCORE_CHANNEL" key in ".env".
 type Channel string
 
 const (
@@ -72,12 +72,12 @@ var nowFn = time.Now
 
 // stableSoak is how long a final release must bake on the latest channel
 // before the stable channel adopts it (Claude-Code-style ~1 week).
-// Override with DECEPTICON_STABLE_SOAK_DAYS. A var so tests can pin it.
+// Override with AEGISCORE_STABLE_SOAK_DAYS. A var so tests can pin it.
 var stableSoak = resolveStableSoak()
 
 func resolveStableSoak() time.Duration {
 	const def = 7 * 24 * time.Hour
-	raw := strings.TrimSpace(os.Getenv("DECEPTICON_STABLE_SOAK_DAYS"))
+	raw := strings.TrimSpace(os.Getenv("AEGISCORE_STABLE_SOAK_DAYS"))
 	if raw == "" {
 		return def
 	}
@@ -88,7 +88,7 @@ func resolveStableSoak() time.Duration {
 	return time.Duration(days * 24 * float64(time.Hour))
 }
 
-// ResolveChannel normalizes a raw "DECEPTICON_CHANNEL" value. Empty or
+// ResolveChannel normalizes a raw "AEGISCORE_CHANNEL" value. Empty or
 // unrecognized values resolve to the safe default (stable) so a typo can
 // never silently opt a security-tool user onto the faster channel.
 func ResolveChannel(raw string) Channel {
@@ -346,11 +346,11 @@ func parseUint(s string) (int, bool) {
 // from GitHub's CDN; the release asset is the authoritative integrity
 // pin for the same tag.
 //
-// Branch-tracking installs (DECEPTICON_BRANCH set in .env, no release
+// Branch-tracking installs (AEGISCORE_BRANCH set in .env, no release
 // asset available) fall back to the legacy download-without-verify
 // behavior with a warning. “release == nil“ exists for this path.
 func SyncConfigFiles(branch string, release *Release) error {
-	home := config.DecepticonHome()
+	home := config.AegiscoreHome()
 	files := map[string]string{
 		// docker-compose.opscontrol.yml is intentionally absent: it is
 		// LAUNCHER-MANAGED (cmd/opscontrol/supervisor.go embeds the
@@ -597,7 +597,7 @@ func SelfUpdate(release *Release) error {
 
 // WriteVersion writes the version to .version file.
 func WriteVersion(version string) error {
-	versionFile := filepath.Join(config.DecepticonHome(), ".version")
+	versionFile := filepath.Join(config.AegiscoreHome(), ".version")
 	return os.WriteFile(versionFile, []byte(strings.TrimPrefix(version, "v")), 0o644)
 }
 
@@ -754,12 +754,12 @@ func displayVersion(version string) string {
 }
 
 // resolveUpdateRef picks the git ref for SyncConfigFiles: an explicit
-// DECEPTICON_BRANCH override in .env, otherwise the release tag.
+// AEGISCORE_BRANCH override in .env, otherwise the release tag.
 func resolveUpdateRef(release *Release) string {
 	ref := release.TagName
 	if config.EnvExists() {
 		if env, lerr := config.LoadEnv(config.EnvPath()); lerr == nil {
-			if branch := strings.TrimSpace(env["DECEPTICON_BRANCH"]); branch != "" {
+			if branch := strings.TrimSpace(env["AEGISCORE_BRANCH"]); branch != "" {
 				ref = branch
 			}
 		}

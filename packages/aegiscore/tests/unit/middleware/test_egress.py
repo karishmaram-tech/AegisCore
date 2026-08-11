@@ -107,8 +107,8 @@ def test_render_flushes_table_for_idempotent_reapply():
     script = render_nftables(pol)
     # Re-running the ruleset must replace, not stack — the table is
     # destroyed up-front (nft tolerates the table not existing yet).
-    assert "table inet decepticon_egress" in script
-    assert "delete table inet decepticon_egress" in script
+    assert "table inet aegiscore_egress" in script
+    assert "delete table inet aegiscore_egress" in script
 
 
 def test_render_audit_mode_has_no_drop_policy():

@@ -42,7 +42,7 @@ shim layer. `aegiscore.compat.register_legacy_imports()` runs at
 import time of `aegiscore` and emits a single `DeprecationWarning`
 listing the table below so the migration list shows up in test logs.
 
-Opt out of the warning with `DECEPTICON_NO_COMPAT=1` in the environment.
+Opt out of the warning with `AEGISCORE_NO_COMPAT=1` in the environment.
 
 | Legacy path | Canonical path |
 |-------------|----------------|

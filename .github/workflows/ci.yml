@@ -144,7 +144,7 @@ jobs:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       # The compose files reference a project-local ``.env`` for the
       # runtime stack. CI doesn't ship one (and shouldn't — keys live
-      # in the user's $DECEPTICON_HOME), so the validator runs against
+      # in the user's $AEGISCORE_HOME), so the validator runs against
       # an empty .env so it only catches YAML/structure drift.
       - name: Stub empty .env for config-only validation
         run: touch .env
@@ -454,7 +454,7 @@ jobs:
         if: needs.changes.outputs.web == 'true'
         run: cd clients/web && npm run build
         env:
-          NEXT_PUBLIC_DECEPTICON_EDITION: oss
+          NEXT_PUBLIC_AEGISCORE_EDITION: oss
 
   # Go launcher: vet + test. Mirrors what release.yml runs before GoReleaser
   # builds the binaries on tag push, so a broken `go test ./...` is caught

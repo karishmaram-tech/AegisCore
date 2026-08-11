@@ -172,9 +172,9 @@ Opt-in (security/sensitive tool → opt-out is too risky):
 #   "Send anonymous usage stats? Prompt text / targets / credentials are
 #    NEVER transmitted. Details: TELEMETRY.md  [y/N]"
 
-DECEPTICON_TELEMETRY=off|basic|extended   # off / Tier A / Tier A+B
+AEGISCORE_TELEMETRY=off|basic|extended   # off / Tier A / Tier A+B
 DO_NOT_TRACK=1                            # standard; forces off
-DECEPTICON_TELEMETRY_ENDPOINT=...         # users may self-route
+AEGISCORE_TELEMETRY_ENDPOINT=...         # users may self-route
 ```
 
 - Tiered consent (Tier A only / through B / later ③).

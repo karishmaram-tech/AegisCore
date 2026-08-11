@@ -69,7 +69,7 @@ Persistent relational storage for:
 - Web dashboard data (engagements, findings, OPPLAN objectives, defense actions)
 - The single local user record
 
-Two logical databases: `litellm` (managed by LiteLLM) and `decepticon_web` (managed via Prisma in the web dashboard).
+Two logical databases: `litellm` (managed by LiteLLM) and `aegiscore_web` (managed via Prisma in the web dashboard).
 
 ### Neo4j Knowledge Graph — KGStore (`sandbox-net` + `aegiscore-net`, port 7687 / browser 7474)
 

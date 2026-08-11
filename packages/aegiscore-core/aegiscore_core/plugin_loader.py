@@ -62,7 +62,7 @@ ROLES_GROUP = "aegiscore.roles"  # Spec §7.2 Principle 4 — custom agent roles
 #
 # Highest to lowest precedence (first one that sets a value wins):
 #
-#   1. DECEPTICON_PLUGINS env var          ← runtime override (Docker, CI)
+#   1. AEGISCORE_PLUGINS env var          ← runtime override (Docker, CI)
 #   2. .aegiscore.toml [plugins].enabled  ← per-checkout opt-in (CWD)
 #   3. pyproject.toml [tool.aegiscore.plugins].enabled  ← project default (CWD)
 #   4. Hardcoded default: {"standard"}     ← lean OSS baseline
@@ -72,10 +72,10 @@ ROLES_GROUP = "aegiscore.roles"  # Spec §7.2 Principle 4 — custom agent roles
 # External plugin packages always load when pip-installed; their
 # entry-point contributions can wrap output in ``PluginBundle`` to opt
 # into the same allowlist (e.g. ``bundle="vendor"`` requires that string
-# in DECEPTICON_PLUGINS / config file).
+# in AEGISCORE_PLUGINS / config file).
 # ─────────────────────────────────────────────────────────────────────────────
 
-PLUGINS_ENV_VAR = "DECEPTICON_PLUGINS"
+PLUGINS_ENV_VAR = "AEGISCORE_PLUGINS"
 DEFAULT_BUNDLES: frozenset[str] = frozenset({"standard"})
 _WILDCARD: frozenset[str] = frozenset()  # empty frozenset sentinel — "all"
 
@@ -110,17 +110,17 @@ def _config_file_bundles() -> frozenset[str] | None:
     """
     cwd = Path.cwd()
 
-    decepticon_toml = cwd / ".aegiscore.toml"
-    if decepticon_toml.is_file():
+    aegiscore_toml = cwd / ".aegiscore.toml"
+    if aegiscore_toml.is_file():
         try:
-            data = tomllib.loads(decepticon_toml.read_text(encoding="utf-8"))
+            data = tomllib.loads(aegiscore_toml.read_text(encoding="utf-8"))
             value = data.get("plugins", {}).get("enabled")
             if value is not None:
                 normalized = _normalize_bundles_value(value)
                 if normalized is not None:
                     return normalized
         except Exception:
-            logger.exception("failed to read %s", decepticon_toml)
+            logger.exception("failed to read %s", aegiscore_toml)
 
     pyproject = cwd / "pyproject.toml"
     if pyproject.is_file():
@@ -160,9 +160,9 @@ def _enabled_bundles() -> frozenset[str]:
 
 
 def is_bundle_enabled(bundle: str | None) -> bool:
-    """Return True if ``bundle`` is active under current DECEPTICON_PLUGINS.
+    """Return True if ``bundle`` is active under current AEGISCORE_PLUGINS.
 
-    - Wildcard env (``DECEPTICON_PLUGINS=*``) → True for any bundle.
+    - Wildcard env (``AEGISCORE_PLUGINS=*``) → True for any bundle.
     - ``bundle is None`` → True. Specs without a declared bundle are
       treated as "always-load when installed" (the package-install
       already implies opt-in, matching Claude Code's MCP-server model).
@@ -204,7 +204,7 @@ class PluginBundle:
     ``SAFETY_CRITICAL_SLOTS`` / ``SAFETY_CRITICAL_TOOLS`` in
     ``aegiscore.agents``). Plugins attempting to disable or replace
     those raise ``SafetyOverrideViolation`` at agent-construction time
-    unless ``DECEPTICON_ALLOW_SAFETY_OVERRIDES=1`` is set in the
+    unless ``AEGISCORE_ALLOW_SAFETY_OVERRIDES=1`` is set in the
     environment. The gate exists so an accidentally-installed plugin
     can't silently subvert ``EngagementContextMiddleware``,
     ``SandboxNotificationMiddleware``, ``ask_user_question``, or
@@ -626,7 +626,7 @@ def load_subagents_for_parent(parent: str) -> list[SubAgentSpec]:
 
     Two filters apply:
       1. ``parent`` must be in the spec's ``parent_agents`` tuple.
-      2. The spec's ``bundle`` must be active under ``DECEPTICON_PLUGINS``
+      2. The spec's ``bundle`` must be active under ``AEGISCORE_PLUGINS``
          (see ``is_bundle_enabled``).
 
     Returned in stable order: ``(priority, name)``. Main-agent factories
@@ -634,11 +634,11 @@ def load_subagents_for_parent(parent: str) -> list[SubAgentSpec]:
     adding a new subagent (OSS-side or plugin-side) is a pure
     entry-point registration — no main-agent edits required.
 
-    Default ``DECEPTICON_PLUGINS=standard`` returns only ``bundle="standard"``
+    Default ``AEGISCORE_PLUGINS=standard`` returns only ``bundle="standard"``
     subagents. To activate the OSS ``plugins`` bundle (vulnresearch family),
-    set ``DECEPTICON_PLUGINS=standard,plugins``. Downstream plugin packages set
+    set ``AEGISCORE_PLUGINS=standard,plugins``. Downstream plugin packages set
     their own bundle (e.g. ``bundle="vendor"``) and the downstream Docker image
-    activates it via ``ENV DECEPTICON_PLUGINS=standard,vendor``.
+    activates it via ``ENV AEGISCORE_PLUGINS=standard,vendor``.
     """
     matched = [
         s

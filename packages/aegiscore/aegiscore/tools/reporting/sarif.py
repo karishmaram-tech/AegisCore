@@ -249,6 +249,6 @@ def _partial_fingerprints(node: Node) -> dict[str, str]:
     )
     digest = hashlib.sha256(raw.encode("utf-8")).hexdigest()
     return {
-        "decepticonFindingId": node.id,
-        "decepticonStableHash": digest,
+        "aegiscoreFindingId": node.id,
+        "aegiscoreStableHash": digest,
     }

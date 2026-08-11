@@ -70,7 +70,7 @@ Code-heavy override
 -------------------
 For roles that benefit from OpenAI's agentic coding specialization (patcher,
 exploiter, contract_auditor, reverser, verifier), set
-``DECEPTICON_MODEL_<ROLE>`` to one of the registered Codex variant routes:
+``AEGISCORE_MODEL_<ROLE>`` to one of the registered Codex variant routes:
   - ``openai/gpt-5.3-codex``       (paid API key)
   - ``auth/gpt-5.3-codex``         (ChatGPT subscription via Codex backend)
   - ``copilot/gpt-5.3-codex``      (GitHub Copilot subscription)
@@ -271,7 +271,7 @@ METHOD_MODELS: dict[AuthMethod, dict[Tier, str]] = {
         # For code-heavy roles (patcher, exploiter, contract_auditor), the
         # ``copilot/gpt-5.3-codex`` route is registered as an alternative in
         # ``litellm_dynamic_config`` (sentinel-aliased to dodge bypass) and
-        # can be selected per-agent via ``DECEPTICON_MODEL_<ROLE>``.
+        # can be selected per-agent via ``AEGISCORE_MODEL_<ROLE>``.
         Tier.HIGH: "copilot/gpt-5.5",
         Tier.MID: "copilot/claude-sonnet-4-6",
         Tier.LOW: "copilot/gpt-5.4-mini",
@@ -302,7 +302,7 @@ METHOD_MODELS: dict[AuthMethod, dict[Tier, str]] = {
     # JSON path + VERTEXAI_PROJECT + VERTEXAI_LOCATION.
     AuthMethod.VERTEX_API: {
         # Vertex Anthropic models use @latest aliases when no specific
-        # snapshot is needed. Override per-role via DECEPTICON_MODEL_<ROLE>
+        # snapshot is needed. Override per-role via AEGISCORE_MODEL_<ROLE>
         # to pin a specific @YYYYMMDD snapshot from the Model Garden.
         Tier.HIGH: "vertex_ai/claude-opus-4-7@latest",
         Tier.MID: "vertex_ai/claude-sonnet-4-6@latest",
@@ -311,7 +311,7 @@ METHOD_MODELS: dict[AuthMethod, dict[Tier, str]] = {
     # Azure OpenAI Service — model names are deployment IDs, so the user
     # configures AZURE_API_KEY + AZURE_API_BASE + AZURE_API_VERSION + their
     # deployment names. The defaults below assume standard deployment
-    # naming; users can override per role via DECEPTICON_MODEL_<ROLE>.
+    # naming; users can override per role via AEGISCORE_MODEL_<ROLE>.
     AuthMethod.AZURE_API: {
         Tier.HIGH: "azure/gpt-5.5",
         Tier.MID: "azure/gpt-5.4",
@@ -334,7 +334,7 @@ METHOD_MODELS: dict[AuthMethod, dict[Tier, str]] = {
     # Fireworks AI — fireworks_ai/<model>. All three default to Llama
     # variants because Fireworks-hosted Mixtral does not reliably honor
     # the OpenAI tools schema and Aegiscore agents always emit tool
-    # calls. Override via DECEPTICON_MODEL_<ROLE> for non-tool roles.
+    # calls. Override via AEGISCORE_MODEL_<ROLE> for non-tool roles.
     AuthMethod.FIREWORKS_API: {
         Tier.HIGH: "fireworks_ai/accounts/fireworks/models/llama-v3p3-70b-instruct",
         Tier.MID: "fireworks_ai/accounts/fireworks/models/llama-v3p1-70b-instruct",
@@ -488,7 +488,7 @@ METHOD_MODELS: dict[AuthMethod, dict[Tier, str]] = {
         # (cloud.baidu.com/doc/qianfan/s/rmh4stp0j) which matches this base
         # URL — note ERNIE Speed 128k is ``ernie-speed-pro-128k`` there.
         # Pricing is region/currency-dependent → cost $0 (not per-token
-        # enforced). Ids drift; override per role via DECEPTICON_MODEL_<ROLE>.
+        # enforced). Ids drift; override per role via AEGISCORE_MODEL_<ROLE>.
         Tier.HIGH: "qianfan/ernie-4.5-turbo-128k",
         Tier.MID: "qianfan/ernie-4.5-turbo-32k",
         Tier.LOW: "qianfan/ernie-speed-pro-128k",
@@ -808,7 +808,7 @@ class ProxyConfig(BaseModel):
 
     The ``api_key`` default is the well-known local-dev placeholder
     documented in .env.example. Production deployments MUST override it
-    via DECEPTICON_LLM__PROXY_API_KEY. The placeholder exists so
+    via AEGISCORE_LLM__PROXY_API_KEY. The placeholder exists so
     module-level agent constructors (Aegiscore imports its agents at
     package init time for the ``aegiscore.agents.plugins.*`` entry
     points to register) can build a ChatOpenAI instance against the

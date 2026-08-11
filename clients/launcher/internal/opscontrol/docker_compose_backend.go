@@ -18,7 +18,7 @@ import (
 type DockerComposeBackend struct {
 	// ComposeFile + EnvFile + (optional) extra files combine into the
 	// `-f`/`--env-file` prefix every compose call uses. Defaults from
-	// $DECEPTICON_HOME.
+	// $AEGISCORE_HOME.
 	ComposeFile string
 	EnvFile     string
 	ExtraFiles  []string
@@ -29,9 +29,9 @@ type DockerComposeBackend struct {
 }
 
 // NewDockerComposeBackend constructs a backend with the launcher's
-// standard $DECEPTICON_HOME paths.
+// standard $AEGISCORE_HOME paths.
 func NewDockerComposeBackend() *DockerComposeBackend {
-	home := config.DecepticonHome()
+	home := config.AegiscoreHome()
 	return &DockerComposeBackend{
 		ComposeFile:        filepath.Join(home, "docker-compose.yml"),
 		EnvFile:            filepath.Join(home, ".env"),

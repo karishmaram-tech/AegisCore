@@ -13,7 +13,7 @@ Architecture:
 Profile-aware: when no explicit mapping is provided, builds a
 credentials-aware mapping from environment variables. The factory
 inspects which credentials are configured (non-placeholder API keys
-plus the OAuth toggle) and respects ``DECEPTICON_AUTH_PRIORITY`` for
+plus the OAuth toggle) and respects ``AEGISCORE_AUTH_PRIORITY`` for
 ordering AuthMethods in the fallback chain.
 """
 
@@ -61,21 +61,21 @@ log = get_logger("llm.factory")
 # models (opus-4-8 / sonnet-4-6 / haiku-4-5) support far larger outputs; 16384
 # is a generous cap (it is a ceiling, not a forced value — short replies cost
 # nothing extra) that lets large deliverables complete in one call.
-# Override with ``DECEPTICON_LLM_MAX_TOKENS``.
+# Override with ``AEGISCORE_LLM_MAX_TOKENS``.
 DEFAULT_LLM_MAX_TOKENS = 16384
-LLM_MAX_TOKENS_ENV = "DECEPTICON_LLM_MAX_TOKENS"
+LLM_MAX_TOKENS_ENV = "AEGISCORE_LLM_MAX_TOKENS"
 
 DEFAULT_LLM_REQUEST_TIMEOUT_SECONDS = 600
-LLM_TIMEOUT_ENV = "DECEPTICON_LLM_TIMEOUT_SECONDS"
+LLM_TIMEOUT_ENV = "AEGISCORE_LLM_TIMEOUT_SECONDS"
 # `.env.example` documents the pydantic-settings nested form
-# (``DECEPTICON_LLM__TIMEOUT``) because that's what the rest of the
+# (``AEGISCORE_LLM__TIMEOUT``) because that's what the rest of the
 # settings tree uses (``LLMConfig.timeout`` → httpx transport). The
 # whole-coroutine guard below is a separate piece of plumbing — but
 # from the user's point of view there is only one "LLM timeout" knob,
 # so we honor the documented name too. Precedence:
-# ``DECEPTICON_LLM_TIMEOUT_SECONDS`` (explicit, whole-coroutine) >
-# ``DECEPTICON_LLM__TIMEOUT`` (the published env knob) > default.
-LLM_TIMEOUT_ENV_ALIAS = "DECEPTICON_LLM__TIMEOUT"
+# ``AEGISCORE_LLM_TIMEOUT_SECONDS`` (explicit, whole-coroutine) >
+# ``AEGISCORE_LLM__TIMEOUT`` (the published env knob) > default.
+LLM_TIMEOUT_ENV_ALIAS = "AEGISCORE_LLM__TIMEOUT"
 
 
 def _resolve_max_tokens() -> int:
@@ -104,8 +104,8 @@ class LLMTimeoutError(RuntimeError):
 def _resolve_llm_timeout_seconds() -> float:
     """Resolve the per-call LLM request timeout.
 
-    Precedence: ``DECEPTICON_LLM_TIMEOUT_SECONDS`` env >
-    ``DECEPTICON_LLM__TIMEOUT`` env (the pydantic-settings nested form
+    Precedence: ``AEGISCORE_LLM_TIMEOUT_SECONDS`` env >
+    ``AEGISCORE_LLM__TIMEOUT`` env (the pydantic-settings nested form
     advertised in ``.env.example``) > default ``600``. The alias is what
     users actually set when following the published docs — without it,
     changing the documented knob silently has no effect on the whole-
@@ -146,7 +146,7 @@ async def call_with_timeout(coro: Awaitable[Any], timeout: float) -> Any:
         raise LLMTimeoutError(f"LLM request timed out after {timeout:g} seconds") from exc
 
 
-# Default ordering when DECEPTICON_AUTH_PRIORITY is not set. Every OAuth
+# Default ordering when AEGISCORE_AUTH_PRIORITY is not set. Every OAuth
 # (subscription) method precedes its closest paid-API peer so a subscription
 # is spent first and only falls back to the metered API when its quota hits —
 # never the other way. Copilot (broad multi-model subscription) sits just
@@ -156,7 +156,7 @@ async def call_with_timeout(coro: Awaitable[Any], timeout: float) -> Any:
 # last-resort fallback.
 #
 # NOTE: all six subscription methods are listed here so a credential wired
-# without an explicit DECEPTICON_AUTH_PRIORITY is actually routed. Before,
+# without an explicit AEGISCORE_AUTH_PRIORITY is actually routed. Before,
 # google/copilot/grok/perplexity OAuth were absent — a configured
 # subscription was silently never used (surfaced by `aegiscore-cli auth`).
 _DEFAULT_AUTH_PRIORITY: tuple[AuthMethod, ...] = (
@@ -258,12 +258,12 @@ _API_METHOD_ENV: dict[AuthMethod, str] = {
 }
 
 _OAUTH_METHOD_ENV: dict[AuthMethod, str] = {
-    AuthMethod.ANTHROPIC_OAUTH: "DECEPTICON_AUTH_CLAUDE_CODE",
-    AuthMethod.OPENAI_OAUTH: "DECEPTICON_AUTH_CHATGPT",
-    AuthMethod.GOOGLE_OAUTH: "DECEPTICON_AUTH_GEMINI",
-    AuthMethod.COPILOT_OAUTH: "DECEPTICON_AUTH_COPILOT",
-    AuthMethod.GROK_OAUTH: "DECEPTICON_AUTH_GROK",
-    AuthMethod.PERPLEXITY_OAUTH: "DECEPTICON_AUTH_PERPLEXITY",
+    AuthMethod.ANTHROPIC_OAUTH: "AEGISCORE_AUTH_CLAUDE_CODE",
+    AuthMethod.OPENAI_OAUTH: "AEGISCORE_AUTH_CHATGPT",
+    AuthMethod.GOOGLE_OAUTH: "AEGISCORE_AUTH_GEMINI",
+    AuthMethod.COPILOT_OAUTH: "AEGISCORE_AUTH_COPILOT",
+    AuthMethod.GROK_OAUTH: "AEGISCORE_AUTH_GROK",
+    AuthMethod.PERPLEXITY_OAUTH: "AEGISCORE_AUTH_PERPLEXITY",
 }
 
 # Vendor-specific API key prefix hints. When the method has a known
@@ -302,7 +302,7 @@ _PLACEHOLDER_TOKENS: tuple[str, ...] = (
 _KEY_MIN_LENGTH = 24
 
 # OAuth methods carry a host-side credentials file. Booleans like
-# ``DECEPTICON_AUTH_CLAUDE_CODE=true`` are intent (the user enabled the
+# ``AEGISCORE_AUTH_CLAUDE_CODE=true`` are intent (the user enabled the
 # subscription) — they don't guarantee the actual file exists. The
 # factory verifies file presence + valid JSON before adding a method to
 # the chain so a user who ran ``codex logout`` without flipping the
@@ -444,7 +444,7 @@ def _oauth_credentials_present(method: AuthMethod) -> bool:
     """Return True if the host-side credential file for ``method`` exists.
 
     The factory layer reads this to keep the credentials inventory
-    honest — without it, ``DECEPTICON_AUTH_CLAUDE_CODE=true`` plus a
+    honest — without it, ``AEGISCORE_AUTH_CLAUDE_CODE=true`` plus a
     deleted ``~/.claude/.credentials.json`` would still place the OAuth
     method in every fallback chain, generating one 401 per request.
 
@@ -496,14 +496,14 @@ def _is_truthy(value: str) -> bool:
 
 
 def _parse_auth_priority() -> tuple[list[AuthMethod], bool]:
-    """Parse ``DECEPTICON_AUTH_PRIORITY`` into an ordered AuthMethod list.
+    """Parse ``AEGISCORE_AUTH_PRIORITY`` into an ordered AuthMethod list.
 
     Returns ``(priority, priority_explicit)``: the ordered method list and a
     flag for whether the env var was set non-empty. When it is unset/blank
     the default ordering (``_DEFAULT_AUTH_PRIORITY``) is returned. Unknown
     tokens are logged and skipped.
     """
-    priority_raw = os.getenv("DECEPTICON_AUTH_PRIORITY", "")
+    priority_raw = os.getenv("AEGISCORE_AUTH_PRIORITY", "")
     priority_explicit = bool(priority_raw.strip())
     if priority_explicit:
         priority: list[AuthMethod] = []
@@ -514,7 +514,7 @@ def _parse_auth_priority() -> tuple[list[AuthMethod], bool]:
             try:
                 priority.append(AuthMethod(token))
             except ValueError:
-                log.warning("Unknown method in DECEPTICON_AUTH_PRIORITY: %s", token)
+                log.warning("Unknown method in AEGISCORE_AUTH_PRIORITY: %s", token)
     else:
         priority = list(_DEFAULT_AUTH_PRIORITY)
     return priority, priority_explicit
@@ -592,7 +592,7 @@ def _fallback_credentials(*, priority_explicit: bool) -> Credentials:
         log.info("Only CUSTOM_OPENAI_* detected; using custom OpenAI-compatible endpoint")
         return Credentials(methods=[AuthMethod.CUSTOM_OPENAI_API])
     if priority_explicit:
-        # User expressed clear intent (set DECEPTICON_AUTH_PRIORITY) but
+        # User expressed clear intent (set AEGISCORE_AUTH_PRIORITY) but
         # every listed method failed detection. Surface the root cause
         # at ERROR level — otherwise the silent fallback to
         # all_api_methods() runs through providers the user doesn't
@@ -602,17 +602,17 @@ def _fallback_credentials(*, priority_explicit: bool) -> Credentials:
         # stay green; real model calls still surface a remediation
         # hint via _reraise_with_actionable_message.
         log.error(
-            "DECEPTICON_AUTH_PRIORITY=%r set but no listed method has "
+            "AEGISCORE_AUTH_PRIORITY=%r set but no listed method has "
             "detectable credentials. Verify: (1) API keys are "
             "non-placeholder (e.g. ANTHROPIC_API_KEY starts with "
             "'sk-ant-'), (2) OAuth flag matches credential file "
-            "(e.g. DECEPTICON_AUTH_CLAUDE_CODE=true requires "
+            "(e.g. AEGISCORE_AUTH_CLAUDE_CODE=true requires "
             "~/.claude/.credentials.json to exist and contain a valid "
             "JSON object — a /dev/null mount fails this check). "
             "Falling back to all-API-methods so module imports "
             "remain importable; every model call will 401 until "
             "the priority chain is fixed.",
-            os.getenv("DECEPTICON_AUTH_PRIORITY", ""),
+            os.getenv("AEGISCORE_AUTH_PRIORITY", ""),
         )
     else:
         log.info(
@@ -625,7 +625,7 @@ def _fallback_credentials(*, priority_explicit: bool) -> Credentials:
 def _resolve_credentials() -> Credentials:
     """Build Credentials from environment variables.
 
-    Walks ``DECEPTICON_AUTH_PRIORITY`` (comma-separated AuthMethod
+    Walks ``AEGISCORE_AUTH_PRIORITY`` (comma-separated AuthMethod
     values; defaults to ``_DEFAULT_AUTH_PRIORITY``) and includes only
     methods whose detection rule passes:
 
@@ -793,7 +793,7 @@ class AuthInventory:
     @property
     def configured_but_idle(self) -> tuple[AuthMethodStatus, ...]:
         """Configured methods NOT on the resolved chain — almost always
-        because the method is missing from ``DECEPTICON_AUTH_PRIORITY``
+        because the method is missing from ``AEGISCORE_AUTH_PRIORITY``
         (google_oauth / copilot_oauth / grok_oauth / perplexity_oauth are
         not in the default priority), so the credential is wired but the
         runtime will never route to it."""
@@ -863,7 +863,7 @@ class _ProxiedChatOpenAI(ChatOpenAI):
 
     async def ainvoke(self, *args, **kwargs):
         # Resolve the timeout *before* creating the request coroutine. A
-        # misconfigured ``DECEPTICON_LLM_TIMEOUT_SECONDS`` raises ValueError;
+        # misconfigured ``AEGISCORE_LLM_TIMEOUT_SECONDS`` raises ValueError;
         # if that were evaluated as the second argument to
         # ``call_with_timeout`` the ``super().ainvoke(...)`` coroutine would
         # already exist and leak un-awaited ("coroutine was never awaited").
@@ -1340,7 +1340,7 @@ def _reraise_with_actionable_message(exc: Exception, model_name: str) -> None:
         raise RuntimeError(
             f"Model '{model_name}' failed and no provider fallback was "
             f"available for it. Either configure another auth method in "
-            f"DECEPTICON_AUTH_PRIORITY or fix the upstream error.\n"
+            f"AEGISCORE_AUTH_PRIORITY or fix the upstream error.\n"
             f"Underlying: {safe_msg}"
         ) from exc
 
@@ -1372,13 +1372,13 @@ def _reraise_with_actionable_message(exc: Exception, model_name: str) -> None:
             f"provider accepted your credentials but forbids this model "
             f"(region lock, plan tier, or org policy). Verify your account "
             f"can use that model, or route to another method via "
-            f"DECEPTICON_AUTH_PRIORITY.\nUnderlying: {safe_msg}"
+            f"AEGISCORE_AUTH_PRIORITY.\nUnderlying: {safe_msg}"
         ) from exc
 
     if "ratelimit" in err_type.lower() or "code: 429" in msg_lower:
         raise RuntimeError(
             f"Model '{model_name}' hit the provider's rate limit (429). "
-            f"Add another method to DECEPTICON_AUTH_PRIORITY so the agent "
+            f"Add another method to AEGISCORE_AUTH_PRIORITY so the agent "
             f"can fall back when this happens.\nUnderlying: {safe_msg}"
         ) from exc
 
@@ -1447,7 +1447,7 @@ def _validate_chain_coverage(credentials: Credentials, profile: ModelProfile) ->
         f"credentials: [{inventory}]. Add a credential whose AuthMethod "
         f"has an entry for the listed tier(s) in METHOD_MODELS "
         f"(packages/aegiscore-core/aegiscore_core/types/llm.py), or "
-        f"adjust DECEPTICON_AUTH_PRIORITY / DECEPTICON_MODEL_PROFILE."
+        f"adjust AEGISCORE_AUTH_PRIORITY / AEGISCORE_MODEL_PROFILE."
     )
 
 
@@ -1459,7 +1459,7 @@ class LLMFactory:
 
     When constructed without an explicit mapping, builds one from the
     user's credentials inventory and the model profile from
-    DecepticonConfig (env: ``DECEPTICON_MODEL_PROFILE``).
+    AegiscoreConfig (env: ``AEGISCORE_MODEL_PROFILE``).
     """
 
     def __init__(
@@ -1483,7 +1483,7 @@ class LLMFactory:
 
     @staticmethod
     def _resolve_proxy_config() -> ProxyConfig:
-        """Resolve proxy config from DecepticonConfig (env vars)."""
+        """Resolve proxy config from AegiscoreConfig (env vars)."""
         from aegiscore_core.utils.config import load_config
 
         config = load_config()
@@ -1496,7 +1496,7 @@ class LLMFactory:
 
     @staticmethod
     def _resolve_profile() -> ModelProfile:
-        """Resolve the model profile from DecepticonConfig (env var)."""
+        """Resolve the model profile from AegiscoreConfig (env var)."""
         from aegiscore_core.utils.config import load_config
 
         return load_config().model_profile

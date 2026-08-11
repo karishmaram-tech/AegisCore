@@ -328,7 +328,7 @@ class HITLApprovalMiddleware(AgentMiddleware):
         state = getattr(request, "state", None) or {}
         get = state.get if hasattr(state, "get") else (lambda _k, _d=None: None)
         workspace = get("workspace_path") or os.environ.get(
-            "DECEPTICON_WORKSPACE_PATH", "/workspace"
+            "AEGISCORE_WORKSPACE_PATH", "/workspace"
         )
         workspace = str(workspace)
         cached = self._transport_cache.get(workspace)
@@ -355,7 +355,7 @@ class HITLApprovalMiddleware(AgentMiddleware):
             return self._engagement_name
         state = getattr(request, "state", None) or {}
         get = state.get if hasattr(state, "get") else (lambda _k, _d=None: None)
-        return get("engagement_name", "") or os.environ.get("DECEPTICON_ENGAGEMENT_ID", "")
+        return get("engagement_name", "") or os.environ.get("AEGISCORE_ENGAGEMENT_ID", "")
 
     def _technique_tag(self, request: Any) -> str | None:
         state = getattr(request, "state", None) or {}

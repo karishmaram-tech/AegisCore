@@ -10,11 +10,11 @@ credentials, and tool output are never transmitted.**
 ## TL;DR
 
 - **On by default for consenting users (opt-out).** The onboard wizard asks
-  during setup (default yes), writing `DECEPTICON_TELEMETRY=research`. Existing
+  during setup (default yes), writing `AEGISCORE_TELEMETRY=research`. Existing
   users are re-asked once at `aegiscore start` after this policy change.
-- **Turn it off anytime:** set `DECEPTICON_TELEMETRY=off` (or `basic`) in
+- **Turn it off anytime:** set `AEGISCORE_TELEMETRY=off` (or `basic`) in
   `~/.aegiscore/.env`, run `aegiscore-cli telemetry off`, or `DO_NOT_TRACK=1`.
-- **Nothing is sent** without a `DECEPTICON_TELEMETRY_ENDPOINT` (shipped in the
+- **Nothing is sent** without a `AEGISCORE_TELEMETRY_ENDPOINT` (shipped in the
   `.env` template; backfilled into existing installs on update).
 - **See exactly what would be sent:** `aegiscore-cli telemetry preview`.
 
@@ -22,9 +22,9 @@ credentials, and tool output are never transmitted.**
 
 | Variable / command | Effect |
 |---|---|
-| `DECEPTICON_TELEMETRY=off\|basic\|research` | consent mode (template default `research`; unset ⇒ `off`) |
+| `AEGISCORE_TELEMETRY=off\|basic\|research` | consent mode (template default `research`; unset ⇒ `off`) |
 | `DO_NOT_TRACK=1` | standard kill switch — forces `off` |
-| `DECEPTICON_TELEMETRY_ENDPOINT=<url>` | gateway URL; unset ⇒ nothing is sent |
+| `AEGISCORE_TELEMETRY_ENDPOINT=<url>` | gateway URL; unset ⇒ nothing is sent |
 | `aegiscore-cli telemetry status` | show resolved mode / endpoint / anonymous id |
 | `aegiscore-cli telemetry preview` | print the exact payload for a sample run |
 | `aegiscore-cli telemetry off` / `on` | persistent opt-out marker (overrides env) |
@@ -72,7 +72,7 @@ the OS family (`linux`/`darwin`/`windows`).
   "schema_version": "1.0",
   "tier": "A",
   "install_id": "1e9a73a6-c8bd-4e1e-be02-78f4b11de4e1",
-  "client": { "decepticon_version": "1.1.13", "os": "linux" },
+  "client": { "aegiscore_version": "1.1.13", "os": "linux" },
   "events": [
     { "type": "tool.call",   "ts": 2.0, "agent": "recon", "tool": "bash" },
     { "type": "tool.result", "ts": 3.0, "agent": "recon", "tool": "bash",
@@ -95,7 +95,7 @@ turn sequence a training pipeline needs. Identifiers are masked throughout:
   "schema_version": "1.0",
   "tier": "R",
   "install_id": "1e9a73a6-…",
-  "client": { "decepticon_version": "1.1.13", "os": "linux" },
+  "client": { "aegiscore_version": "1.1.13", "os": "linux" },
   "events": [
     { "type": "trajectory.step", "session_id": "a1b2c3d4e5f60718", "step": 0,
       "role": "human", "agent": "aegiscore", "text": "Objective: own the host at <HOST_1>" },

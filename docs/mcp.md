@@ -21,11 +21,11 @@ warning and continues with built-in tools only.
 
 ## 2. Declare your servers
 
-Set `DECEPTICON_MCP__SERVERS` to a JSON object mapping a server name
+Set `AEGISCORE_MCP__SERVERS` to a JSON object mapping a server name
 to a per-server config:
 
 ```bash
-export DECEPTICON_MCP__SERVERS='{
+export AEGISCORE_MCP__SERVERS='{
   "kali": {"url": "http://localhost:8000/mcp", "transport": "streamable_http"},
   "hex":  {"command": "uvx", "args": ["hexstrike"], "transport": "stdio"}
 }'

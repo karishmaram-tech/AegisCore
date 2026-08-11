@@ -156,7 +156,7 @@ PRO_SKILL_SOURCES = [
     "/skills/shared/",
 ]
 
-def create_decepticon_pro_agent(**kwargs):
+def create_aegiscore_pro_agent(**kwargs):
     # LLMFactory only knows OSS role assignments; pass default_role=
     # to inherit one as fallback until the plugin registers its own.
     llm_factory = LLMFactory()
@@ -227,9 +227,9 @@ VENDOR_BUNDLE = PluginBundle(
 vendor = "vendor_pkg.bundles:VENDOR_BUNDLE"
 ```
 
-Activation also honors the existing `DECEPTICON_PLUGINS` env / config
+Activation also honors the existing `AEGISCORE_PLUGINS` env / config
 allowlist via `bundle="vendor"`. Set
-`DECEPTICON_PLUGINS=standard,vendor` to opt in.
+`AEGISCORE_PLUGINS=standard,vendor` to opt in.
 
 ### Adding skills via entry-points
 
@@ -282,7 +282,7 @@ A small allowlist of slots and tools is flagged safety-critical:
 
 Disabling or replacing any of these (whether via factory kwarg, plugin
 bundle, or both) raises `SafetyOverrideViolation` at agent-construction
-time unless `DECEPTICON_ALLOW_SAFETY_OVERRIDES=1` is set in the
+time unless `AEGISCORE_ALLOW_SAFETY_OVERRIDES=1` is set in the
 environment. The gate exists so an accidentally-installed plugin
 cannot silently subvert the safety story — operators must explicitly
 opt in.
@@ -370,7 +370,7 @@ from aegiscore.agents.standard.soundwave import create_soundwave_agent
 # This is library-style direct call; for plugin-wide disable, use
 # PluginBundle(disabled_middleware=("prompt-caching",)).
 import os
-os.environ["DECEPTICON_ALLOW_SAFETY_OVERRIDES"] = "0"  # default — only non-critical slots ok
+os.environ["AEGISCORE_ALLOW_SAFETY_OVERRIDES"] = "0"  # default — only non-critical slots ok
 # … then use the factory's `middleware=` kwarg with your own composed list,
 # or rely on a plugin bundle.
 ```

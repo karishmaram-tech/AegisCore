@@ -61,7 +61,7 @@ log = logging.getLogger("aegiscore.sandbox_kernel.base")
 # workspaces. Root-workspace sessions (bare names like ``main``) could
 # belong to anything on a shared host and are left alone deliberately.
 
-_DECEPTICON_TMUX_SOCKET_PREFIX = "dcptn_"
+_AEGISCORE_TMUX_SOCKET_PREFIX = "aegiscore_"
 
 
 def _compute_orphan_tmux_sessions(
@@ -77,11 +77,11 @@ def _compute_orphan_tmux_sessions(
     return {
         name
         for name in discovered
-        if name.startswith(_DECEPTICON_TMUX_SOCKET_PREFIX) and name not in tracked
+        if name.startswith(_AEGISCORE_TMUX_SOCKET_PREFIX) and name not in tracked
     }
 
 
-def _list_decepticon_tmux_sockets() -> list[str]:
+def _list_aegiscore_tmux_sockets() -> list[str]:
     """List aegiscore-owned tmux socket names on the host.
 
     Each ``tmux -L <name>`` creates a socket at ``/tmp/tmux-<uid>/<name>``
@@ -92,7 +92,7 @@ def _list_decepticon_tmux_sockets() -> list[str]:
     """
     socket_dir = f"/tmp/tmux-{os.getuid()}"
     try:
-        return [n for n in os.listdir(socket_dir) if n.startswith(_DECEPTICON_TMUX_SOCKET_PREFIX)]
+        return [n for n in os.listdir(socket_dir) if n.startswith(_AEGISCORE_TMUX_SOCKET_PREFIX)]
     except FileNotFoundError:
         return []
     except OSError as e:
@@ -458,11 +458,11 @@ class SandboxBase(BaseSandbox):
         manager tracks them. Without this reap they leak forever.
 
         Returns the count of sockets successfully killed. Discovery and
-        kill go through module-level seams (``_list_decepticon_tmux_sockets``,
+        kill go through module-level seams (``_list_aegiscore_tmux_sockets``,
         ``_kill_tmux_socket``) so unit tests can drive the logic without
         invoking real tmux.
         """
-        discovered = set(_list_decepticon_tmux_sockets())
+        discovered = set(_list_aegiscore_tmux_sockets())
         with self._managers_lock:
             tracked = {mgr.session for mgr in self._managers.values()}
         orphans = _compute_orphan_tmux_sessions(discovered, tracked)

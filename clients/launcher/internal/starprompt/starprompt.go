@@ -1,7 +1,7 @@
 // Package starprompt presents a one-time GitHub star ask at the natural
 // post-onboarding moment and again at the first interactive launch
 // (before the engagement picker). Idempotent — a sentinel file at
-// ${DECEPTICON_HOME}/.starred suppresses the prompt permanently after
+// ${AEGISCORE_HOME}/.starred suppresses the prompt permanently after
 // the first outcome (Yes / Skip / already-starred).
 //
 // Behaviour:
@@ -31,7 +31,7 @@ import (
 )
 
 const (
-	// AckFileName is the zero-byte sentinel inside DECEPTICON_HOME.
+	// AckFileName is the zero-byte sentinel inside AEGISCORE_HOME.
 	// Presence alone is the signal — contents are intentionally empty
 	// so an operator can suppress the prompt forever with
 	// `touch ~/.aegiscore/.starred` and re-enable it with `rm` of the
@@ -63,7 +63,7 @@ var (
 // check makes any subsequent call a no-op for users who have already
 // gone through the prompt once.
 func PromptIfNotStarred() {
-	ackPath := filepath.Join(config.DecepticonHome(), AckFileName)
+	ackPath := filepath.Join(config.AegiscoreHome(), AckFileName)
 
 	// Stage 0 — already acknowledged.
 	if _, err := os.Stat(ackPath); err == nil {

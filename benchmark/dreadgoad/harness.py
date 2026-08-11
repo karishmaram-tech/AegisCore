@@ -38,18 +38,18 @@ log = logging.getLogger(__name__)
 
 # Sandbox container name — overridable for tests / non-docker setups.
 # Defaults to the OSS Aegiscore compose name; override via
-# ``DECEPTICON_SANDBOX_CONTAINER`` when running outside the standard stack.
-_SANDBOX_CONTAINER = os.environ.get("DECEPTICON_SANDBOX_CONTAINER", "aegiscore-sandbox")
+# ``AEGISCORE_SANDBOX_CONTAINER`` when running outside the standard stack.
+_SANDBOX_CONTAINER = os.environ.get("AEGISCORE_SANDBOX_CONTAINER", "aegiscore-sandbox")
 _SANDBOX_READ_TIMEOUT_S = 10
 
 # LiteLLM proxy admin endpoints for offline cost attribution. The harness
 # runs on the controller host where compose maps litellm to localhost on
-# ``LITELLM_PORT``; override via ``DECEPTICON_LITELLM_URL`` +
+# ``LITELLM_PORT``; override via ``AEGISCORE_LITELLM_URL`` +
 # ``LITELLM_MASTER_KEY`` for non-docker test runs. When the env vars are
 # unset, ``_compute_window_cost`` returns ``("time_window_unavailable", 0,
 # {})`` and the run still completes — cost reporting is best-effort.
 _LITELLM_URL = os.environ.get(
-    "DECEPTICON_LITELLM_URL",
+    "AEGISCORE_LITELLM_URL",
     f"http://127.0.0.1:{os.environ.get('LITELLM_PORT', '4001')}",
 )
 _LITELLM_KEY = os.environ.get("LITELLM_MASTER_KEY", "")
@@ -228,7 +228,7 @@ def pull_measurement_bytes(scenario_name: str, run_id: str | None) -> bytes | No
     ``None`` if anything goes wrong. ``docker exec <sandbox> cat
     /workspace/<scenario>/measurements/<run_id>.json`` — coupled to the
     docker-based deploy on purpose; non-docker deployments override via
-    ``DECEPTICON_SANDBOX_CONTAINER`` env var.
+    ``AEGISCORE_SANDBOX_CONTAINER`` env var.
 
     A run that died before any tool fired writes a near-empty record; a
     run that never reached on_chain_end / on_chain_error writes none at

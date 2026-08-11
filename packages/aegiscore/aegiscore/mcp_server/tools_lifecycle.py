@@ -33,7 +33,7 @@ def register_lifecycle_tools(
     """Register start / status / findings / cancel tools on the server."""
 
     @mcp.tool()
-    async def decepticon_list_graphs() -> list[GraphInfo]:
+    async def aegiscore_list_graphs() -> list[GraphInfo]:
         """List the engagement graphs the connected Aegiscore server exposes.
 
         Pick a graph: ``aegiscore`` (full kill-chain engagement), ``recon``
@@ -43,7 +43,7 @@ def register_lifecycle_tools(
         return await engagements.list_graphs()
 
     @mcp.tool()
-    async def decepticon_start_engagement(
+    async def aegiscore_start_engagement(
         targets: list[str],
         instruction: str = "",
         scan_mode: ScanMode = "standard",
@@ -58,8 +58,8 @@ def register_lifecycle_tools(
         assets you are authorized to test.
 
         Returns immediately with a ``thread_id`` (the engagement handle). Drive
-        everything else with that handle: ``decepticon_transcript`` to watch,
-        ``decepticon_send_message`` to steer, ``decepticon_engagement_findings``
+        everything else with that handle: ``aegiscore_transcript`` to watch,
+        ``aegiscore_send_message`` to steer, ``aegiscore_engagement_findings``
         to pull results.
         """
         name = engagement_name or default_engagement_name()
@@ -77,7 +77,7 @@ def register_lifecycle_tools(
         )
 
     @mcp.tool()
-    async def decepticon_engagement_status(
+    async def aegiscore_engagement_status(
         thread_id: str, engagement_name: str = ""
     ) -> StatusResult:
         """Report an engagement's latest run status + whether findings exist yet.
@@ -102,7 +102,7 @@ def register_lifecycle_tools(
         )
 
     @mcp.tool()
-    async def decepticon_engagement_findings(
+    async def aegiscore_engagement_findings(
         engagement_name: str, include_sarif: bool = False
     ) -> FindingsResult:
         """Fetch the findings summary for an engagement (optionally full SARIF).
@@ -117,7 +117,7 @@ def register_lifecycle_tools(
         )
 
     @mcp.tool()
-    async def decepticon_cancel_engagement(thread_id: str) -> str:
+    async def aegiscore_cancel_engagement(thread_id: str) -> str:
         """Cancel the active run on an engagement thread."""
         run_id = await engagements.cancel(thread_id)
         return f"cancelled {run_id}" if run_id else "no active run to cancel"

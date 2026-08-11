@@ -56,12 +56,12 @@ log = logging.getLogger("aegiscore.tools.bash.bash")
 #      thread. Restoring the cross-thread default keeps the public
 #      ContextVar API (used for per-request overrides) intact.
 _sandbox_var: contextvars.ContextVar[HTTPSandbox | None] = contextvars.ContextVar(
-    "decepticon_bash_sandbox",
+    "aegiscore_bash_sandbox",
     default=None,
 )
 _sandbox_default: HTTPSandbox | None = None
 _current_workspace_path: contextvars.ContextVar[str] = contextvars.ContextVar(
-    "decepticon_bash_workspace_path",
+    "aegiscore_bash_workspace_path",
     default="/workspace",
 )
 
@@ -312,13 +312,13 @@ def _workspace_path_from_config(config: RunnableConfig | None) -> str:
         if normalized != "/workspace":
             return normalized
 
-    env_workspace = os.environ.get("DECEPTICON_WORKSPACE_PATH")
+    env_workspace = os.environ.get("AEGISCORE_WORKSPACE_PATH")
     if env_workspace:
         normalized = SandboxBase._normalize_workspace_path(env_workspace)
         if normalized != "/workspace":
             return normalized
 
-    env_slug = os.environ.get("DECEPTICON_ENGAGEMENT")
+    env_slug = os.environ.get("AEGISCORE_ENGAGEMENT")
     if env_slug:
         normalized = SandboxBase._normalize_workspace_path(f"/workspace/{env_slug}")
         if normalized != "/workspace":

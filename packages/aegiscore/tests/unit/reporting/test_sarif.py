@@ -163,9 +163,9 @@ class TestResultMapping:
         fp2 = _partial_fingerprints(node)
 
         assert fp1 == fp2
-        assert "decepticonFindingId" in fp1
-        assert "decepticonStableHash" in fp1
-        assert len(fp1["decepticonStableHash"]) == 64
+        assert "aegiscoreFindingId" in fp1
+        assert "aegiscoreStableHash" in fp1
+        assert len(fp1["aegiscoreStableHash"]) == 64
 
     def test_workspace_finding_uri_used_when_no_file_or_url(self) -> None:
         g = KnowledgeGraph()

@@ -1,6 +1,6 @@
 # Aegiscore 레드팀 인프라 아키텍처
 
-> Decepticon의 레드팀 인프라 구성과 현업 레드팀 인프라와의 매핑을 정의하는 설계 문서.
+> Aegiscore의 레드팀 인프라 구성과 현업 레드팀 인프라와의 매핑을 정의하는 설계 문서.
 > 분리형 C2(Command & Control) 모듈 아키텍처를 포함한 전체 공격 인프라 토폴로지를 다룬다.
 
 ---
@@ -61,7 +61,7 @@ graph LR
 
 ### 2.1 현업 vs Aegiscore 대응 관계
 
-Decepticon은 통제된 Docker 환경에서 운영되므로 OPSEC 기반 인프라 분리(리다이렉터)는 적용하지 않는다. 단, 팀 서버(C2)는 **별도 컨테이너로 분리**하여 모듈 교체가 가능한 구조를 채택한다.
+Aegiscore은 통제된 Docker 환경에서 운영되므로 OPSEC 기반 인프라 분리(리다이렉터)는 적용하지 않는다. 단, 팀 서버(C2)는 **별도 컨테이너로 분리**하여 모듈 교체가 가능한 구조를 채택한다.
 
 | 현업 구성 요소 | 현업 역할 | Aegiscore 대응 | 비고 |
 |---|---|---|---|
@@ -83,7 +83,7 @@ Decepticon은 통제된 Docker 환경에서 운영되므로 OPSEC 기반 인프�
 
 **리다이렉터를 제외하는 이유:**
 
-| 현업에서 리다이렉터가 필요한 이유 | Decepticon에서 불필요한 이유 |
+| 현업에서 리다이렉터가 필요한 이유 | Aegiscore에서 불필요한 이유 |
 |---|---|
 | 블루팀이 비콘 트래픽을 역추적하여 C2 IP 식별 | Docker 네트워크 내 통제 환경, 역추적 위협 없음 |
 | 팀 서버 IP가 노출되면 전체 작전 실패 | 단일 sandbox-net 내 통신, 외부 노출 없음 |
@@ -99,7 +99,7 @@ Decepticon은 통제된 Docker 환경에서 운영되므로 OPSEC 기반 인프�
 graph TB
     subgraph HostMachine["Host Machine"]
 
-        subgraph DecepticonNet["aegiscore-net (인프라 네트워크)"]
+        subgraph AegiscoreNet["aegiscore-net (인프라 네트워크)"]
             CLI["Ink CLI<br/>(사용자 인터페이스)"]
             LG["LangGraph Server :2024<br/>(에이전트 오케스트레이션)"]
             LLM["LiteLLM :4000<br/>(LLM API 게이트웨이)"]
@@ -246,7 +246,7 @@ docker compose up -d
 
 ### 5.1 킬 체인 단계별 실행 모델
 
-Decepticon은 5개 에이전트가 전체 레드팀 킬 체인을 커버한다. 각 단계에서 인프라 사용 방식이 다르다.
+Aegiscore은 5개 에이전트가 전체 레드팀 킬 체인을 커버한다. 각 단계에서 인프라 사용 방식이 다르다.
 
 ```mermaid
 graph TD

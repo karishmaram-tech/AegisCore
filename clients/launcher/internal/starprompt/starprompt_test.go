@@ -7,12 +7,12 @@ import (
 	"testing"
 )
 
-// withTempHome redirects config.DecepticonHome() output via env so each
+// withTempHome redirects config.AegiscoreHome() output via env so each
 // test owns its own ack-file directory.
 func withTempHome(t *testing.T) string {
 	t.Helper()
 	dir := t.TempDir()
-	t.Setenv("DECEPTICON_HOME", dir)
+	t.Setenv("AEGISCORE_HOME", dir)
 	return dir
 }
 

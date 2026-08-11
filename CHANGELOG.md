@@ -57,7 +57,7 @@ LangGraph, sandbox) keeps the always-on contract.
   Predibase, Snowflake, local servers), and a no-API-key set for
   SigV4/ADC/signed providers (Bedrock, SageMaker, Vertex, OCI, …).
   `ALLOWED_DYNAMIC_PROVIDERS` derives from the union, so any
-  `DECEPTICON_LITELLM_MODELS=<provider>/<model>` slug from the catalog
+  `AEGISCORE_LITELLM_MODELS=<provider>/<model>` slug from the catalog
   routes with the correct credentials; unknown prefixes get a
   remediation message naming the supported-provider count. (#672)
 - **CVE-Bench harness (research-credibility track).** Adds
@@ -88,7 +88,7 @@ LangGraph, sandbox) keeps the always-on contract.
   `/web url` / alias `/dashboard`) from inside the terminal CLI.
   The CLI image ships with `docker-ce-cli` + `docker-compose-plugin`;
   the compose entry bind-mounts the host docker socket and the
-  operator's `$DECEPTICON_HOME` so the slash command shells out
+  operator's `$AEGISCORE_HOME` so the slash command shells out
   against the operator's compose project. OSS scope only — downstream
   bundles override these volumes via a separate compose overlay. (#625)
 - **One-shot upgrade migration** for the stale
@@ -313,7 +313,7 @@ are unchanged. All three Python packages release in lockstep.
   content, preventing the 4-block hard limit from being exceeded.
   (#402)
 - **OSS launcher UX** — de-duplicate `ctrl+o` hint; silence
-  `DECEPTICON_STACK_NAME` compose warning when the stack name is the
+  `AEGISCORE_STACK_NAME` compose warning when the stack name is the
   default. (#344)
 - **Sandbox zombie reaper** — replaced the in-process SIGCHLD handler
   (clobbered exit codes) with `tini` (`init: true` on the sandbox
@@ -382,7 +382,7 @@ additive or a fix.
   setup guide document the native path alongside WSL2. (#281)
 - **Podman + nerdctl container runtimes** — the launcher auto-detects
   docker → podman → nerdctl (first reachable wins) with a
-  `DECEPTICON_CONTAINER_RUNTIME` override; Podman socket discovery injects
+  `AEGISCORE_CONTAINER_RUNTIME` override; Podman socket discovery injects
   `DOCKER_HOST` so nested Docker-API consumers keep working. Docker users
   see zero behavioral change. (#292)
 - **Ghidra 12.1 reverse-engineering backend** — `aegiscore/tools/reversing/ghidra.py`
@@ -476,7 +476,7 @@ additive or a fix.
 - **Retired the dead docker-exec transport** — `_docker_tmux` → `_tmux`,
   `exec_prefix` defaults to `[]`; `HTTPSandbox` → in-container
   `DaemonSandbox` is the only path. (#289 review follow-up)
-- **`DECEPTICON_LLM__TIMEOUT`** default 120s → 600s for long Opus
+- **`AEGISCORE_LLM__TIMEOUT`** default 120s → 600s for long Opus
   generations. (#295)
 
 ### Dev infrastructure
@@ -564,14 +564,14 @@ preserve upstream contracts.
   and Web3 audits.
   ([`docker-compose.yml`](docker-compose.yml))
 
-- **Default `DECEPTICON_LLM__TIMEOUT`: `120` → `600` (10 min)** —
+- **Default `AEGISCORE_LLM__TIMEOUT`: `120` → `600` (10 min)** —
   with `max_tokens` bumped to 128K (fix above), long Opus generations
   with extended thinking + large tool_use payloads routinely exceed
   120s mid-stream. The langgraph httpx client aborted the connection
   while LiteLLM proxy kept streaming successfully (200 OK in proxy
   logs), surfacing in the CLI as `APITimeoutError: Request timed
   out`. Documented in `.env.example`; defaults pass through via the
-  `DECEPTICON_LLM__*` Pydantic settings.
+  `AEGISCORE_LLM__*` Pydantic settings.
   ([`.env.example`](.env.example))
 
 ### Compatibility
@@ -696,7 +696,7 @@ core/framework/sdk split design spec.
 
 The following legacy import paths keep working but emit a
 `DeprecationWarning` via `aegiscore.compat.register_legacy_imports()`
-(default-on; opt-out via `DECEPTICON_NO_COMPAT=1`). Shims removed at
+(default-on; opt-out via `AEGISCORE_NO_COMPAT=1`). Shims removed at
 **2.0.0**.
 
 | Legacy path | Canonical path |

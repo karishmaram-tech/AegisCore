@@ -112,17 +112,17 @@ interface UseAgentReturn {
 // and the next operator message starts a fresh thread on that assistant —
 // no CLI restart needed.
 const INITIAL_ASSISTANT_ID =
-  process.env.DECEPTICON_ASSISTANT_ID || "aegiscore";
+  process.env.AEGISCORE_ASSISTANT_ID || "aegiscore";
 let _nextEventId = 0;
 
 
 export function useAgent({
-  apiUrl = process.env.DECEPTICON_API_URL || "http://localhost:2024",
+  apiUrl = process.env.AEGISCORE_API_URL || "http://localhost:2024",
   resumeThread = false,
 }: UseAgentOptions = {}): UseAgentReturn {
   const clientRef = useRef(new Client({ apiUrl }));
   // Thread ID priority: env var (from web terminal) > --resume flag > new thread
-  const envThreadId = process.env.DECEPTICON_THREAD_ID || null;
+  const envThreadId = process.env.AEGISCORE_THREAD_ID || null;
   const threadIdRef = useRef<string | null>(envThreadId ?? null);
   const resumeInitialized = useRef(false);
   const eventsRef = useRef<AgentEvent[]>([]);
@@ -766,11 +766,11 @@ export function useAgent({
         };
 
         const configurable: Record<string, unknown> = {};
-        const slug = process.env.DECEPTICON_ENGAGEMENT;
+        const slug = process.env.AEGISCORE_ENGAGEMENT;
         if (slug) {
           configurable.engagement_name = slug;
           configurable.workspace_path =
-            process.env.DECEPTICON_WORKSPACE_PATH ?? "/workspace";
+            process.env.AEGISCORE_WORKSPACE_PATH ?? "/workspace";
         }
         const modelOverride = getModelOverride();
         if (modelOverride) {

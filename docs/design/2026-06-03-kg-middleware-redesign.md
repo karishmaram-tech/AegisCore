@@ -6,7 +6,7 @@
 - **Related schema:** [`docs/design/attack-graph-schema.md`](../../design/attack-graph-schema.md) (node labels + relationships — unchanged by this spec)
 - **Prep work (already landed on this branch):** narrow KG tool surface to analyst + AD/Contract specialists; move engagement scope helper to `aegiscore_core.utils`
 - **Branch:** continue on `chore/kg-removal-1-engagement-scope-evacuation` (suggest rename to `refactor/kg-narrow-and-research` before push) — implementation work will land on a follow-up branch `feat/kg-middleware`
-- **Audience:** an engineering session that opens `/home/catow/GIT/decepticon_new/` *with no prior context* and is asked "execute this spec." Self-contained on purpose.
+- **Audience:** an engineering session that opens `/home/catow/GIT/aegiscore_new/` *with no prior context* and is asked "execute this spec." Self-contained on purpose.
 
 ---
 

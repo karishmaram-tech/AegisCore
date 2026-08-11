@@ -48,7 +48,7 @@ describe("scanTierC — clean Tier-A content passes", () => {
     { type: "finding.created", ts: 1, cwe: ["CWE-89"], cve: ["CVE-2021-44228"] },
     { type: "agent.turn", ts: 1, agent: "recon", mitre_techniques: ["T1046"] },
     { type: "llm.response", ts: 1, tokens: 1234, cost_usd: 0.0012 },
-    { decepticon_version: "1.1.13", os: "linux", arch: "x86_64", py: "3.13" },
+    { aegiscore_version: "1.1.13", os: "linux", arch: "x86_64", py: "3.13" },
   ];
   for (const c of CLEAN) {
     it(`passes ${JSON.stringify(c).slice(0, 50)}`, () => {

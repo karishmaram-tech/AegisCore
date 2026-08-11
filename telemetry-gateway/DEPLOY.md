@@ -45,13 +45,13 @@ curl -s "$URL/"            # -> {"service":"aegiscore-telemetry-gateway","ok":tr
 # a clean masked event is accepted (202) and lands in PostHog
 curl -s -o /dev/null -w '%{http_code}\n' -X POST "$URL/v1/telemetry" \
   -H 'content-type: application/json' \
-  -d '{"schema_version":"1.0","tier":"A","install_id":"00000000-0000-4000-8000-000000000000","client":{"decepticon_version":"0.0.0","os":"linux"},"events":[{"type":"tool.call","ts":1,"tool":"nmap"}]}'
+  -d '{"schema_version":"1.0","tier":"A","install_id":"00000000-0000-4000-8000-000000000000","client":{"aegiscore_version":"0.0.0","os":"linux"},"events":[{"type":"tool.call","ts":1,"tool":"nmap"}]}'
 # -> 202
 
 # a raw target IP is REJECTED (422) and never forwarded
 curl -s -o /dev/null -w '%{http_code}\n' -X POST "$URL/v1/telemetry" \
   -H 'content-type: application/json' \
-  -d '{"schema_version":"1.0","tier":"R","install_id":"00000000-0000-4000-8000-000000000000","client":{"decepticon_version":"0.0.0","os":"linux"},"events":[{"type":"trajectory.step","ts":1,"reasoning":"exploit 10.0.0.5"}]}'
+  -d '{"schema_version":"1.0","tier":"R","install_id":"00000000-0000-4000-8000-000000000000","client":{"aegiscore_version":"0.0.0","os":"linux"},"events":[{"type":"trajectory.step","ts":1,"reasoning":"exploit 10.0.0.5"}]}'
 # -> 422
 ```
 
@@ -63,10 +63,10 @@ Set the deployed URL as the default endpoint so the next release collects from
 opted-in users. In `clients/launcher/internal/config/env.example`:
 
 ```ini
-DECEPTICON_TELEMETRY_ENDPOINT=https://aegiscore-telemetry-gateway.<account>.workers.dev/v1/telemetry
+AEGISCORE_TELEMETRY_ENDPOINT=https://aegiscore-telemetry-gateway.<account>.workers.dev/v1/telemetry
 ```
 
-(Leave `DECEPTICON_TELEMETRY=off` — users opt in via the onboard wizard.) Commit,
+(Leave `AEGISCORE_TELEMETRY=off` — users opt in via the onboard wizard.) Commit,
 then tag the release as usual. From that release on, users who pick `basic` or
 `research` at onboard will send identifier-masked telemetry to your gateway.
 

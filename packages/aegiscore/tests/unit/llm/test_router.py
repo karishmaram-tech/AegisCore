@@ -22,7 +22,7 @@ class TestModelRouter:
         # recon is LOW; first method is anthropic_api → haiku.
         assert self.router.resolve("recon") == "anthropic/claude-haiku-4-5"
 
-    def test_resolve_decepticon_is_high_tier(self):
+    def test_resolve_aegiscore_is_high_tier(self):
         assert self.router.resolve("aegiscore") == "anthropic/claude-opus-4-8"
 
     def test_resolve_with_fallback_returns_chain(self):

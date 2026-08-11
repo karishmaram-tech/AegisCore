@@ -192,12 +192,12 @@ This downloads the `aegiscore` CLI binary for your platform and places it in you
 
 ### Using Podman instead of Docker
 
-Aegiscore detects Podman 4.4+ automatically. The launcher prefers Docker when both are available; set `DECEPTICON_CONTAINER_RUNTIME=podman` to force Podman:
+Aegiscore detects Podman 4.4+ automatically. The launcher prefers Docker when both are available; set `AEGISCORE_CONTAINER_RUNTIME=podman` to force Podman:
 
 ```bash
 # Linux (rootless Podman, recommended)
 systemctl --user enable --now podman.socket          # enable the API socket
-export DECEPTICON_CONTAINER_RUNTIME=podman           # force Podman selection
+export AEGISCORE_CONTAINER_RUNTIME=podman           # force Podman selection
 aegiscore start                                      # launcher detects + uses podman compose
 ```
 
@@ -213,7 +213,7 @@ Rootless Podman caveats:
 ### Using nerdctl
 
 ```bash
-export DECEPTICON_CONTAINER_RUNTIME=nerdctl
+export AEGISCORE_CONTAINER_RUNTIME=nerdctl
 aegiscore start
 ```
 
@@ -225,7 +225,7 @@ Requires nerdctl ≥ 0.16 (built-in compose) and a running containerd (`containe
 — launcher onboard wizard, engagement picker, compose up, health checks,
 and the CLI all execute exactly as the `curl | bash` install path. The
 launcher and every service image come from the current checkout (tag
-`:dev`), with an isolated `$DECEPTICON_HOME` under `.dogfood/` so your
+`:dev`), with an isolated `$AEGISCORE_HOME` under `.dogfood/` so your
 real `~/.aegiscore` is untouched.
 
 ```bash
@@ -260,7 +260,7 @@ aegiscore onboard
 Or edit `~/.aegiscore/.env` directly:
 
 ```bash
-DECEPTICON_AUTH_PRIORITY=anthropic_api,openai_api
+AEGISCORE_AUTH_PRIORITY=anthropic_api,openai_api
 ANTHROPIC_API_KEY=sk-ant-api03-...
 OPENAI_API_KEY=sk-proj-...
 ```
@@ -327,7 +327,7 @@ default fallback chain; pick a specific route at runtime with `/model`
 
 > Cloudflare's base URL is per-account — set it to your gateway's
 > OpenAI-compat `…/compat` path. Qianfan model ids drift; override per
-> role with `DECEPTICON_MODEL_<ROLE>` if a default 404s.
+> role with `AEGISCORE_MODEL_<ROLE>` if a default 404s.
 
 ---
 
@@ -388,7 +388,7 @@ billing, no key.
 - The `ollama_local` AuthMethod collapses HIGH/MID/LOW tiers to the
   same model — local hardware can't usually run three different models
   in parallel. Mix with cloud providers if you want tier degradation:
-  set `DECEPTICON_AUTH_PRIORITY=ollama_local,anthropic_api` to lead
+  set `AEGISCORE_AUTH_PRIORITY=ollama_local,anthropic_api` to lead
   with local and fall back to Anthropic on local-side errors.
 
 **Per-role overrides:**
@@ -397,8 +397,8 @@ If you do have the GPU headroom, override individual agents to
 different Ollama models without touching yaml:
 
 ```bash
-DECEPTICON_MODEL_DECEPTICON=ollama_chat/qwen3-coder:30b   # HIGH agents
-DECEPTICON_MODEL_RECON=ollama_chat/llama3.2:3b             # LOW agents
+AEGISCORE_MODEL_AEGISCORE=ollama_chat/qwen3-coder:30b   # HIGH agents
+AEGISCORE_MODEL_RECON=ollama_chat/llama3.2:3b             # LOW agents
 ```
 
 The dynamic config registrar picks these up at startup.
@@ -449,9 +449,9 @@ aegiscore onboard
 Or edit `~/.aegiscore/.env`:
 
 ```bash
-DECEPTICON_AUTH_PRIORITY=anthropic_oauth,anthropic_api
-DECEPTICON_AUTH_CLAUDE_CODE=true
-DECEPTICON_MODEL_PROFILE=eco
+AEGISCORE_AUTH_PRIORITY=anthropic_oauth,anthropic_api
+AEGISCORE_AUTH_CLAUDE_CODE=true
+AEGISCORE_MODEL_PROFILE=eco
 ```
 
 4. Launch:
@@ -508,7 +508,7 @@ aegiscore onboard
 Or edit `~/.aegiscore/.env`:
 
 ```bash
-DECEPTICON_AUTH_CHATGPT=true
+AEGISCORE_AUTH_CHATGPT=true
 ```
 
 2. Launch:
@@ -523,7 +523,7 @@ aegiscore
   and `auth/gpt-5.4`.
 - LiteLLM dynamic config maps those aliases through Aegiscore's custom
   `auth/` handler (`codex_chatgpt_handler`) only when
-  `DECEPTICON_AUTH_CHATGPT=true`.
+  `AEGISCORE_AUTH_CHATGPT=true`.
 - `docker-compose.yml` mounts the host's Codex CLI credential file
   (`~/.codex/auth.json`) into the LiteLLM container at
   `/root/.codex/auth.json` (read-write, so the in-container refresh path
@@ -554,7 +554,7 @@ Use your Google One AI Premium subscription ($20/mo).
 2. Configure:
 
 ```bash
-DECEPTICON_AUTH_GEMINI=true
+AEGISCORE_AUTH_GEMINI=true
 GEMINI_ACCESS_TOKEN=<your-google-oauth-token>
 ```
 
@@ -577,7 +577,7 @@ Use your Copilot Pro subscription ($20/mo) for GPT-4o/o1 access.
 2. Configure:
 
 ```bash
-DECEPTICON_AUTH_COPILOT=true
+AEGISCORE_AUTH_COPILOT=true
 COPILOT_ACCESS_TOKEN=eyJ...your-ms-token
 ```
 
@@ -601,7 +601,7 @@ Use your X Premium+ subscription for Grok-3 access.
 2. Configure:
 
 ```bash
-DECEPTICON_AUTH_GROK=true
+AEGISCORE_AUTH_GROK=true
 GROK_SESSION_TOKEN=your-x-auth-token
 ```
 
@@ -619,7 +619,7 @@ Use your Perplexity Pro subscription ($20/mo) for Sonar Pro access.
 2. Configure:
 
 ```bash
-DECEPTICON_AUTH_PERPLEXITY=true
+AEGISCORE_AUTH_PERPLEXITY=true
 PERPLEXITY_SESSION_TOKEN=your-session-token
 ```
 
@@ -663,12 +663,12 @@ Complete list of all supported LLM providers and their pre-configured models:
 
 **Adding models not in the static config:**
 
-Set `DECEPTICON_MODEL` or `DECEPTICON_LITELLM_MODELS` and Aegiscore auto-generates the LiteLLM route at container startup:
+Set `AEGISCORE_MODEL` or `AEGISCORE_LITELLM_MODELS` and Aegiscore auto-generates the LiteLLM route at container startup:
 
 ```bash
-DECEPTICON_MODEL_PROFILE=custom
-DECEPTICON_MODEL=openrouter/anthropic/claude-3.7-sonnet
-DECEPTICON_LITELLM_MODELS=groq/llama-3.3-70b-versatile,together/deepseek-ai/DeepSeek-R1
+AEGISCORE_MODEL_PROFILE=custom
+AEGISCORE_MODEL=openrouter/anthropic/claude-3.7-sonnet
+AEGISCORE_LITELLM_MODELS=groq/llama-3.3-70b-versatile,together/deepseek-ai/DeepSeek-R1
 ```
 
 ---
@@ -680,20 +680,20 @@ DECEPTICON_LITELLM_MODELS=groq/llama-3.3-70b-versatile,together/deepseek-ai/Deep
 | `eco` | Production engagements — balanced mix | $$ |
 | `max` | High-value targets — Opus everywhere | $$$$ |
 | `test` | Development and CI — Haiku only | $ |
-| `custom` | Bring your own model via `DECEPTICON_MODEL` | Varies |
+| `custom` | Bring your own model via `AEGISCORE_MODEL` | Varies |
 
 Set in `~/.aegiscore/.env`:
 
 ```bash
-DECEPTICON_MODEL_PROFILE=eco
+AEGISCORE_MODEL_PROFILE=eco
 ```
 
 Per-role overrides (any profile):
 
 ```bash
-DECEPTICON_MODEL_RECON=ollama_chat/qwen3-coder:30b
-DECEPTICON_MODEL_EXPLOIT=anthropic/claude-opus-4-7
-DECEPTICON_MODEL_EXPLOIT_TEMPERATURE=0.2
+AEGISCORE_MODEL_RECON=ollama_chat/qwen3-coder:30b
+AEGISCORE_MODEL_EXPLOIT=anthropic/claude-opus-4-7
+AEGISCORE_MODEL_EXPLOIT_TEMPERATURE=0.2
 ```
 
 See [Models](models.md) for the full role-to-model mapping.
@@ -941,7 +941,7 @@ aegiscore           # Shows engagement picker → select existing
 
 ```bash
 aegiscore stop
-# Edit ~/.aegiscore/.env → change DECEPTICON_AUTH_PRIORITY, DECEPTICON_AUTH_* toggles, or API keys
+# Edit ~/.aegiscore/.env → change AEGISCORE_AUTH_PRIORITY, AEGISCORE_AUTH_* toggles, or API keys
 aegiscore
 ```
 
@@ -978,11 +978,11 @@ GEMINI_API_KEY=AIza...
 
 ### Hybrid Auth (OAuth + API Keys)
 
-Set `DECEPTICON_AUTH_CLAUDE_CODE=true` to route Anthropic models through Claude Code OAuth while keeping API-key fallbacks active. The `DECEPTICON_AUTH_PRIORITY` list controls order:
+Set `AEGISCORE_AUTH_CLAUDE_CODE=true` to route Anthropic models through Claude Code OAuth while keeping API-key fallbacks active. The `AEGISCORE_AUTH_PRIORITY` list controls order:
 
 ```bash
-DECEPTICON_AUTH_PRIORITY=anthropic_oauth,anthropic_api,openai_api,google_api
-DECEPTICON_AUTH_CLAUDE_CODE=true      # Primary: Claude via OAuth (auth/* in LiteLLM)
+AEGISCORE_AUTH_PRIORITY=anthropic_oauth,anthropic_api,openai_api,google_api
+AEGISCORE_AUTH_CLAUDE_CODE=true      # Primary: Claude via OAuth (auth/* in LiteLLM)
 ANTHROPIC_API_KEY=sk-ant-...          # Fallback: Anthropic API
 OPENAI_API_KEY=sk-proj-...            # Fallback: GPT via API key
 GEMINI_API_KEY=AIza...                # Fallback: Gemini via API key
@@ -1008,7 +1008,7 @@ WEB_PORT=3000         # Dashboard
 ### Debug Mode
 
 ```bash
-DECEPTICON_DEBUG=true
+AEGISCORE_DEBUG=true
 ```
 
 ---

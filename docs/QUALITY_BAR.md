@@ -405,7 +405,7 @@ The complement of the banned list. The reviewer is looking for these:
 - **Every public function has explicit type annotations**, including
   return type. `-> None` when nothing is returned.
 - **Every exception raised is a named class** that subclasses a
-  Aegiscore base error (`DecepticonError` or a domain-specific child).
+  Aegiscore base error (`AegiscoreError` or a domain-specific child).
 - **Every fix PR's branch has a failing-test commit followed by a
   passing-test commit.** Don't squash locally; the maintainer wants
   to see the bug reproduced. CI will squash on merge.

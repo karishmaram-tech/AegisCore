@@ -117,13 +117,13 @@ def test_resolve_bundle_unknown_raises_404() -> None:
     assert "unknown bundle" in str(exc.value.detail)
 
 
-# ── GET /_decepticon/bundles ─────────────────────────────────────────────
+# ── GET /_aegiscore/bundles ─────────────────────────────────────────────
 
 
 def test_list_bundles_all_registered_reports_enabled_true() -> None:
     all_graph_ids = {gid for graphs in _BUNDLE_TO_GRAPHS.values() for gid in graphs}
     with patch.object(plugins_api, "_registered_graph_ids", return_value=all_graph_ids):
-        resp = client.get("/_decepticon/bundles")
+        resp = client.get("/_aegiscore/bundles")
     assert resp.status_code == 200
     bundles = {b["name"]: b for b in resp.json()["bundles"]}
     assert set(bundles) == set(_BUNDLE_TO_GRAPHS)
@@ -137,7 +137,7 @@ def test_list_bundles_partial_registration_reports_enabled_false() -> None:
     # must report enabled=False.
     plugin_graphs = list(_BUNDLE_TO_GRAPHS["plugins"])
     with patch.object(plugins_api, "_registered_graph_ids", return_value={plugin_graphs[0]}):
-        resp = client.get("/_decepticon/bundles")
+        resp = client.get("/_aegiscore/bundles")
     assert resp.status_code == 200
     bundles = {b["name"]: b for b in resp.json()["bundles"]}
     assert bundles["plugins"]["enabled"] is False
@@ -145,13 +145,13 @@ def test_list_bundles_partial_registration_reports_enabled_false() -> None:
 
 def test_list_bundles_nothing_registered_reports_enabled_false() -> None:
     with patch.object(plugins_api, "_registered_graph_ids", return_value=set()):
-        resp = client.get("/_decepticon/bundles")
+        resp = client.get("/_aegiscore/bundles")
     assert resp.status_code == 200
     for bundle in resp.json()["bundles"]:
         assert bundle["enabled"] is False
 
 
-# ── POST /_decepticon/bundles/{name}/enable ──────────────────────────────
+# ── POST /_aegiscore/bundles/{name}/enable ──────────────────────────────
 
 
 def test_enable_bundle_registers_every_graph(_clean_lg_modules: None) -> None:
@@ -159,7 +159,7 @@ def test_enable_bundle_registers_every_graph(_clean_lg_modules: None) -> None:
     _install_graph_module({}, register_calls)
     sentinel = object()
     with patch.object(plugins_api, "_load_graph", return_value=sentinel):
-        resp = client.post("/_decepticon/bundles/plugins/enable")
+        resp = client.post("/_aegiscore/bundles/plugins/enable")
     assert resp.status_code == 200
     body = resp.json()
     expected = list(_BUNDLE_TO_GRAPHS["plugins"])
@@ -181,7 +181,7 @@ def test_enable_bundle_skips_already_registered_graphs(
     # not re-registered.
     _install_graph_module({already: object()}, register_calls)
     with patch.object(plugins_api, "_load_graph", return_value=object()):
-        resp = client.post("/_decepticon/bundles/plugins/enable")
+        resp = client.post("/_aegiscore/bundles/plugins/enable")
     assert resp.status_code == 200
     body = resp.json()
     assert body["skipped"] == [already]
@@ -191,7 +191,7 @@ def test_enable_bundle_skips_already_registered_graphs(
 
 def test_enable_bundle_unknown_name_is_404(_clean_lg_modules: None) -> None:
     _install_graph_module({}, [])
-    resp = client.post("/_decepticon/bundles/does-not-exist/enable")
+    resp = client.post("/_aegiscore/bundles/does-not-exist/enable")
     assert resp.status_code == 404
     assert "unknown bundle" in resp.json()["detail"]
 
@@ -208,27 +208,27 @@ def test_enable_bundle_register_graph_failure_is_500(
     sys.modules["langgraph_api.graph"] = mod
 
     with patch.object(plugins_api, "_load_graph", return_value=object()):
-        resp = client.post("/_decepticon/bundles/plugins/enable")
+        resp = client.post("/_aegiscore/bundles/plugins/enable")
     assert resp.status_code == 500
     detail = resp.json()["detail"]
     assert "register_graph" in detail
     assert "registry exploded" in detail
 
 
-# ── POST /_decepticon/bundles/{name}/disable ─────────────────────────────
+# ── POST /_aegiscore/bundles/{name}/disable ─────────────────────────────
 
 
 def test_disable_bundle_standard_is_400_before_any_import() -> None:
     # The 'standard' guard runs before the lazy langgraph imports, so this
     # needs no stubbing at all.
-    resp = client.post("/_decepticon/bundles/standard/disable")
+    resp = client.post("/_aegiscore/bundles/standard/disable")
     assert resp.status_code == 400
     assert "cannot be disabled" in resp.json()["detail"]
 
 
 def test_disable_bundle_unknown_name_is_404(_clean_lg_modules: None) -> None:
     _install_disable_stubs(graphs={}, deleted=[])
-    resp = client.post("/_decepticon/bundles/does-not-exist/disable")
+    resp = client.post("/_aegiscore/bundles/does-not-exist/disable")
     assert resp.status_code == 404
     assert "unknown bundle" in resp.json()["detail"]
 
@@ -314,7 +314,7 @@ def test_disable_bundle_happy_path_removes_graphs(
     deleted: list[Any] = []
     _install_disable_stubs(graphs=live_graphs, deleted=deleted)
 
-    resp = client.post("/_decepticon/bundles/plugins/disable")
+    resp = client.post("/_aegiscore/bundles/plugins/disable")
     assert resp.status_code == 200
     body = resp.json()
     assert body["bundle"] == "plugins"
@@ -335,7 +335,7 @@ def test_disable_bundle_skips_graphs_not_registered(
     deleted: list[Any] = []
     _install_disable_stubs(graphs=live_graphs, deleted=deleted)
 
-    resp = client.post("/_decepticon/bundles/plugins/disable")
+    resp = client.post("/_aegiscore/bundles/plugins/disable")
     assert resp.status_code == 200
     body = resp.json()
     assert body["graphs"] == [plugin_graphs[0]]
@@ -352,7 +352,7 @@ def test_disable_bundle_uses_grpc_assistants_when_postgres(
     deleted: list[Any] = []
     _install_disable_stubs(graphs=live_graphs, deleted=deleted, postgres=True)
 
-    resp = client.post("/_decepticon/bundles/plugins/disable")
+    resp = client.post("/_aegiscore/bundles/plugins/disable")
     assert resp.status_code == 200
     assert resp.json()["graphs"] == plugin_graphs
     assert len(deleted) == len(plugin_graphs)
@@ -370,7 +370,7 @@ def test_disable_bundle_swallows_assistants_delete_failure(
     deleted: list[Any] = []
     _install_disable_stubs(graphs=live_graphs, deleted=deleted, delete_raises=True)
 
-    resp = client.post("/_decepticon/bundles/plugins/disable")
+    resp = client.post("/_aegiscore/bundles/plugins/disable")
     assert resp.status_code == 200
     body = resp.json()
     # Graphs still reported removed despite the delete failure.

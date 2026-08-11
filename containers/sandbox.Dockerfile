@@ -245,7 +245,7 @@ RUN cd /opt/aegiscore/sandbox_web/templates \
 # env var and short-circuits the RoleRegistry + PluginRegistry setup
 # so the sandbox process can ``python -m aegiscore.sandbox_server``
 # without importing aegiscore-core (which isn't installed here).
-ENV DECEPTICON_SKIP_BOOT=1
+ENV AEGISCORE_SKIP_BOOT=1
 
 # Working directory for the agent's virtual filesystem.
 # Runs as root — security boundary is the container, not the user.

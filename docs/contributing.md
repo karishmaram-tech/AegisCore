@@ -93,9 +93,9 @@ Aegiscore defaults to the lean `standard` bundle. To activate additional
 bundles (e.g. the `plugins` bundle that ships `vulnresearch`), use the
 4-tier hierarchy (highest precedence wins):
 
-1. **`DECEPTICON_PLUGINS` env var** — runtime override:
+1. **`AEGISCORE_PLUGINS` env var** — runtime override:
    ```bash
-   DECEPTICON_PLUGINS=standard,plugins langgraph dev   # or "*" for all
+   AEGISCORE_PLUGINS=standard,plugins langgraph dev   # or "*" for all
    ```
 2. **`.aegiscore.toml` in CWD** — per-checkout opt-in:
    ```toml
@@ -114,7 +114,7 @@ The OSS repo itself ships with both bundles enabled via the project-level
 End-user installs that just `pip install aegiscore` get the lean
 `standard`-only default (neo4j and other heavy features are opt-in extras,
 e.g. `aegiscore[neo4j]`). Downstream Docker images override via
-`ENV DECEPTICON_PLUGINS=standard,vendor` to activate their own bundle.
+`ENV AEGISCORE_PLUGINS=standard,vendor` to activate their own bundle.
 
 The OSS-shipped `langgraph.json` matches the lean default — it only
 lists the 10 `standard` graphs. To expose plugin graphs to LangGraph

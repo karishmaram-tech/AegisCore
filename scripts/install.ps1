@@ -1,23 +1,23 @@
 # ─────────────────────────────────────────────────────────────────────
-# Decepticon — Windows installer (PowerShell)
+# Aegiscore — Windows installer (PowerShell)
 #
 # The Windows-native counterpart of scripts/install.sh. Windows 10/11 ship
 # Windows PowerShell 5.1; this script also runs unchanged under PowerShell 7+.
 #
 # Usage:
-#   irm https://decepticon.red/install.ps1 | iex
+#   irm https://aegiscore.red/install.ps1 | iex
 #
 # Environment variables:
-#   DECEPTICON_VERSION   — install a specific version (default: latest)
-#   DECEPTICON_HOME      — install directory (default: %USERPROFILE%\.decepticon)
+#   AEGISCORE_VERSION   — install a specific version (default: latest)
+#   AEGISCORE_HOME      — install directory (default: %USERPROFILE%\.aegiscore)
 #   SKIP_PULL            — set to "true" to skip the Docker image pull
-#   DECEPTICON_SKIP_VERIFY — set to "1" to opt out of checksum verification
+#   AEGISCORE_SKIP_VERIFY — set to "1" to opt out of checksum verification
 # ─────────────────────────────────────────────────────────────────────
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-$Repo        = 'PurpleAILAB/Decepticon'
+$Repo        = 'PurpleAILAB/Aegiscore'
 $Branch      = if ($env:BRANCH) { $env:BRANCH } else { 'main' }
 $RawBase     = "https://raw.githubusercontent.com/$Repo/$Branch"
 $ReleaseBase = "https://github.com/$Repo/releases/download"
@@ -64,15 +64,15 @@ function Get-Arch {
 
 # ── Version resolution ───────────────────────────────────────────────
 function Resolve-Version {
-    if ($env:DECEPTICON_VERSION) { return $env:DECEPTICON_VERSION }
+    if ($env:AEGISCORE_VERSION) { return $env:AEGISCORE_VERSION }
     Write-Info 'Fetching latest version...'
     try {
         $rel = Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/releases/latest" `
-            -Headers @{ 'User-Agent' = 'decepticon-installer' }
+            -Headers @{ 'User-Agent' = 'aegiscore-installer' }
         return ($rel.tag_name -replace '^v', '')
     } catch {
         Write-Err 'Could not resolve a release version automatically.'
-        Write-Err "Set DECEPTICON_VERSION explicitly from https://github.com/$Repo/releases"
+        Write-Err "Set AEGISCORE_VERSION explicitly from https://github.com/$Repo/releases"
         exit 1
     }
 }
@@ -84,8 +84,8 @@ function Assert-Sha256 {
     param($Path, $Expected, $Label)
     if (-not $Expected) {
         Write-Err "Integrity check failed: no checksum recorded for $Label."
-        if ($env:DECEPTICON_SKIP_VERIFY -eq '1') {
-            Write-Warn '  -> skipping verification (DECEPTICON_SKIP_VERIFY=1).'
+        if ($env:AEGISCORE_SKIP_VERIFY -eq '1') {
+            Write-Warn '  -> skipping verification (AEGISCORE_SKIP_VERIFY=1).'
             return
         }
         exit 1
@@ -102,7 +102,7 @@ function Assert-Sha256 {
 # ── Main ─────────────────────────────────────────────────────────────
 function Main {
     Write-Host ''
-    Write-Host 'Decepticon' -ForegroundColor White -NoNewline
+    Write-Host 'Aegiscore' -ForegroundColor White -NoNewline
     Write-Host ' - Windows Installer'
     Write-Host ''
 
@@ -110,10 +110,10 @@ function Main {
 
     $version    = Resolve-Version
     $arch       = Get-Arch
-    $installDir = if ($env:DECEPTICON_HOME) { $env:DECEPTICON_HOME } else { Join-Path $env:USERPROFILE '.decepticon' }
+    $installDir = if ($env:AEGISCORE_HOME) { $env:AEGISCORE_HOME } else { Join-Path $env:USERPROFILE '.aegiscore' }
     $binDir     = Join-Path $installDir 'bin'
 
-    Write-Info "Installing Decepticon $version  (windows/$arch)"
+    Write-Info "Installing Aegiscore $version  (windows/$arch)"
     Write-Info "Directory: $installDir"
     Write-Host ''
 
@@ -127,13 +127,13 @@ function Main {
     Invoke-WebRequest -Uri "$rawBase/config/litellm.yaml" -OutFile (Join-Path $installDir 'config\litellm.yaml')
 
     # Verify config files against the release-pinned manifest.
-    if ($env:DECEPTICON_SKIP_VERIFY -ne '1') {
+    if ($env:AEGISCORE_SKIP_VERIFY -ne '1') {
         $manifestPath = Join-Path $installDir '.config-checksums.txt'
         try {
             Invoke-WebRequest -Uri "$ReleaseBase/v$version/config-checksums.txt" -OutFile $manifestPath
         } catch {
             Write-Err "Failed to download config-checksums.txt for v$version (pre-1.0.27 release?)."
-            Write-Err 'Install a newer release or set DECEPTICON_SKIP_VERIFY=1 to opt out.'
+            Write-Err 'Install a newer release or set AEGISCORE_SKIP_VERIFY=1 to opt out.'
             exit 1
         }
         Write-Info 'Verifying configuration files against release manifest...'
@@ -149,8 +149,8 @@ function Main {
     Write-Success 'Configuration files downloaded.'
 
     # ── Launcher binary ──────────────────────────────────────────────
-    $binaryName = "decepticon-windows-$arch.exe"
-    $binaryPath = Join-Path $binDir 'decepticon.exe'
+    $binaryName = "aegiscore-windows-$arch.exe"
+    $binaryPath = Join-Path $binDir 'aegiscore.exe'
     Write-Info "Downloading launcher binary ($binaryName)..."
     try {
         Invoke-WebRequest -Uri "$ReleaseBase/v$version/$binaryName" -OutFile $binaryPath
@@ -158,8 +158,8 @@ function Main {
         Write-Err "No launcher binary for windows/$arch in v$version."
         exit 1
     }
-    if ($env:DECEPTICON_SKIP_VERIFY -ne '1') {
-        $sumsPath = Join-Path $env:TEMP 'decepticon-checksums.txt'
+    if ($env:AEGISCORE_SKIP_VERIFY -ne '1') {
+        $sumsPath = Join-Path $env:TEMP 'aegiscore-checksums.txt'
         try {
             Invoke-WebRequest -Uri "$ReleaseBase/v$version/checksums.txt" -OutFile $sumsPath
             $expected = $null
@@ -170,7 +170,7 @@ function Main {
             Remove-Item $sumsPath -ErrorAction SilentlyContinue
             Assert-Sha256 $binaryPath $expected $binaryName
         } catch {
-            Write-Err 'Failed to verify launcher binary; set DECEPTICON_SKIP_VERIFY=1 to opt out.'
+            Write-Err 'Failed to verify launcher binary; set AEGISCORE_SKIP_VERIFY=1 to opt out.'
             exit 1
         }
     }
@@ -191,19 +191,19 @@ function Main {
         Write-Host ''
         Write-Info 'Pulling Docker images (this may take a few minutes)...'
         Push-Location $installDir
-        $env:DECEPTICON_VERSION = $version
-        $env:DECEPTICON_HOME    = $installDir
-        try { docker compose --profile cli pull } catch { Write-Warn 'Warning: failed to pull some images - run "decepticon update" later.' }
+        $env:AEGISCORE_VERSION = $version
+        $env:AEGISCORE_HOME    = $installDir
+        try { docker compose --profile cli pull } catch { Write-Warn 'Warning: failed to pull some images - run "aegiscore update" later.' }
         Pop-Location
     }
 
     Write-Host ''
     Write-Success '─────────────────────────────────────────────'
-    Write-Success '  Decepticon installed successfully!'
+    Write-Success '  Aegiscore installed successfully!'
     Write-Success '─────────────────────────────────────────────'
     Write-Host ''
-    Write-Host '  1. Configure your API keys:  ' -NoNewline; Write-Host 'decepticon onboard' -ForegroundColor White
-    Write-Host '  2. Start Decepticon:         ' -NoNewline; Write-Host 'decepticon' -ForegroundColor White
+    Write-Host '  1. Configure your API keys:  ' -NoNewline; Write-Host 'aegiscore onboard' -ForegroundColor White
+    Write-Host '  2. Start Aegiscore:         ' -NoNewline; Write-Host 'aegiscore' -ForegroundColor White
     Write-Host ''
     Write-Info '  Open a new terminal so the updated PATH takes effect.'
     Write-Host ''

@@ -6,7 +6,7 @@
  * 5 specialists) but is off by default. /plugins lets the operator
  * toggle bundles without restarting the langgraph container — the
  * langgraph platform exposes a custom HTTP surface under
- * ``/_decepticon/bundles`` that calls ``register_graph()`` at runtime.
+ * ``/_aegiscore/bundles`` that calls ``register_graph()`` at runtime.
  *
  * Usage:
  *   /plugins                  Show every bundle + enabled state
@@ -18,7 +18,7 @@
  *
  * Persistence: runtime-only. Bundles activated here do NOT survive a
  * ``aegiscore restart``. To make a selection permanent, set
- * ``DECEPTICON_PLUGINS=standard,plugins`` in ``~/.aegiscore/.env``.
+ * ``AEGISCORE_PLUGINS=standard,plugins`` in ``~/.aegiscore/.env``.
  */
 
 import type { Command } from "./types.js";
@@ -41,7 +41,7 @@ interface ToggleResponse {
 }
 
 function apiBase(): string {
-  return process.env.DECEPTICON_API_URL || "http://localhost:2024";
+  return process.env.AEGISCORE_API_URL || "http://localhost:2024";
 }
 
 function formatList(data: ListResponse): string {
@@ -62,7 +62,7 @@ function formatList(data: ListResponse): string {
   lines.push(
     "Activations are runtime-only. To persist across `aegiscore restart`,",
   );
-  lines.push("set DECEPTICON_PLUGINS in ~/.aegiscore/.env (e.g. standard,plugins).");
+  lines.push("set AEGISCORE_PLUGINS in ~/.aegiscore/.env (e.g. standard,plugins).");
   return lines.join("\n");
 }
 
@@ -95,7 +95,7 @@ const plugins: Command = {
     if (!sub) {
       void (async () => {
         try {
-          const data = await getJson<ListResponse>(`${apiBase()}/_decepticon/bundles`);
+          const data = await getJson<ListResponse>(`${apiBase()}/_aegiscore/bundles`);
           ctx.addSystemEvent(formatList(data));
         } catch (err) {
           ctx.addSystemEvent(
@@ -122,7 +122,7 @@ const plugins: Command = {
 
     void (async () => {
       try {
-        const url = `${apiBase()}/_decepticon/bundles/${encodeURIComponent(bundle)}/${sub}`;
+        const url = `${apiBase()}/_aegiscore/bundles/${encodeURIComponent(bundle)}/${sub}`;
         const data = await getJson<ToggleResponse>(url, { method: "POST" });
 
         const verb = sub === "enable" ? "enabled" : "disabled";

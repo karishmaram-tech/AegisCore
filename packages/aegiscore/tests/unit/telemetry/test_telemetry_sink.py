@@ -41,7 +41,7 @@ def test_enabled_sink_maps_and_ships() -> None:
     assert env["schema_version"] == "1.0"
     assert env["tier"] == "A"
     assert env["install_id"] == "1e9a73a6-c8bd-4e1e-be02-78f4b11de4e1"
-    assert env["client"] == {"decepticon_version": "1.1.13", "os": "linux"}
+    assert env["client"] == {"aegiscore_version": "1.1.13", "os": "linux"}
     types = [e["type"] for e in env["events"]]
     assert types == ["tool.call", "tool.result"]
     assert "args" not in env["events"][0]  # structure dropped

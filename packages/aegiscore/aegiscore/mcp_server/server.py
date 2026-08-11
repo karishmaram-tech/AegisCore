@@ -4,14 +4,14 @@ This is the seam that makes external agent runtimes (OpenClaw, Hermes, or any
 MCP client) able to *drive* Aegiscore like its CLI — from a phone, via those
 agents' chat channels. The full surface:
 
-- ``decepticon_list_graphs`` / ``decepticon_list_engagements`` — discover & resume
-- ``decepticon_start_engagement`` — launch an authorized engagement
-- ``decepticon_send_message`` — steer / answer / ``/model`` switch mid-run
-- ``decepticon_transcript`` — watch the orchestrator narrative incrementally
-- ``decepticon_watch`` — tail the live sub-agent stream for a few seconds
-- ``decepticon_engagement_state`` — inspect OPPLAN / scope / phase
-- ``decepticon_engagement_status`` / ``decepticon_engagement_findings`` — status & SARIF
-- ``decepticon_cancel_engagement`` — stop a run
+- ``aegiscore_list_graphs`` / ``aegiscore_list_engagements`` — discover & resume
+- ``aegiscore_start_engagement`` — launch an authorized engagement
+- ``aegiscore_send_message`` — steer / answer / ``/model`` switch mid-run
+- ``aegiscore_transcript`` — watch the orchestrator narrative incrementally
+- ``aegiscore_watch`` — tail the live sub-agent stream for a few seconds
+- ``aegiscore_engagement_state`` — inspect OPPLAN / scope / phase
+- ``aegiscore_engagement_status`` / ``aegiscore_engagement_findings`` — status & SARIF
+- ``aegiscore_cancel_engagement`` — stop a run
 
 The server is a thin control plane. The red-team work runs inside the
 Aegiscore LangGraph server (RoE enforcement, sandbox, knowledge-graph

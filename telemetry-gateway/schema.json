@@ -13,9 +13,9 @@
     "client": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["decepticon_version", "os"],
+      "required": ["aegiscore_version", "os"],
       "properties": {
-        "decepticon_version": { "type": "string", "maxLength": 32, "pattern": "^[0-9A-Za-z.+_-]+$" },
+        "aegiscore_version": { "type": "string", "maxLength": 32, "pattern": "^[0-9A-Za-z.+_-]+$" },
         "os": { "enum": ["linux", "darwin", "windows"] },
         "arch": { "type": "string", "maxLength": 64, "pattern": "^[a-z0-9][a-z0-9._-]*$" },
         "py": { "type": "string", "maxLength": 16, "pattern": "^\\d+\\.\\d+(\\.\\d+)?$" }

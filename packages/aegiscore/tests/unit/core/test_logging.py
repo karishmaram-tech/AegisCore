@@ -34,7 +34,7 @@ def _capture(level: str | int = "INFO", fmt: str = "text") -> io.StringIO:
 
 
 class TestGetLogger:
-    def test_namespaces_under_decepticon(self) -> None:
+    def test_namespaces_under_aegiscore(self) -> None:
         log = dlog.get_logger("auth.manager")
         assert log.name == "aegiscore.auth.manager"
 
@@ -119,8 +119,8 @@ class TestConfigureLogging:
         assert root.level == logging.WARNING
 
     def test_env_var_override(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        monkeypatch.setenv("DECEPTICON_LOG_FORMAT", "json")
-        monkeypatch.setenv("DECEPTICON_LOG_LEVEL", "DEBUG")
+        monkeypatch.setenv("AEGISCORE_LOG_FORMAT", "json")
+        monkeypatch.setenv("AEGISCORE_LOG_LEVEL", "DEBUG")
         dlog.configure_logging()
         root = logging.getLogger("aegiscore")
         assert root.level == logging.DEBUG

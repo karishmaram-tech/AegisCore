@@ -22,7 +22,7 @@ release series — see CHANGELOG):
 
 ```python
 from aegiscore.agents import (
-    create_decepticon_agent,
+    create_aegiscore_agent,
     create_soundwave_agent,
     create_recon_agent,
     # ... 16 factories total

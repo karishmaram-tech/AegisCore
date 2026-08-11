@@ -68,7 +68,7 @@ supported by `aegiscore onboard`):
 - `OPENROUTER_API_KEY`
 - `NVIDIA_API_KEY`
 
-Set `DECEPTICON_AUTH_PRIORITY` (also as an env var) to control fallback ordering.
+Set `AEGISCORE_AUTH_PRIORITY` (also as an env var) to control fallback ordering.
 
 ## PR comment integration
 

@@ -69,7 +69,7 @@ pvj
 """
 
 
-def ghidra_recon_script(binary: str, script_name: str = "decepticon_recon.py") -> str:
+def ghidra_recon_script(binary: str, script_name: str = "aegiscore_recon.py") -> str:
     """Return a Ghidra headless script body targeting ``binary``."""
     return _GHIDRA_RECON.replace("{binary}", binary).replace("{script_name}", script_name)
 

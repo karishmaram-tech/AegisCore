@@ -15,7 +15,7 @@ import pytest
 _MODULE_PATH = (
     Path(__file__).resolve().parents[3] / "aegiscore" / "agents" / "prompts" / "claude4_compat.py"
 )
-_spec = importlib.util.spec_from_file_location("decepticon_claude4_compat_under_test", _MODULE_PATH)
+_spec = importlib.util.spec_from_file_location("aegiscore_claude4_compat_under_test", _MODULE_PATH)
 assert _spec is not None and _spec.loader is not None
 _module = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_module)
@@ -127,6 +127,6 @@ class TestApplyClaude4Compat:
         assert once == twice
 
     def test_env_disable(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        monkeypatch.setenv("DECEPTICON_CLAUDE4_COMPAT", "0")
+        monkeypatch.setenv("AEGISCORE_CLAUDE4_COMPAT", "0")
         prompt = "Red Team Recon engagement."
         assert apply_claude4_compat(prompt, "claude-opus-4-7") == prompt

@@ -104,7 +104,7 @@ CORE_PUBLIC_API: tuple[tuple[str, str], ...] = (
     ("aegiscore_core.plugin_loader", "load_subagents_for_parent"),
     ("aegiscore_core.plugin_loader", "load_plugin_agents"),
     # aegiscore_core.utils
-    ("aegiscore_core.utils.config", "DecepticonConfig"),
+    ("aegiscore_core.utils.config", "AegiscoreConfig"),
     ("aegiscore_core.utils.config", "LLMConfig"),
     ("aegiscore_core.utils.config", "load_config"),
     ("aegiscore_core.utils.logging", "configure_logging"),

@@ -811,7 +811,7 @@ class TestScriptsExtended:
 
     def test_ghidra_script_default_script_name(self) -> None:
         src = ghidra_recon_script("/bin/ls")
-        assert "decepticon_recon.py" in src
+        assert "aegiscore_recon.py" in src
 
     def test_ghidra_script_has_function_iteration(self) -> None:
         src = ghidra_recon_script("/bin/ls")

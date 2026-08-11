@@ -58,7 +58,7 @@ The current production path is `aegiscore.middleware.skills.SkillsMiddleware`, a
 
 The catalog is **flat text**; the agent picks a skill by reading the catalog and matching keywords. Per-agent slicing (different specialists get different `sources`) cuts the catalog to ~20–40 skills per agent, but the routing decision remains opaque LLM keyword matching.
 
-A parallel `aegiscore.skillogy.*` package (added 2026-05-28 in `20d57603`) externalizes the catalog as a REST service backed by an in-memory dict. It is feature-flagged behind `DECEPTICON_USE_SKILLOGY=1` and currently sees no production traffic. The original gRPC half is unwired (`build_grpc_server` raises `RuntimeError`).
+A parallel `aegiscore.skillogy.*` package (added 2026-05-28 in `20d57603`) externalizes the catalog as a REST service backed by an in-memory dict. It is feature-flagged behind `AEGISCORE_USE_SKILLOGY=1` and currently sees no production traffic. The original gRPC half is unwired (`build_grpc_server` raises `RuntimeError`).
 
 ### 1.2 What hurts (user-confirmed, in priority order)
 
@@ -687,10 +687,10 @@ The injected system prompt (~300 tokens) carries:
 
 ### 5.11 Migration (Phase 1a)
 
-- New env flag: `DECEPTICON_SKILL_BACKEND ∈ {skills, skillogy_brain}` (default `skills`).
-- New env vars for the client side: `DECEPTICON_SKILLOGY_URL` (default `http://skillogy:9100`), `DECEPTICON_SKILLOGY_API_KEY` (optional). These are read by `SkillogyMiddleware.from_env()`.
+- New env flag: `AEGISCORE_SKILL_BACKEND ∈ {skills, skillogy_brain}` (default `skills`).
+- New env vars for the client side: `AEGISCORE_SKILLOGY_URL` (default `http://skillogy:9100`), `AEGISCORE_SKILLOGY_API_KEY` (optional). These are read by `SkillogyMiddleware.from_env()`.
 - Existing `SkillsMiddleware` is kept and continues to read SKILL.md files. After Phase 0 cleanup, both backends operate on the same canonical corpus.
-- The current `aegiscore.skillogy.*` REST/proto/client package is **rewritten in place**, not deleted. The wire surface (4 RPC methods + Bearer-token auth) is preserved; the storage backend swaps from in-memory dict to Neo4j; new RPCs (`Traverse`, `CypherRead`, `MocSummary`, `Schema`) are added. The `DECEPTICON_USE_SKILLOGY` flag is renamed `DECEPTICON_SKILL_BACKEND` for clarity but the legacy name accepts a compat shim for one minor cycle.
+- The current `aegiscore.skillogy.*` REST/proto/client package is **rewritten in place**, not deleted. The wire surface (4 RPC methods + Bearer-token auth) is preserved; the storage backend swaps from in-memory dict to Neo4j; new RPCs (`Traverse`, `CypherRead`, `MocSummary`, `Schema`) are added. The `AEGISCORE_USE_SKILLOGY` flag is renamed `AEGISCORE_SKILL_BACKEND` for clarity but the legacy name accepts a compat shim for one minor cycle.
 - Agent-by-agent rollout: specialists opt in to `skillogy_brain` one at a time. Benchmark per agent before moving the next.
 - A 50-case routing benchmark + token-cost comparison gates the global default flip.
 - After one release cycle on the new backend as default:
@@ -713,7 +713,7 @@ The injected system prompt (~300 tokens) carries:
 - **Read-only enforcement tests** (server-side): assert `run_cypher_read` / `cypher_read` RPC rejects `CREATE`, `MERGE`, `SET`, `DELETE`, `REMOVE`, `DETACH`, write-mode APOC calls, etc. via both Cypher-AST analysis and Neo4j session `default_access_mode=READ`.
 - **Client unit tests**: mock httpx + grpcio transports; assert request serialisation, retry, auth header propagation, error mapping back to `SkillogyClientError`.
 - **Middleware integration tests**: a fake `SkillogyClient` implementation; assert tool outputs match documented schema; workflow.md auto-load still fires.
-- **End-to-end smoke**: `make dogfood` with `DECEPTICON_SKILL_BACKEND=skillogy_brain`. The dogfood stack now boots the skillogy container alongside langgraph; assert one agent boots, calls `load_skill` over REST, and executes one tool call.
+- **End-to-end smoke**: `make dogfood` with `AEGISCORE_SKILL_BACKEND=skillogy_brain`. The dogfood stack now boots the skillogy container alongside langgraph; assert one agent boots, calls `load_skill` over REST, and executes one tool call.
 - **Routing benchmark**: 50-case set against current `SkillsMiddleware` baseline. Metrics: routing accuracy (skill picked matches gold), missed-skill rate, token cost per engagement, p95 wire latency for `load_skill` / `traverse` / `cypher_read`.
 
 ---
@@ -805,9 +805,9 @@ Out of scope for this design doc; tracked here only to confirm that the Phase 1a
 
 1. Phase 0 lands cleaned-up corpus + validator + canonical schema. **(DONE — PR #519 merged 2026-06-03.)**
 2. PR introduces `skillogy.builder` package, `skills/.graph/skills.cypher` artifact, CI build step that asserts the dump matches what's checked in.
-3. PR rewrites `aegiscore.skillogy.{proto,server,client}/` in place: storage swaps from in-memory dict to Neo4j; wire surface gains `Traverse` / `CypherRead` / `MocSummary` / `Schema` RPCs; Bearer-token auth preserved; container image now bakes the `skills.cypher` dump and connects to Neo4j on `aegiscore-net`. The `DECEPTICON_USE_SKILLOGY` env var is renamed `DECEPTICON_SKILL_BACKEND` with a one-cycle compat shim.
+3. PR rewrites `aegiscore.skillogy.{proto,server,client}/` in place: storage swaps from in-memory dict to Neo4j; wire surface gains `Traverse` / `CypherRead` / `MocSummary` / `Schema` RPCs; Bearer-token auth preserved; container image now bakes the `skills.cypher` dump and connects to Neo4j on `aegiscore-net`. The `AEGISCORE_USE_SKILLOGY` env var is renamed `AEGISCORE_SKILL_BACKEND` with a one-cycle compat shim.
 4. PR introduces the new `SkillogyMiddleware` as a thin REST/gRPC client of the rewritten skillogy service. Old `SkillsMiddleware` untouched in this step.
-5. Per-agent opt-in via `DECEPTICON_SKILL_BACKEND=skillogy_brain` (per-factory override). Aegiscore orchestrator stays on `skills` until specialists are validated one by one.
+5. Per-agent opt-in via `AEGISCORE_SKILL_BACKEND=skillogy_brain` (per-factory override). Aegiscore orchestrator stays on `skills` until specialists are validated one by one.
 6. 50-case routing benchmark + token-cost report on each opt-in.
 7. Once all 16 specialists pass: flip default to `skillogy_brain`.
 8. One release cycle later: delete `SkillsMiddleware` AND drop `COPY packages/aegiscore/aegiscore/skills` from `containers/langgraph.Dockerfile`. The skillogy image becomes the sole owner of the catalog at runtime.
@@ -865,7 +865,7 @@ Total Phase 0 + 1a + 1b: **~14–17 weeks** to land the full "brain v1." Compare
   1. **Rebuilds the existing REST/proto/client package on a Neo4j backend** instead of deleting it. Wire surface preserved; storage swapped; `Traverse`, `CypherRead`, `MocSummary`, `Schema` RPCs added.
   2. **Reframes `SkillogyMiddleware` as a thin REST/gRPC client** of the service. The middleware imports nothing from `neo4j`. Multi-tenant operation, hot-swap, and non-Python agent runtimes (Go, Rust, TypeScript) are now first-class concerns of the service container.
   3. **Trims `containers/langgraph.Dockerfile` at the final Phase 1a cutover** — drops the `COPY packages/aegiscore/aegiscore/skills` line. The skillogy container becomes the sole owner of the catalog at runtime; the agent image becomes catalog-free, removing a stale-catalog footgun and shrinking the image.
-  4. Renames `DECEPTICON_USE_SKILLOGY` to `DECEPTICON_SKILL_BACKEND ∈ {skills, skillogy_brain}` with a one-cycle compat shim.
+  4. Renames `AEGISCORE_USE_SKILLOGY` to `AEGISCORE_SKILL_BACKEND ∈ {skills, skillogy_brain}` with a one-cycle compat shim.
   Phase 0 deliverables (validator + cleanup + docs) are marked DONE (PR #519, merged 2026-06-03). Architecture diagram (§3.1), components table (§3.2), middleware example (§5.10), migration plan (§5.11 + §10.1), and file table (§11) are updated. No change to the graph schema (§5.1–§5.4) or the agent-facing tool semantics — those decisions stay.
 - **2026-06-03** — Initial draft. Supersedes the 2026-05-28 v0.1 design (`docs/design/skillogy.md`) in four ways: (a) body lives in the graph node, not on disk; (b) agents get read-only Cypher access in addition to curated tools; (c) Phase 1a graph schema is matrix-agnostic (single `:Technique` label with `matrix` enum property) so ICS / Mobile / ATLAS importers can be added in Phase 1b/2 without breaking changes — **Phase 1a loads ATT&CK Enterprise v19.1 only**, non-Enterprise frontmatter (ICS T0xxx, ATLAS AML.T, AATMF) is preserved as raw and promoted to edges when its importer lands; (d) the `:Skill` schema is slimmed to only fields the audit confirmed are read by production middleware — `allowed-tools`, `metadata.kind`, `metadata.safety_critical`, `metadata.gated_by_conops` are explicitly dropped (the v0.1 spec treated `kind` as load-bearing for validation; the production data shows 4/251 occurrences and 0 readers). Adds Phase 0 corpus cleanup as a pre-condition. Adds §1.4 frontmatter-field audit. Specifies that `SkillogyMiddleware` extends `AgentMiddleware` directly and does NOT subclass the deepagents skill base. Originally proposed deleting the in-memory REST skillogy package; superseded by the 2026-06-03 v0.2.1 amendment above.
 

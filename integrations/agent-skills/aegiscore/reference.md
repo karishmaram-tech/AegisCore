@@ -1,6 +1,6 @@
 # Aegiscore MCP — tool reference
 
-Exact parameters, defaults, clamps, and return schemas for every `decepticon_*`
+Exact parameters, defaults, clamps, and return schemas for every `aegiscore_*`
 tool. Read this when you need precise field names or edge-case behaviour. All
 tools are async and target a running Aegiscore LangGraph server.
 
@@ -15,7 +15,7 @@ tools are async and target a running Aegiscore LangGraph server.
 
 ---
 
-## decepticon_list_graphs()
+## aegiscore_list_graphs()
 
 List the engagement graphs (assistants) the connected server exposes.
 
@@ -24,14 +24,14 @@ List the engagement graphs (assistants) the connected server exposes.
 - Common `graph_id`s: `aegiscore` (full kill-chain orchestrator), `recon`
   (recon only), `soundwave` (engagement planning). Others may exist per install.
 
-## decepticon_list_engagements(limit=20)
+## aegiscore_list_engagements(limit=20)
 
 Recent engagements, most-recently-updated first — for browse / resume.
 
 - **Args:** `limit` (int, clamped 1–100).
 - **Returns:** `[{ thread_id, engagement_name, status, created_at, updated_at }]`.
 
-## decepticon_start_engagement(targets, instruction="", scan_mode="standard", engagement_name=None, assistant=None)
+## aegiscore_start_engagement(targets, instruction="", scan_mode="standard", engagement_name=None, assistant=None)
 
 Launch a **background** engagement. Returns immediately.
 
@@ -45,7 +45,7 @@ Launch a **background** engagement. Returns immediately.
     (`aegiscore`).
 - **Returns:** `{ engagement_name, thread_id, run_id, assistant, status, langgraph_url }`.
 
-## decepticon_transcript(thread_id, after_index=0, limit=40)
+## aegiscore_transcript(thread_id, after_index=0, limit=40)
 
 The orchestrator narrative — poll this to watch progress.
 
@@ -61,7 +61,7 @@ The orchestrator narrative — poll this to watch progress.
   - `text` is truncated per message (long results are clipped with a `+N chars`
     marker).
 
-## decepticon_watch(thread_id, max_seconds=20, max_events=40)
+## aegiscore_watch(thread_id, max_seconds=20, max_events=40)
 
 Bounded live tail of the run's stream (sub-agent activity), then returns.
 
@@ -73,7 +73,7 @@ Bounded live tail of the run's stream (sub-agent activity), then returns.
   - `truncated`: true if `max_events` was hit before the window/closed run.
   - Returns `events: []` when no run is active (idle/finished) — use `transcript`.
 
-## decepticon_send_message(thread_id, message, assistant=None)
+## aegiscore_send_message(thread_id, message, assistant=None)
 
 Send an operator message onto the engagement thread — steer, answer, or switch.
 
@@ -85,7 +85,7 @@ Send an operator message onto the engagement thread — steer, answer, or switch
   orchestrator's model mid-engagement (e.g. `/model anthropic/claude-opus-4-8`).
 - **Returns:** `{ thread_id, run_id, assistant, status }`.
 
-## decepticon_engagement_state(thread_id)
+## aegiscore_engagement_state(thread_id)
 
 Engagement context minus the message log.
 
@@ -95,7 +95,7 @@ Engagement context minus the message log.
     phase, working files. Large values are replaced with an `<N chars omitted>`
     placeholder to keep the payload small.
 
-## decepticon_engagement_status(thread_id, engagement_name="")
+## aegiscore_engagement_status(thread_id, engagement_name="")
 
 Latest run status + whether findings have been persisted.
 
@@ -104,7 +104,7 @@ Latest run status + whether findings have been persisted.
   - `status`: `pending`/`running`/`success`/`error`/`timeout`/`interrupted`/`none`.
   - `findings_available`: true once `graph.json` exists for the engagement.
 
-## decepticon_engagement_findings(engagement_name, include_sarif=False)
+## aegiscore_engagement_findings(engagement_name, include_sarif=False)
 
 Findings summary, optionally with the full SARIF v2.1.0 document.
 
@@ -116,7 +116,7 @@ Findings summary, optionally with the full SARIF v2.1.0 document.
   - `sarif`: full SARIF doc when `include_sarif=true`, else null. Mine
     `runs[0].results[]` for `ruleId`, `message`, and `locations` (reproduction).
 
-## decepticon_cancel_engagement(thread_id)
+## aegiscore_cancel_engagement(thread_id)
 
 Cancel the active run on a thread.
 
@@ -132,6 +132,6 @@ Cancel the active run on a thread.
 - **Cursoring:** always pass the previous `next_index` as `after_index` so you
   narrate only new activity and avoid repeating yourself.
 - **Server required:** all tools need the Aegiscore LangGraph server up at
-  `DECEPTICON_API_URL`. A connection error means it isn't running.
+  `AEGISCORE_API_URL`. A connection error means it isn't running.
 - **Findings lag the run:** `status=running` with `findings_available=false` is
   normal; findings appear as the analyst persists them.

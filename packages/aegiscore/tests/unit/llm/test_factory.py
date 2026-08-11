@@ -71,7 +71,7 @@ class TestIsRealKey:
 class TestOAuthCredentialsPresent:
     """OAuth detection requires the credential file alongside the boolean.
 
-    Without the file check, ``DECEPTICON_AUTH_CLAUDE_CODE=true`` plus a
+    Without the file check, ``AEGISCORE_AUTH_CLAUDE_CODE=true`` plus a
     deleted ``~/.claude/.credentials.json`` would still place OAuth in
     every fallback chain and generate one 401 per request.
     """
@@ -136,7 +136,7 @@ class TestOAuthEnvCredentials:
         # Flag true + env token, but the credential file is absent.
         monkeypatch.setenv("HOME", str(tmp_path))
         monkeypatch.setenv("GEMINI_TOKENS_PATH", str(tmp_path / "absent.json"))
-        monkeypatch.setenv("DECEPTICON_AUTH_GEMINI", "true")
+        monkeypatch.setenv("AEGISCORE_AUTH_GEMINI", "true")
         monkeypatch.setenv("GEMINI_ACCESS_TOKEN", "ya29.env-token")
         assert _oauth_credentials_present(AuthMethod.GOOGLE_OAUTH) is False
         assert _method_is_configured(AuthMethod.GOOGLE_OAUTH) is True
@@ -144,7 +144,7 @@ class TestOAuthEnvCredentials:
     def test_method_not_configured_without_file_or_env(self, monkeypatch, tmp_path) -> None:
         monkeypatch.setenv("HOME", str(tmp_path))
         monkeypatch.setenv("GEMINI_TOKENS_PATH", str(tmp_path / "absent.json"))
-        monkeypatch.setenv("DECEPTICON_AUTH_GEMINI", "true")
+        monkeypatch.setenv("AEGISCORE_AUTH_GEMINI", "true")
         monkeypatch.delenv("GEMINI_ACCESS_TOKEN", raising=False)
         monkeypatch.delenv("GEMINI_SESSION_COOKIES", raising=False)
         assert _method_is_configured(AuthMethod.GOOGLE_OAUTH) is False
@@ -153,7 +153,7 @@ class TestOAuthEnvCredentials:
         # Env token present but the boolean intent flag is off → not configured.
         monkeypatch.setenv("HOME", str(tmp_path))
         monkeypatch.setenv("GEMINI_TOKENS_PATH", str(tmp_path / "absent.json"))
-        monkeypatch.delenv("DECEPTICON_AUTH_GEMINI", raising=False)
+        monkeypatch.delenv("AEGISCORE_AUTH_GEMINI", raising=False)
         monkeypatch.setenv("GEMINI_ACCESS_TOKEN", "ya29.env-token")
         assert _method_is_configured(AuthMethod.GOOGLE_OAUTH) is False
 
@@ -309,14 +309,14 @@ class TestResolveCredentials:
             "OLLAMA_MODEL",
         ):
             monkeypatch.delenv(k, raising=False)
-        monkeypatch.delenv("DECEPTICON_AUTH_PRIORITY", raising=False)
-        monkeypatch.delenv("DECEPTICON_AUTH_CLAUDE_CODE", raising=False)
+        monkeypatch.delenv("AEGISCORE_AUTH_PRIORITY", raising=False)
+        monkeypatch.delenv("AEGISCORE_AUTH_CLAUDE_CODE", raising=False)
         for flag in (
-            "DECEPTICON_AUTH_CHATGPT",
-            "DECEPTICON_AUTH_COPILOT",
-            "DECEPTICON_AUTH_GEMINI",
-            "DECEPTICON_AUTH_GROK",
-            "DECEPTICON_AUTH_PERPLEXITY",
+            "AEGISCORE_AUTH_CHATGPT",
+            "AEGISCORE_AUTH_COPILOT",
+            "AEGISCORE_AUTH_GEMINI",
+            "AEGISCORE_AUTH_GROK",
+            "AEGISCORE_AUTH_PERPLEXITY",
         ):
             monkeypatch.delenv(flag, raising=False)
         creds = _resolve_credentials()
@@ -343,21 +343,21 @@ class TestResolveCredentials:
             "OLLAMA_MODEL",
         ):
             monkeypatch.delenv(k, raising=False)
-        monkeypatch.setenv("DECEPTICON_AUTH_CLAUDE_CODE", "true")
-        monkeypatch.delenv("DECEPTICON_AUTH_PRIORITY", raising=False)
+        monkeypatch.setenv("AEGISCORE_AUTH_CLAUDE_CODE", "true")
+        monkeypatch.delenv("AEGISCORE_AUTH_PRIORITY", raising=False)
         for flag in (
-            "DECEPTICON_AUTH_CHATGPT",
-            "DECEPTICON_AUTH_COPILOT",
-            "DECEPTICON_AUTH_GEMINI",
-            "DECEPTICON_AUTH_GROK",
-            "DECEPTICON_AUTH_PERPLEXITY",
+            "AEGISCORE_AUTH_CHATGPT",
+            "AEGISCORE_AUTH_COPILOT",
+            "AEGISCORE_AUTH_GEMINI",
+            "AEGISCORE_AUTH_GROK",
+            "AEGISCORE_AUTH_PERPLEXITY",
         ):
             monkeypatch.delenv(flag, raising=False)
         creds = _resolve_credentials()
         assert creds.methods == [AuthMethod.ANTHROPIC_OAUTH]
 
     def test_oauth_flag_without_credential_file_is_dropped(self, monkeypatch, tmp_path):
-        """Stale ``DECEPTICON_AUTH_CLAUDE_CODE=true`` after ``codex logout``
+        """Stale ``AEGISCORE_AUTH_CLAUDE_CODE=true`` after ``codex logout``
         (or after the user deleted ``~/.claude/.credentials.json``) must
         not place the OAuth method into the chain — otherwise every
         request 401s before falling back to the next provider.
@@ -369,7 +369,7 @@ class TestResolveCredentials:
         monkeypatch.setenv("HOME", str(tmp_path))
         missing = tmp_path / "missing.json"  # never created
         monkeypatch.setenv("CLAUDE_CODE_CREDENTIALS_PATH", str(missing))
-        monkeypatch.setenv("DECEPTICON_AUTH_CLAUDE_CODE", "true")
+        monkeypatch.setenv("AEGISCORE_AUTH_CLAUDE_CODE", "true")
         for k in (
             "ANTHROPIC_API_KEY",
             "OPENAI_API_KEY",
@@ -380,14 +380,14 @@ class TestResolveCredentials:
         ):
             monkeypatch.delenv(k, raising=False)
         for flag in (
-            "DECEPTICON_AUTH_CHATGPT",
-            "DECEPTICON_AUTH_COPILOT",
-            "DECEPTICON_AUTH_GEMINI",
-            "DECEPTICON_AUTH_GROK",
-            "DECEPTICON_AUTH_PERPLEXITY",
+            "AEGISCORE_AUTH_CHATGPT",
+            "AEGISCORE_AUTH_COPILOT",
+            "AEGISCORE_AUTH_GEMINI",
+            "AEGISCORE_AUTH_GROK",
+            "AEGISCORE_AUTH_PERPLEXITY",
         ):
             monkeypatch.delenv(flag, raising=False)
-        monkeypatch.delenv("DECEPTICON_AUTH_PRIORITY", raising=False)
+        monkeypatch.delenv("AEGISCORE_AUTH_PRIORITY", raising=False)
         creds = _resolve_credentials()
         assert AuthMethod.ANTHROPIC_OAUTH not in creds.methods
 
@@ -396,7 +396,7 @@ class TestResolveCredentials:
         cred_file = tmp_path / "credentials.json"
         cred_file.write_text('{"claudeAiOauth": {"accessToken": "sk-ant-oat01-deadbeefdeadbeef"}}')
         monkeypatch.setenv("CLAUDE_CODE_CREDENTIALS_PATH", str(cred_file))
-        monkeypatch.setenv("DECEPTICON_AUTH_CLAUDE_CODE", "true")
+        monkeypatch.setenv("AEGISCORE_AUTH_CLAUDE_CODE", "true")
         monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-api03-realtokenfortestingauthrouting12345")
         monkeypatch.setenv("OPENAI_API_KEY", "sk-proj-realopenaitokenfortestingauthrouting12345")
         for k in (
@@ -411,13 +411,13 @@ class TestResolveCredentials:
             "OLLAMA_MODEL",
         ):
             monkeypatch.delenv(k, raising=False)
-        monkeypatch.delenv("DECEPTICON_AUTH_PRIORITY", raising=False)
+        monkeypatch.delenv("AEGISCORE_AUTH_PRIORITY", raising=False)
         for flag in (
-            "DECEPTICON_AUTH_CHATGPT",
-            "DECEPTICON_AUTH_COPILOT",
-            "DECEPTICON_AUTH_GEMINI",
-            "DECEPTICON_AUTH_GROK",
-            "DECEPTICON_AUTH_PERPLEXITY",
+            "AEGISCORE_AUTH_CHATGPT",
+            "AEGISCORE_AUTH_COPILOT",
+            "AEGISCORE_AUTH_GEMINI",
+            "AEGISCORE_AUTH_GROK",
+            "AEGISCORE_AUTH_PERPLEXITY",
         ):
             monkeypatch.delenv(flag, raising=False)
         creds = _resolve_credentials()
@@ -428,12 +428,12 @@ class TestResolveCredentials:
         ]
 
     def test_explicit_priority_override(self, monkeypatch):
-        monkeypatch.setenv("DECEPTICON_AUTH_PRIORITY", "openai_api,anthropic_api")
+        monkeypatch.setenv("AEGISCORE_AUTH_PRIORITY", "openai_api,anthropic_api")
         monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-api03-realtokenfortestingauthrouting12345")
         monkeypatch.setenv("OPENAI_API_KEY", "sk-proj-realopenaitokenfortestingauthrouting12345")
         monkeypatch.delenv("GEMINI_API_KEY", raising=False)
         monkeypatch.delenv("MINIMAX_API_KEY", raising=False)
-        monkeypatch.delenv("DECEPTICON_AUTH_CLAUDE_CODE", raising=False)
+        monkeypatch.delenv("AEGISCORE_AUTH_CLAUDE_CODE", raising=False)
         creds = _resolve_credentials()
         assert creds.methods == [AuthMethod.OPENAI_API, AuthMethod.ANTHROPIC_API]
 
@@ -455,8 +455,8 @@ class TestResolveCredentials:
             "OLLAMA_MODEL",
         ):
             monkeypatch.delenv(k, raising=False)
-        monkeypatch.delenv("DECEPTICON_AUTH_PRIORITY", raising=False)
-        monkeypatch.delenv("DECEPTICON_AUTH_CLAUDE_CODE", raising=False)
+        monkeypatch.delenv("AEGISCORE_AUTH_PRIORITY", raising=False)
+        monkeypatch.delenv("AEGISCORE_AUTH_CLAUDE_CODE", raising=False)
         creds = _resolve_credentials()
         assert creds.methods == [
             AuthMethod.ANTHROPIC_API,
@@ -471,7 +471,7 @@ class TestResolveCredentials:
         ]
 
     def test_explicit_priority_no_creds_logs_error(self, monkeypatch, tmp_path, caplog):
-        """An explicit ``DECEPTICON_AUTH_PRIORITY`` whose every listed
+        """An explicit ``AEGISCORE_AUTH_PRIORITY`` whose every listed
         method fails detection (typical of a broken OAuth credentials
         mount — e.g. ``CLAUDE_CREDENTIALS_VOLUME`` unset and the
         compose file bound ``/dev/null`` into the container) must
@@ -491,8 +491,8 @@ class TestResolveCredentials:
         missing = tmp_path / "missing.json"
         monkeypatch.setenv("HOME", str(tmp_path))
         monkeypatch.setenv("CLAUDE_CODE_CREDENTIALS_PATH", str(missing))
-        monkeypatch.setenv("DECEPTICON_AUTH_PRIORITY", "anthropic_oauth")
-        monkeypatch.setenv("DECEPTICON_AUTH_CLAUDE_CODE", "true")
+        monkeypatch.setenv("AEGISCORE_AUTH_PRIORITY", "anthropic_oauth")
+        monkeypatch.setenv("AEGISCORE_AUTH_CLAUDE_CODE", "true")
         for k in (
             "ANTHROPIC_API_KEY",
             "OPENAI_API_KEY",
@@ -514,11 +514,11 @@ class TestResolveCredentials:
         ):
             monkeypatch.delenv(k, raising=False)
         for flag in (
-            "DECEPTICON_AUTH_CHATGPT",
-            "DECEPTICON_AUTH_COPILOT",
-            "DECEPTICON_AUTH_GEMINI",
-            "DECEPTICON_AUTH_GROK",
-            "DECEPTICON_AUTH_PERPLEXITY",
+            "AEGISCORE_AUTH_CHATGPT",
+            "AEGISCORE_AUTH_COPILOT",
+            "AEGISCORE_AUTH_GEMINI",
+            "AEGISCORE_AUTH_GROK",
+            "AEGISCORE_AUTH_PERPLEXITY",
         ):
             monkeypatch.delenv(flag, raising=False)
 
@@ -528,8 +528,8 @@ class TestResolveCredentials:
         # so without re-enabling propagation our ERROR record never
         # reaches pytest's capture buffer. Re-enable for the duration of
         # the call and let monkeypatch restore on teardown.
-        decepticon_log = logging.getLogger("aegiscore")
-        monkeypatch.setattr(decepticon_log, "propagate", True)
+        aegiscore_log = logging.getLogger("aegiscore")
+        monkeypatch.setattr(aegiscore_log, "propagate", True)
 
         with caplog.at_level(logging.ERROR):
             creds = _resolve_credentials()
@@ -540,13 +540,13 @@ class TestResolveCredentials:
         # ERROR diagnostic must mention the env var name so an operator
         # scanning ``aegiscore logs langgraph`` knows where to look.
         error_records = [r for r in caplog.records if r.levelname == "ERROR"]
-        assert any("DECEPTICON_AUTH_PRIORITY" in r.getMessage() for r in error_records), (
-            f"No ERROR log mentioned DECEPTICON_AUTH_PRIORITY. "
+        assert any("AEGISCORE_AUTH_PRIORITY" in r.getMessage() for r in error_records), (
+            f"No ERROR log mentioned AEGISCORE_AUTH_PRIORITY. "
             f"Got: {[r.getMessage() for r in error_records]}"
         )
 
     def test_implicit_priority_no_creds_stays_info_level(self, monkeypatch, caplog):
-        """Implicit priority (no DECEPTICON_AUTH_PRIORITY set) with no
+        """Implicit priority (no AEGISCORE_AUTH_PRIORITY set) with no
         detectable credentials is the import-friendly CI/test path:
         we keep the existing INFO log and ``all_api_methods()`` return
         so module imports work without keys present. Only **explicit**
@@ -566,14 +566,14 @@ class TestResolveCredentials:
             "OLLAMA_MODEL",
         ):
             monkeypatch.delenv(k, raising=False)
-        monkeypatch.delenv("DECEPTICON_AUTH_PRIORITY", raising=False)
-        monkeypatch.delenv("DECEPTICON_AUTH_CLAUDE_CODE", raising=False)
+        monkeypatch.delenv("AEGISCORE_AUTH_PRIORITY", raising=False)
+        monkeypatch.delenv("AEGISCORE_AUTH_CLAUDE_CODE", raising=False)
 
         # Match the explicit-priority test's pattern so caplog sees the
         # records — the aegiscore parent logger defaults to
         # ``propagate=False`` per ``aegiscore_core.utils.logging``.
-        decepticon_log = logging.getLogger("aegiscore")
-        monkeypatch.setattr(decepticon_log, "propagate", True)
+        aegiscore_log = logging.getLogger("aegiscore")
+        monkeypatch.setattr(aegiscore_log, "propagate", True)
 
         with caplog.at_level(logging.DEBUG):
             creds = _resolve_credentials()
@@ -601,9 +601,9 @@ class TestResolveCredentials:
             "MISTRAL_API_KEY",
             "OPENROUTER_API_KEY",
             "NVIDIA_API_KEY",
-            "DECEPTICON_AUTH_PRIORITY",
-            "DECEPTICON_AUTH_CLAUDE_CODE",
-            "DECEPTICON_AUTH_CHATGPT",
+            "AEGISCORE_AUTH_PRIORITY",
+            "AEGISCORE_AUTH_CLAUDE_CODE",
+            "AEGISCORE_AUTH_CHATGPT",
         ):
             monkeypatch.delenv(k, raising=False)
         monkeypatch.setenv("OLLAMA_API_BASE", "http://host.docker.internal:11434")
@@ -614,7 +614,7 @@ class TestResolveCredentials:
     def test_explicit_priority_with_ollama_local(self, monkeypatch):
         """User opts into Ollama via explicit priority — the resolver
         recognizes it as configured when OLLAMA_API_BASE is set."""
-        monkeypatch.setenv("DECEPTICON_AUTH_PRIORITY", "ollama_local,anthropic_api")
+        monkeypatch.setenv("AEGISCORE_AUTH_PRIORITY", "ollama_local,anthropic_api")
         monkeypatch.setenv("OLLAMA_API_BASE", "http://host.docker.internal:11434")
         monkeypatch.setenv("OLLAMA_MODEL", "qwen3-coder:30b")
         monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-api03-realtokenfortestingauthrouting12345")
@@ -627,8 +627,8 @@ class TestResolveCredentials:
             "MISTRAL_API_KEY",
             "OPENROUTER_API_KEY",
             "NVIDIA_API_KEY",
-            "DECEPTICON_AUTH_CLAUDE_CODE",
-            "DECEPTICON_AUTH_CHATGPT",
+            "AEGISCORE_AUTH_CLAUDE_CODE",
+            "AEGISCORE_AUTH_CHATGPT",
         ):
             monkeypatch.delenv(k, raising=False)
         creds = _resolve_credentials()
@@ -695,7 +695,7 @@ class TestActionableErrorTranslation:
         msg = str(info.value)
         assert "no provider fallback" in msg
         assert "anthropic/claude-opus-4-7" in msg
-        assert "DECEPTICON_AUTH_PRIORITY" in msg
+        assert "AEGISCORE_AUTH_PRIORITY" in msg
 
     def test_400_bad_request_branch(self):
         # openai.BadRequestError carries 'Error code: 400' in repr.
@@ -719,7 +719,7 @@ class TestActionableErrorTranslation:
             self._translate(exc, "anthropic/claude-opus-4-7")
         msg = str(info.value)
         assert "rate limit (429)" in msg
-        assert "DECEPTICON_AUTH_PRIORITY" in msg
+        assert "AEGISCORE_AUTH_PRIORITY" in msg
 
     def test_404_notfound_with_ollama_hint(self):
         exc = type("NotFoundError", (Exception,), {})("Error code: 404 - model not found")
@@ -1238,16 +1238,16 @@ def _scrub_other_credentials(monkeypatch: pytest.MonkeyPatch) -> None:
         "LMSTUDIO_MODEL",
         "CUSTOM_OPENAI_API_BASE",
         "CUSTOM_OPENAI_API_KEY",
-        "DECEPTICON_AUTH_PRIORITY",
+        "AEGISCORE_AUTH_PRIORITY",
     ):
         monkeypatch.delenv(var, raising=False)
     for flag in (
-        "DECEPTICON_AUTH_CLAUDE_CODE",
-        "DECEPTICON_AUTH_CHATGPT",
-        "DECEPTICON_AUTH_COPILOT",
-        "DECEPTICON_AUTH_GEMINI",
-        "DECEPTICON_AUTH_GROK",
-        "DECEPTICON_AUTH_PERPLEXITY",
+        "AEGISCORE_AUTH_CLAUDE_CODE",
+        "AEGISCORE_AUTH_CHATGPT",
+        "AEGISCORE_AUTH_COPILOT",
+        "AEGISCORE_AUTH_GEMINI",
+        "AEGISCORE_AUTH_GROK",
+        "AEGISCORE_AUTH_PERPLEXITY",
     ):
         monkeypatch.delenv(flag, raising=False)
 
@@ -1302,25 +1302,25 @@ class TestResolveCredentialsForLlamacpp:
         assert creds.methods == [AuthMethod.LLAMACPP_LOCAL]
 
     def test_priority_list_with_llamacpp_picks_it_up(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        """User wrote an explicit DECEPTICON_AUTH_PRIORITY listing
+        """User wrote an explicit AEGISCORE_AUTH_PRIORITY listing
         llamacpp_local — the resolver must respect that ordering."""
         _scrub_other_credentials(monkeypatch)
         monkeypatch.setenv("LLAMACPP_API_BASE", "http://localhost:8080/v1")
         monkeypatch.setenv("LLAMACPP_MODEL", "qwen-coder")
         monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-api03-realtokenfortestingauthrouting12345")
-        monkeypatch.setenv("DECEPTICON_AUTH_PRIORITY", "llamacpp_local,anthropic_api")
+        monkeypatch.setenv("AEGISCORE_AUTH_PRIORITY", "llamacpp_local,anthropic_api")
 
         creds = _resolve_credentials()
         assert creds.methods == [AuthMethod.LLAMACPP_LOCAL, AuthMethod.ANTHROPIC_API]
 
 
 class TestLLMTimeout:
-    """Whole-coroutine LLM request timeout (DECEPTICON_LLM_TIMEOUT_SECONDS)."""
+    """Whole-coroutine LLM request timeout (AEGISCORE_LLM_TIMEOUT_SECONDS)."""
 
     @pytest.fixture(autouse=True)
     def _isolate_timeout_env(self, monkeypatch: pytest.MonkeyPatch) -> None:
-        monkeypatch.delenv("DECEPTICON_LLM_TIMEOUT_SECONDS", raising=False)
-        monkeypatch.delenv("DECEPTICON_LLM__TIMEOUT", raising=False)
+        monkeypatch.delenv("AEGISCORE_LLM_TIMEOUT_SECONDS", raising=False)
+        monkeypatch.delenv("AEGISCORE_LLM__TIMEOUT", raising=False)
 
     def test_call_with_timeout_raises_typed_exception(self) -> None:
         from aegiscore.llm.factory import LLMTimeoutError, call_with_timeout
@@ -1373,50 +1373,50 @@ class TestLLMTimeout:
     def test_env_override_takes_effect(self, monkeypatch: pytest.MonkeyPatch) -> None:
         from aegiscore.llm.factory import _resolve_llm_timeout_seconds
 
-        monkeypatch.setenv("DECEPTICON_LLM_TIMEOUT_SECONDS", "3")
+        monkeypatch.setenv("AEGISCORE_LLM_TIMEOUT_SECONDS", "3")
         assert _resolve_llm_timeout_seconds() == 3.0
 
     def test_default_timeout_is_600_when_env_absent(self, monkeypatch: pytest.MonkeyPatch) -> None:
         from aegiscore.llm.factory import _resolve_llm_timeout_seconds
 
-        monkeypatch.delenv("DECEPTICON_LLM_TIMEOUT_SECONDS", raising=False)
+        monkeypatch.delenv("AEGISCORE_LLM_TIMEOUT_SECONDS", raising=False)
         assert _resolve_llm_timeout_seconds() == 600.0
 
     def test_blank_env_falls_back_to_default(self, monkeypatch: pytest.MonkeyPatch) -> None:
         from aegiscore.llm.factory import _resolve_llm_timeout_seconds
 
-        monkeypatch.setenv("DECEPTICON_LLM_TIMEOUT_SECONDS", "   ")
+        monkeypatch.setenv("AEGISCORE_LLM_TIMEOUT_SECONDS", "   ")
         assert _resolve_llm_timeout_seconds() == 600.0
 
     def test_invalid_env_raises_value_error(self, monkeypatch: pytest.MonkeyPatch) -> None:
         from aegiscore.llm.factory import _resolve_llm_timeout_seconds
 
-        monkeypatch.setenv("DECEPTICON_LLM_TIMEOUT_SECONDS", "not-a-number")
+        monkeypatch.setenv("AEGISCORE_LLM_TIMEOUT_SECONDS", "not-a-number")
         with pytest.raises(ValueError):
             _resolve_llm_timeout_seconds()
 
     def test_non_positive_env_raises_value_error(self, monkeypatch: pytest.MonkeyPatch) -> None:
         from aegiscore.llm.factory import _resolve_llm_timeout_seconds
 
-        monkeypatch.setenv("DECEPTICON_LLM_TIMEOUT_SECONDS", "0")
+        monkeypatch.setenv("AEGISCORE_LLM_TIMEOUT_SECONDS", "0")
         with pytest.raises(ValueError, match="greater than 0"):
             _resolve_llm_timeout_seconds()
 
-        monkeypatch.setenv("DECEPTICON_LLM_TIMEOUT_SECONDS", "-5")
+        monkeypatch.setenv("AEGISCORE_LLM_TIMEOUT_SECONDS", "-5")
         with pytest.raises(ValueError, match="greater than 0"):
             _resolve_llm_timeout_seconds()
 
     def test_pydantic_nested_alias_takes_effect(self, monkeypatch: pytest.MonkeyPatch) -> None:
         from aegiscore.llm.factory import _resolve_llm_timeout_seconds
 
-        monkeypatch.setenv("DECEPTICON_LLM__TIMEOUT", "900")
+        monkeypatch.setenv("AEGISCORE_LLM__TIMEOUT", "900")
         assert _resolve_llm_timeout_seconds() == 900.0
 
     def test_explicit_env_wins_over_pydantic_alias(self, monkeypatch: pytest.MonkeyPatch) -> None:
         from aegiscore.llm.factory import _resolve_llm_timeout_seconds
 
-        monkeypatch.setenv("DECEPTICON_LLM_TIMEOUT_SECONDS", "120")
-        monkeypatch.setenv("DECEPTICON_LLM__TIMEOUT", "900")
+        monkeypatch.setenv("AEGISCORE_LLM_TIMEOUT_SECONDS", "120")
+        monkeypatch.setenv("AEGISCORE_LLM__TIMEOUT", "900")
         assert _resolve_llm_timeout_seconds() == 120.0
 
     def test_alias_invalid_value_attributes_error_to_alias(
@@ -1424,8 +1424,8 @@ class TestLLMTimeout:
     ) -> None:
         from aegiscore.llm.factory import _resolve_llm_timeout_seconds
 
-        monkeypatch.setenv("DECEPTICON_LLM__TIMEOUT", "nonsense")
-        with pytest.raises(ValueError, match="DECEPTICON_LLM__TIMEOUT"):
+        monkeypatch.setenv("AEGISCORE_LLM__TIMEOUT", "nonsense")
+        with pytest.raises(ValueError, match="AEGISCORE_LLM__TIMEOUT"):
             _resolve_llm_timeout_seconds()
 
     def test_alias_non_positive_attributes_error_to_alias(
@@ -1433,8 +1433,8 @@ class TestLLMTimeout:
     ) -> None:
         from aegiscore.llm.factory import _resolve_llm_timeout_seconds
 
-        monkeypatch.setenv("DECEPTICON_LLM__TIMEOUT", "0")
-        with pytest.raises(ValueError, match="DECEPTICON_LLM__TIMEOUT.*greater than 0"):
+        monkeypatch.setenv("AEGISCORE_LLM__TIMEOUT", "0")
+        with pytest.raises(ValueError, match="AEGISCORE_LLM__TIMEOUT.*greater than 0"):
             _resolve_llm_timeout_seconds()
 
     def test_ainvoke_resolves_timeout_before_creating_request_coroutine(
@@ -1458,7 +1458,7 @@ class TestLLMTimeout:
             return "should-not-happen"
 
         monkeypatch.setattr(ChatOpenAI, "ainvoke", _tracking_ainvoke)
-        monkeypatch.setenv("DECEPTICON_LLM_TIMEOUT_SECONDS", "-5")
+        monkeypatch.setenv("AEGISCORE_LLM_TIMEOUT_SECONDS", "-5")
 
         model = _ProxiedChatOpenAI(
             model="openai/gpt-5.5",

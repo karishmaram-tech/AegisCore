@@ -18,9 +18,9 @@ All tests skip cleanly when the Neo4j stack is unreachable (see
 ``conftest.py``). Run live with::
 
     docker compose up -d neo4j
-    DECEPTICON_NEO4J_URI=bolt://localhost:7687 \
-    DECEPTICON_NEO4J_USER=neo4j \
-    DECEPTICON_NEO4J_PASSWORD=aegiscore-graph \
+    AEGISCORE_NEO4J_URI=bolt://localhost:7687 \
+    AEGISCORE_NEO4J_USER=neo4j \
+    AEGISCORE_NEO4J_PASSWORD=aegiscore-graph \
     uv run pytest packages/aegiscore/tests/integration/kg/ -v
 """
 

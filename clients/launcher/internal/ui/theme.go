@@ -126,9 +126,9 @@ func DimText(msg string) {
 	fmt.Println(Dim.Render(msg))
 }
 
-// DecepticonTheme returns a custom huh theme with Aegiscore red branding.
+// AegiscoreTheme returns a custom huh theme with Aegiscore red branding.
 // Based on ThemeCharm for polished visuals, recolored to red.
-func DecepticonTheme(isDark bool) *huh.Styles {
+func AegiscoreTheme(isDark bool) *huh.Styles {
 	t := huh.ThemeCharm(isDark)
 
 	red := lipgloss.Color("#FF3333")

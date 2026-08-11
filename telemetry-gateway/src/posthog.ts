@@ -41,7 +41,7 @@ export async function forwardToPostHog(
       properties: {
         ...props,
         // Envelope context, flattened onto every event for easy slicing.
-        decepticon_version: batch.client.decepticon_version,
+        aegiscore_version: batch.client.aegiscore_version,
         os: batch.client.os,
         arch: batch.client.arch,
         py: batch.client.py,

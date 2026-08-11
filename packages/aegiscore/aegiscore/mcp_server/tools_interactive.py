@@ -37,16 +37,16 @@ def register_interactive_tools(mcp: FastMCP, engagements: EngagementClient) -> N
     """Register list / send / transcript / state / watch tools on the server."""
 
     @mcp.tool()
-    async def decepticon_list_engagements(limit: int = 20) -> list[EngagementSummary]:
+    async def aegiscore_list_engagements(limit: int = 20) -> list[EngagementSummary]:
         """List recent engagements (most recent first) to browse or resume.
 
-        Use a returned ``thread_id`` as the handle for ``decepticon_transcript``,
-        ``decepticon_send_message``, and the other engagement tools.
+        Use a returned ``thread_id`` as the handle for ``aegiscore_transcript``,
+        ``aegiscore_send_message``, and the other engagement tools.
         """
         return await engagements.list_engagements(limit=_clamp(limit, 1, 100))
 
     @mcp.tool()
-    async def decepticon_send_message(
+    async def aegiscore_send_message(
         thread_id: str, message: str, assistant: str | None = None
     ) -> RunHandle:
         """Send an operator message into a running/standing engagement.
@@ -60,7 +60,7 @@ def register_interactive_tools(mcp: FastMCP, engagements: EngagementClient) -> N
         )
 
     @mcp.tool()
-    async def decepticon_transcript(
+    async def aegiscore_transcript(
         thread_id: str, after_index: int = 0, limit: int = 40
     ) -> Transcript:
         """Read the engagement transcript — the persisted narrative to watch it.
@@ -80,7 +80,7 @@ def register_interactive_tools(mcp: FastMCP, engagements: EngagementClient) -> N
         )
 
     @mcp.tool()
-    async def decepticon_engagement_state(thread_id: str) -> EngagementState:
+    async def aegiscore_engagement_state(thread_id: str) -> EngagementState:
         """Inspect engagement context: OPPLAN / objectives / scope / phase.
 
         Returns the orchestrator's working state (everything except the message
@@ -91,7 +91,7 @@ def register_interactive_tools(mcp: FastMCP, engagements: EngagementClient) -> N
         return build_engagement_state(state, thread_id=thread_id, run_status=status)
 
     @mcp.tool()
-    async def decepticon_watch(
+    async def aegiscore_watch(
         thread_id: str, max_seconds: int = 20, max_events: int = 40
     ) -> WatchResult:
         """Tail the live run stream for a few seconds (sub-agent activity feed).

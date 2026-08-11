@@ -25,16 +25,16 @@ For recon/exploit/postexploit/ad/cloud lanes:
 
 Default remains JSON for simplicity and portability:
 
-- `DECEPTICON_KG_BACKEND=json` (default)
-- `DECEPTICON_KG_PATH=/workspace/kg.json`
+- `AEGISCORE_KG_BACKEND=json` (default)
+- `AEGISCORE_KG_PATH=/workspace/kg.json`
 
 Optional Neo4j backend for larger engagements and multi-agent concurrency:
 
-- `DECEPTICON_KG_BACKEND=neo4j`
-- `DECEPTICON_NEO4J_URI=bolt://localhost:7687`
-- `DECEPTICON_NEO4J_USER=neo4j`
-- `DECEPTICON_NEO4J_PASSWORD=...`
-- `DECEPTICON_NEO4J_DATABASE=neo4j` (optional)
+- `AEGISCORE_KG_BACKEND=neo4j`
+- `AEGISCORE_NEO4J_URI=bolt://localhost:7687`
+- `AEGISCORE_NEO4J_USER=neo4j`
+- `AEGISCORE_NEO4J_PASSWORD=...`
+- `AEGISCORE_NEO4J_DATABASE=neo4j` (optional)
 
 Operational notes:
 - `docker-compose.yml` includes a `neo4j` service and wires LangGraph to it.

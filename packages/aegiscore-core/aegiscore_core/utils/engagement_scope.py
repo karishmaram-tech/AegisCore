@@ -23,7 +23,7 @@ import os
 import re
 
 _active_engagement: contextvars.ContextVar[str | None] = contextvars.ContextVar(
-    "decepticon_active_engagement",
+    "aegiscore_active_engagement",
     default=None,
 )
 
@@ -59,13 +59,14 @@ def get_active_engagement() -> str | None:
 
     Resolution order (first non-empty wins):
       1. contextvar set by ``set_active_engagement``
-      2. ``DECEPTICON_ENGAGEMENT`` environment variable
+      2. ``AEGISCORE_ENGAGEMENT`` environment variable
       3. ``None`` (caller should treat as "no scoping configured")
     """
     label = _active_engagement.get()
     if label:
         return label
-    env_label = os.environ.get("DECEPTICON_ENGAGEMENT", "").strip()
+    env_label = os.environ.get("AEGISCORE_ENGAGEMENT", "").strip()
     if env_label and is_valid_engagement_label(env_label):
         return env_label
     return None
+

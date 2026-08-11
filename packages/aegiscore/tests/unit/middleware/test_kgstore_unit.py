@@ -28,10 +28,10 @@ from aegiscore.middleware.kg_internal.store import (
 
 
 def test_config_from_env_full(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("DECEPTICON_NEO4J_URI", "bolt://neo4j:7687")
-    monkeypatch.setenv("DECEPTICON_NEO4J_USER", "neo4j")
-    monkeypatch.setenv("DECEPTICON_NEO4J_PASSWORD", "secret")
-    monkeypatch.setenv("DECEPTICON_NEO4J_DATABASE", "aegiscore")
+    monkeypatch.setenv("AEGISCORE_NEO4J_URI", "bolt://neo4j:7687")
+    monkeypatch.setenv("AEGISCORE_NEO4J_USER", "neo4j")
+    monkeypatch.setenv("AEGISCORE_NEO4J_PASSWORD", "secret")
+    monkeypatch.setenv("AEGISCORE_NEO4J_DATABASE", "aegiscore")
     cfg = KGStoreConfig.from_env()
     assert cfg.uri == "bolt://neo4j:7687"
     assert cfg.user == "neo4j"
@@ -40,22 +40,22 @@ def test_config_from_env_full(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_config_from_env_default_database(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("DECEPTICON_NEO4J_URI", "bolt://x")
-    monkeypatch.setenv("DECEPTICON_NEO4J_USER", "u")
-    monkeypatch.setenv("DECEPTICON_NEO4J_PASSWORD", "p")
-    monkeypatch.delenv("DECEPTICON_NEO4J_DATABASE", raising=False)
+    monkeypatch.setenv("AEGISCORE_NEO4J_URI", "bolt://x")
+    monkeypatch.setenv("AEGISCORE_NEO4J_USER", "u")
+    monkeypatch.setenv("AEGISCORE_NEO4J_PASSWORD", "p")
+    monkeypatch.delenv("AEGISCORE_NEO4J_DATABASE", raising=False)
     cfg = KGStoreConfig.from_env()
     assert cfg.database == "neo4j"
 
 
 def test_config_from_env_missing_vars(monkeypatch: pytest.MonkeyPatch) -> None:
-    for var in ("DECEPTICON_NEO4J_URI", "DECEPTICON_NEO4J_USER", "DECEPTICON_NEO4J_PASSWORD"):
+    for var in ("AEGISCORE_NEO4J_URI", "AEGISCORE_NEO4J_USER", "AEGISCORE_NEO4J_PASSWORD"):
         monkeypatch.delenv(var, raising=False)
     with pytest.raises(KGStoreConfigError) as exc:
         KGStoreConfig.from_env()
-    assert "DECEPTICON_NEO4J_URI" in str(exc.value)
-    assert "DECEPTICON_NEO4J_USER" in str(exc.value)
-    assert "DECEPTICON_NEO4J_PASSWORD" in str(exc.value)
+    assert "AEGISCORE_NEO4J_URI" in str(exc.value)
+    assert "AEGISCORE_NEO4J_USER" in str(exc.value)
+    assert "AEGISCORE_NEO4J_PASSWORD" in str(exc.value)
 
 
 # ── _safe_label / _safe_rel_type ────────────────────────────────────────

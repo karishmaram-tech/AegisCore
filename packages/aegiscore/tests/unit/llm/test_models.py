@@ -531,7 +531,7 @@ class TestLLMModelMapping:
         m = LLMModelMapping.from_credentials_and_profile(creds, ModelProfile.MAX)
         assert m.get_assignment("recon").primary == "anthropic/claude-opus-4-8"
 
-    def test_test_profile_demotes_decepticon_to_low(self):
+    def test_test_profile_demotes_aegiscore_to_low(self):
         creds = Credentials(methods=[AuthMethod.ANTHROPIC_API])
         m = LLMModelMapping.from_credentials_and_profile(creds, ModelProfile.TEST)
         assert m.get_assignment("aegiscore").primary == "anthropic/claude-haiku-4-5"

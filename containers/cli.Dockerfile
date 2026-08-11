@@ -59,7 +59,7 @@ COPY --from=builder /app/clients/shared/streaming/package.json ./clients/shared/
 COPY --from=builder /app/clients/shared/streaming/dist ./clients/shared/streaming/dist
 COPY --from=builder /app/clients/cli/dist ./dist
 
-ENV DECEPTICON_API_URL=http://langgraph:2024
+ENV AEGISCORE_API_URL=http://langgraph:2024
 ENV NODE_ENV=production
 
 # No HEALTHCHECK — CLI is an interactive TTY app with no HTTP surface.

@@ -37,7 +37,7 @@ baseline AND applies any plugin overrides discovered via the
 ``aegiscore.bundles`` entry-point group. Three usage paths converge
 cleanly:
 
-  1. **OSS default**: ``create_decepticon_agent()`` — no args.
+  1. **OSS default**: ``create_aegiscore_agent()`` — no args.
   2. **Plugin override** (Docker / pip-installed plugin): authors ship
      ``PluginBundle(...)`` under ``aegiscore.bundles``; the factory
      discovers and applies it automatically.
@@ -74,7 +74,7 @@ _ROLE = "aegiscore"
 _RECURSION_LIMIT = 400
 
 
-def create_decepticon_agent(
+def create_aegiscore_agent(
     *,
     # ── Dependencies (injected for testing / library composition) ────
     backend: Any = None,
@@ -202,8 +202,8 @@ def create_decepticon_agent(
 #
 # Construction is guarded by ``is_bundle_enabled("standard")`` for
 # symmetry with the plugins bundle's main agent. The OSS default
-# (``DECEPTICON_PLUGINS`` unset or set to ``standard``) keeps this on;
-# if a user explicitly disables standard (e.g. ``DECEPTICON_PLUGINS=plugins``)
+# (``AEGISCORE_PLUGINS`` unset or set to ``standard``) keeps this on;
+# if a user explicitly disables standard (e.g. ``AEGISCORE_PLUGINS=plugins``)
 # the graph is skipped to avoid empty-subagent crashes.
 if is_bundle_enabled("standard"):
-    graph = create_decepticon_agent()
+    graph = create_aegiscore_agent()

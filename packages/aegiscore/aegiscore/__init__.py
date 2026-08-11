@@ -21,8 +21,8 @@ __package_name__ = "aegiscore"
 # The sandbox container ships only a subset of aegiscore (sandbox_kernel
 # + sandbox_server + bare __init__.py) without aegiscore-core installed,
 # so it must opt out of the full framework boot. The sandbox.Dockerfile
-# sets DECEPTICON_SKIP_BOOT=1 in its ENV so this import doesn't fail.
-if not _os.environ.get("DECEPTICON_SKIP_BOOT"):
+# sets AEGISCORE_SKIP_BOOT=1 in its ENV so this import doesn't fail.
+if not _os.environ.get("AEGISCORE_SKIP_BOOT"):
     from aegiscore import _boot, compat
 
     _boot.run()

@@ -31,7 +31,7 @@ vi.mock("../commands/modelOverride.js", () => ({
 }));
 
 // ── Module-level binding (reset per test via dynamic import) ─────────────────
-// useAgent reads INITIAL_ASSISTANT_ID = process.env.DECEPTICON_ASSISTANT_ID at
+// useAgent reads INITIAL_ASSISTANT_ID = process.env.AEGISCORE_ASSISTANT_ID at
 // module load time. Static import would capture the value before vi.stubEnv()
 // runs in beforeEach. Dynamic import after stubbing gets the right default.
 let useAgent: (typeof import("./useAgent.js"))["useAgent"];
@@ -49,11 +49,11 @@ describe("useAgent — engagement handoff lifecycle", () => {
   beforeEach(async () => {
     vi.resetModules();
     vi.useFakeTimers();
-    vi.stubEnv("DECEPTICON_API_URL", "http://localhost:2024");
-    vi.stubEnv("DECEPTICON_ASSISTANT_ID", "soundwave");
-    vi.stubEnv("DECEPTICON_ENGAGEMENT", "eng-abc");
-    vi.stubEnv("DECEPTICON_WORKSPACE_PATH", "/tmp/ws");
-    delete process.env.DECEPTICON_THREAD_ID;
+    vi.stubEnv("AEGISCORE_API_URL", "http://localhost:2024");
+    vi.stubEnv("AEGISCORE_ASSISTANT_ID", "soundwave");
+    vi.stubEnv("AEGISCORE_ENGAGEMENT", "eng-abc");
+    vi.stubEnv("AEGISCORE_WORKSPACE_PATH", "/tmp/ws");
+    delete process.env.AEGISCORE_THREAD_ID;
     mockState.client = createMockClient();
     ({ useAgent } = await import("./useAgent.js"));
   });

@@ -120,7 +120,7 @@ SAFETY_CRITICAL_SLOTS: frozenset[MiddlewareSlot] = frozenset(
     }
 )
 """Slots a plugin can only replace/disable when
-``DECEPTICON_ALLOW_SAFETY_OVERRIDES=1`` is set in the environment.
+``AEGISCORE_ALLOW_SAFETY_OVERRIDES=1`` is set in the environment.
 
 The gate is enforced by ``build_middleware`` in
 ``aegiscore.agents.build``. Plugins are expected to honour the

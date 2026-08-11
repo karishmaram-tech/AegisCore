@@ -5,7 +5,7 @@
 #   npx wrangler secret put POSTHOG_KEY      # PostHog project API key (server-only)
 #   npx wrangler deploy
 #
-# The OSS client only ever learns the public Worker URL (DECEPTICON_TELEMETRY_ENDPOINT);
+# The OSS client only ever learns the public Worker URL (AEGISCORE_TELEMETRY_ENDPOINT);
 # it never sees POSTHOG_KEY.
 name = "aegiscore-telemetry-gateway"
 main = "src/index.ts"

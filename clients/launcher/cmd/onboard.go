@@ -101,7 +101,7 @@ const (
 )
 
 // methodOrder is the priority order surfaced in the wizard. The
-// resulting DECEPTICON_AUTH_PRIORITY preserves this order, filtered
+// resulting AEGISCORE_AUTH_PRIORITY preserves this order, filtered
 // to the methods the user actually selected. OAuth precedes the
 // matching API on purpose: a subscription primary should fall back
 // to the paid API only when the subscription quota is exhausted.
@@ -862,14 +862,14 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 						"  • the agent's red-team REASONING, with target identifiers MASKED\n"+
 						"    (10.0.0.5 -> <HOST_1>, acme.com -> <DOMAIN_1>)\n\n"+
 						"Never sent: raw prompts, real target IPs/hosts, credentials. Your\n"+
-						"IP is dropped at the gateway. Change anytime: DECEPTICON_TELEMETRY=off\n"+
+						"IP is dropped at the gateway. Change anytime: AEGISCORE_TELEMETRY=off\n"+
 						"(or basic) in .env, `aegiscore-cli telemetry off`, or DO_NOT_TRACK=1.",
 				).
 				Affirmative("Yes, share (recommended)").
 				Negative("No, keep it off").
 				Value(&telemetryConsent),
 		).Title("5 / 5  ·  Usage telemetry"),
-	).WithTheme(huh.ThemeFunc(ui.DecepticonTheme))
+	).WithTheme(huh.ThemeFunc(ui.AegiscoreTheme))
 
 	if err := form.Run(); err != nil {
 		return fmt.Errorf("setup cancelled: %w", err)
@@ -901,15 +901,15 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 	}
 
 	values := map[string]string{
-		"DECEPTICON_MODEL_PROFILE":    profile,
-		"DECEPTICON_LANGUAGE":         language,
-		"DECEPTICON_AUTH_PRIORITY":    strings.Join(priority, ","),
-		"DECEPTICON_AUTH_CLAUDE_CODE": boolStr(contains(methods, methodAnthropicOAuth)),
-		"DECEPTICON_AUTH_CHATGPT":     boolStr(contains(methods, methodOpenAIOAuth)),
-		"DECEPTICON_AUTH_GEMINI":      boolStr(contains(methods, methodGoogleOAuth)),
-		"DECEPTICON_AUTH_GROK":        boolStr(contains(methods, methodGrokOAuth)),
-		"DECEPTICON_AUTH_COPILOT":     boolStr(contains(methods, methodCopilotOAuth)),
-		"DECEPTICON_AUTH_PERPLEXITY":  boolStr(contains(methods, methodPerplexityOAuth)),
+		"AEGISCORE_MODEL_PROFILE":    profile,
+		"AEGISCORE_LANGUAGE":         language,
+		"AEGISCORE_AUTH_PRIORITY":    strings.Join(priority, ","),
+		"AEGISCORE_AUTH_CLAUDE_CODE": boolStr(contains(methods, methodAnthropicOAuth)),
+		"AEGISCORE_AUTH_CHATGPT":     boolStr(contains(methods, methodOpenAIOAuth)),
+		"AEGISCORE_AUTH_GEMINI":      boolStr(contains(methods, methodGoogleOAuth)),
+		"AEGISCORE_AUTH_GROK":        boolStr(contains(methods, methodGrokOAuth)),
+		"AEGISCORE_AUTH_COPILOT":     boolStr(contains(methods, methodCopilotOAuth)),
+		"AEGISCORE_AUTH_PERPLEXITY":  boolStr(contains(methods, methodPerplexityOAuth)),
 	}
 
 	if anthropicKey != "" {
@@ -1033,9 +1033,9 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 	}
 
 	// Anonymous usage telemetry consent. Only sends when a gateway endpoint is
-	// configured (DECEPTICON_TELEMETRY_ENDPOINT, shipped in .env.example); an
+	// configured (AEGISCORE_TELEMETRY_ENDPOINT, shipped in .env.example); an
 	// unset endpoint keeps it dormant even when the user opted in.
-	values["DECEPTICON_TELEMETRY"] = telemetryChoice
+	values["AEGISCORE_TELEMETRY"] = telemetryChoice
 
 	if err := config.WriteEnvFromEmbed(config.EnvPath(), values); err != nil {
 		return fmt.Errorf("write .env: %w", err)
@@ -1044,7 +1044,7 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 	// Record the telemetry policy as acknowledged: this fresh install just
 	// answered the same consent question the start-time re-consent migration
 	// would ask, so it must never be re-prompted.
-	if err := migrate.MarkAcked(config.DecepticonHome(), migrate.TelemetryPolicyID); err != nil {
+	if err := migrate.MarkAcked(config.AegiscoreHome(), migrate.TelemetryPolicyID); err != nil {
 		ui.Warning("Could not record telemetry consent ack: " + err.Error())
 	}
 
@@ -1082,7 +1082,7 @@ func runOnboard(cmd *cobra.Command, args []string) error {
 
 	// One-time GitHub star ask — the natural post-onboarding moment.
 	// Suppressed on subsequent runs by the ack file at
-	// $DECEPTICON_HOME/.starred, so a re-run of `aegiscore onboard
+	// $AEGISCORE_HOME/.starred, so a re-run of `aegiscore onboard
 	// --reset` does not re-prompt.
 	starprompt.PromptIfNotStarred()
 

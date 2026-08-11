@@ -13,7 +13,7 @@ function readVersion(): string {
   // Prefer the injected release tag (set by the launcher from ~/.aegiscore/.version)
   // so the status bar reflects the actual running deployment version, not the
   // npm package version baked into the Docker image.
-  const envVersion = process.env.DECEPTICON_VERSION;
+  const envVersion = process.env.AEGISCORE_VERSION;
   if (envVersion && envVersion !== "latest") return envVersion;
 
   try {

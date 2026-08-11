@@ -30,7 +30,7 @@ a real version-stamping flow, and supply-chain hardening.
   `version` field is a `0.0.0` sentinel stamped with the git tag at Docker
   build time (`pyproject.toml:1-7`) — there is no published-version flow.
 - **A downstream product layers on via entry-points.** The vendor bundle
-  (`bundle="vendor"`) is activated with `DECEPTICON_PLUGINS=standard,vendor`
+  (`bundle="vendor"`) is activated with `AEGISCORE_PLUGINS=standard,vendor`
   (`pyproject.toml:111-123`, `aegiscore/plugin_loader.py:527-529`). The
   OSS default stays lean (`["standard"]`); downstream images opt their bundle in.
 - **The only documented way for a downstream product to consume the core is a git pin.**

@@ -106,12 +106,12 @@ is what we want.
 - The skillogy service is currently **isolated from the LLM proxy**: its
   container env carries only `SKILLOGY_NEO4J_*` (`docker-compose.yml` skillogy
   service), and no skillogy code imports litellm or any embedding API. Only the
-  `langgraph` service gets `DECEPTICON_LLM__PROXY_URL` /
-  `DECEPTICON_LLM__PROXY_API_KEY` (`docker-compose.yml:375-376`).
+  `langgraph` service gets `AEGISCORE_LLM__PROXY_URL` /
+  `AEGISCORE_LLM__PROXY_API_KEY` (`docker-compose.yml:375-376`).
 - This ADR therefore **adds a runtime dependency**: the skillogy container must
   be given the proxy URL + key so both boot-ingest and query-time `find_skill`
-  can embed. Thread `DECEPTICON_LLM__PROXY_URL` + `DECEPTICON_LLM__PROXY_API_KEY`
-  (or a dedicated `DECEPTICON_SKILLOGY_EMBED_*`) into the skillogy service.
+  can embed. Thread `AEGISCORE_LLM__PROXY_URL` + `AEGISCORE_LLM__PROXY_API_KEY`
+  (or a dedicated `AEGISCORE_SKILLOGY_EMBED_*`) into the skillogy service.
 - **OSS / no-credentials posture:** when no embedding model is reachable, both
   boot-ingest embedding and query embedding are skipped and `find_skill`
   **runs the existing substring path** (the documented fallback below). Semantic
@@ -179,7 +179,7 @@ Touch points, in dependency order. Each step is independently testable.
 ### Step 1 — embedding helper (new module)
 `skillogy/embeddings.py` (new):
 - `embed_text(text: str) -> list[float]` and `embed_batch(texts) -> list[list[float]]`,
-  calling the **litellm gateway** (`DECEPTICON_SKILLOGY_EMBED_MODEL`, default chosen
+  calling the **litellm gateway** (`AEGISCORE_SKILLOGY_EMBED_MODEL`, default chosen
   per Open Questions; base URL + key reuse the existing proxy env the agents use).
 - A small on-disk cache keyed by `sha256(model + "\n" + text)` so re-builds and
   repeated queries don't re-spend. Used by BOTH ingest (Step 2) and query (Step 4).
@@ -235,8 +235,8 @@ Touch points, in dependency order. Each step is independently testable.
 - Because embeddings are computed at boot (not in `skills.cypher`), **CI needs
   no embedding creds** and the builder is unchanged.
 - Thread the proxy env into the **skillogy service** in `docker-compose.yml`
-  (it currently has only `SKILLOGY_NEO4J_*`): add `DECEPTICON_LLM__PROXY_URL`
-  + `DECEPTICON_LLM__PROXY_API_KEY` (mirroring the `langgraph` service,
+  (it currently has only `SKILLOGY_NEO4J_*`): add `AEGISCORE_LLM__PROXY_URL`
+  + `AEGISCORE_LLM__PROXY_API_KEY` (mirroring the `langgraph` service,
   `docker-compose.yml:375-376`) and the downstream overlay. Absent → substring
   fallback (no failure).
 

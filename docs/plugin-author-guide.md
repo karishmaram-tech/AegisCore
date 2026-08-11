@@ -152,7 +152,7 @@ audit-policy = "my_plugin:get_contribution"
 
 ## 4. Bundle and safety gates
 
-Bundle activation is controlled by `DECEPTICON_PLUGINS` (or the
+Bundle activation is controlled by `AEGISCORE_PLUGINS` (or the
 `[tool.aegiscore.plugins]` config section). Set `bundle="..."` on
 your contribution so end users can opt in deliberately:
 
@@ -176,14 +176,14 @@ my-plugin-v1 = "my_plugin:get_bundle"
 Operators enable your bundle:
 
 ```bash
-DECEPTICON_PLUGINS=standard,my-plugin python -m aegiscore ...
+AEGISCORE_PLUGINS=standard,my-plugin python -m aegiscore ...
 ```
 
 ### Safety-critical overrides
 
 The framework gates replacement of safety-critical slots and tools
 (`SAFETY_CRITICAL_SLOTS`, `SAFETY_CRITICAL_TOOLS`). Replacements
-require `DECEPTICON_ALLOW_SAFETY_OVERRIDES=1`. To declare *your own*
+require `AEGISCORE_ALLOW_SAFETY_OVERRIDES=1`. To declare *your own*
 tool / middleware safety-critical (additive only — never removes
 safety on OSS names):
 
@@ -239,7 +239,7 @@ Strict mode for production deployments — surface collisions as
 errors at boot:
 
 ```bash
-DECEPTICON_STRICT_REGISTRY=1
+AEGISCORE_STRICT_REGISTRY=1
 ```
 
 ## 7. Publishing

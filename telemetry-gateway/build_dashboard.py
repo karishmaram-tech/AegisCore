@@ -121,7 +121,7 @@ GROUP BY model ORDER BY llm_calls DESC""",
     (
         "Usage · Version & OS adoption",
         "Installed Aegiscore version × OS — upgrade & platform-support signal.",
-        """SELECT properties.decepticon_version AS version, properties.os AS os,
+        """SELECT properties.aegiscore_version AS version, properties.os AS os,
        count(DISTINCT distinct_id) AS installs
 FROM events GROUP BY version, os ORDER BY installs DESC""",
     ),

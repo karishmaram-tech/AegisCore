@@ -111,7 +111,7 @@ export type TelemetryEvent = z.infer<typeof TelemetryEvent>;
 /** Non-identifying client/runtime descriptor. */
 export const ClientInfo = z
   .object({
-    decepticon_version: z
+    aegiscore_version: z
       .string()
       .max(32)
       .regex(/^[0-9A-Za-z.+_-]+$/),

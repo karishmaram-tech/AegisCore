@@ -104,7 +104,7 @@ def bin_symbols_report(symbols: str) -> str:
 
 
 @tool
-def bin_ghidra_script(binary: str, script_name: str = "decepticon_recon.py") -> str:
+def bin_ghidra_script(binary: str, script_name: str = "aegiscore_recon.py") -> str:
     """Emit a Ghidra headless recon script body the agent can write to disk."""
     return _json({"path": script_name, "source": ghidra_recon_script(binary, script_name)})
 

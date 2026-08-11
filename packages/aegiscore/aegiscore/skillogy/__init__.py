@@ -28,7 +28,7 @@ Layout
 - The new ``SkillogyMiddleware`` lives in
   ``aegiscore.middleware.skillogy`` to mirror the existing
   ``SkillsMiddleware`` location, with an opt-in switch via
-  ``DECEPTICON_USE_SKILLOGY=1``.
+  ``AEGISCORE_USE_SKILLOGY=1``.
 """
 
 from aegiscore.skillogy.proto import (

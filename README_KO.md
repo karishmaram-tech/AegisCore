@@ -48,7 +48,7 @@ pip install aegiscore              # 코어 SDK
 pip install "aegiscore[neo4j]"     # + 지식그래프 공격체인 도구
 ```
 
-`aegiscore` 은 **클라이언트 SDK** 입니다 — 에이전트 팩토리·미들웨어·도구·스킬을 담고 있고, LLM 호출과 샌드박스 실행은 런타임 서비스로 HTTP 라우팅합니다 (`DECEPTICON_LLM__PROXY_URL`, `SANDBOX_URL`). 에이전트를 실제로 돌리려면 그 서비스들이 필요합니다 — 위 Docker 스택을 쓰거나 URL 을 직접 가리키세요. 팩토리 오버라이드 surface, 선언적 `PluginBundle` 플러그인, 안전 게이트는 **[라이브러리로서의 Aegiscore](docs/library-usage.md)** 참고.
+`aegiscore` 은 **클라이언트 SDK** 입니다 — 에이전트 팩토리·미들웨어·도구·스킬을 담고 있고, LLM 호출과 샌드박스 실행은 런타임 서비스로 HTTP 라우팅합니다 (`AEGISCORE_LLM__PROXY_URL`, `SANDBOX_URL`). 에이전트를 실제로 돌리려면 그 서비스들이 필요합니다 — 위 Docker 스택을 쓰거나 URL 을 직접 가리키세요. 팩토리 오버라이드 surface, 선언적 `PluginBundle` 플러그인, 안전 게이트는 **[라이브러리로서의 Aegiscore](docs/library-usage.md)** 참고.
 
 
 
@@ -60,23 +60,23 @@ pip install "aegiscore[neo4j]"     # + 지식그래프 공격체인 도구
 
 ---
 
-## Decepticon이란?
+## Aegiscore이란?
 
-AI + 해킹 도구들은 대부분 nmap 돌리고 리포트 출력하는 데모입니다. Decepticon은 다릅니다.
+AI + 해킹 도구들은 대부분 nmap 돌리고 리포트 출력하는 데모입니다. Aegiscore은 다릅니다.
 
-**Decepticon은 전문 자율 레드팀 에이전트입니다.** 실제 공격자처럼 현실적인 공격 체인을 실행합니다 — 정찰, 초기 침투, 권한 상승, 횡이동, C2 — 스캐너가 아닌 실제 공격자의 방식으로.
+**Aegiscore은 전문 자율 레드팀 에이전트입니다.** 실제 공격자처럼 현실적인 공격 체인을 실행합니다 — 정찰, 초기 침투, 권한 상승, 횡이동, C2 — 스캐너가 아닌 실제 공격자의 방식으로.
 
-더 중요한 것은: 스크립트 키디와 레드티머를 구분하는 전문성을 갖추고 있다는 점입니다. 첫 번째 패킷이 나가기 전에 Decepticon은 완전한 인게이지먼트 패키지 — **RoE**, **ConOps**, **디컨플릭션 플랜**, MITRE ATT&CK 매핑이 포함된 **OPPLAN** — 을 생성하고, 모든 행동은 그 규칙 안에서만 동작합니다.
+더 중요한 것은: 스크립트 키디와 레드티머를 구분하는 전문성을 갖추고 있다는 점입니다. 첫 번째 패킷이 나가기 전에 Aegiscore은 완전한 인게이지먼트 패키지 — **RoE**, **ConOps**, **디컨플릭션 플랜**, MITRE ATT&CK 매핑이 포함된 **OPPLAN** — 을 생성하고, 모든 행동은 그 규칙 안에서만 동작합니다.
 
 → **[인게이지먼트 워크플로 상세](docs/engagement-workflow.md)**
 
 ---
 
-## 왜 Decepticon인가?
+## 왜 Aegiscore인가?
 
-**체크리스트 스캔이 아닌 실제 킬체인.** Decepticon은 OPPLAN을 읽고 열린 경로를 통해 목표를 추적합니다 — 피벗, 적응, 기술 체이닝.
+**체크리스트 스캔이 아닌 실제 킬체인.** Aegiscore은 OPPLAN을 읽고 열린 경로를 통해 목표를 추적합니다 — 피벗, 적응, 기술 체이닝.
 
-**진짜 인터랙티브 셸.** 실제 공격 도구들은 인터랙티브합니다 (`msfconsole`, `sliver-client`, `evil-winrm`). Decepticon은 영구 tmux 세션에서 명령을 실행하고 인터랙티브 프롬프트를 자동 감지합니다 — 도구가 프롬프트를 띄우면 우회책 없이 후속 명령을 보냅니다.
+**진짜 인터랙티브 셸.** 실제 공격 도구들은 인터랙티브합니다 (`msfconsole`, `sliver-client`, `evil-winrm`). Aegiscore은 영구 tmux 세션에서 명령을 실행하고 인터랙티브 프롬프트를 자동 감지합니다 — 도구가 프롬프트를 띄우면 우회책 없이 후속 명령을 보냅니다.
 
 **하드닝된 샌드박스 격리.** 모든 명령은 운영 네트워크(`sandbox-net`)의 Kali Linux 샌드박스에서 실행되며, 관리망(`aegiscore-net`)과 분리되어 있습니다. LangGraph는 Docker 소켓으로 샌드박스를 제어합니다. → **[아키텍처](docs/architecture.md)**
 

@@ -37,7 +37,7 @@ def test_compute_orphans_spares_every_tracked_session() -> None:
     assert _compute_orphan_tmux_sessions(discovered, tracked) == set()
 
 
-def test_compute_orphans_ignores_non_decepticon_sockets() -> None:
+def test_compute_orphans_ignores_non_aegiscore_sockets() -> None:
     # The reap path must scope to aegiscore-named sockets only — never
     # touch a session that some other process (e.g. an operator's shell)
     # might own on a shared host.
@@ -61,13 +61,13 @@ def test_reap_kills_only_orphans(monkeypatch: pytest.MonkeyPatch) -> None:
     # so the test is robust to slug-generation changes.
     live_mgr = sandbox._get_manager("main", "/workspace/eng-abc")
     live_session = live_mgr.session
-    assert live_session.startswith("dcptn_")
+    assert live_session.startswith("aegiscore_")
 
     discovered = [live_session, "dcptn_eng-abc_recon", "dcptn_eng-xyz_main"]
     killed: list[str] = []
 
     monkeypatch.setattr(
-        "aegiscore.sandbox_kernel.base._list_decepticon_tmux_sockets",
+        "aegiscore.sandbox_kernel.base._list_aegiscore_tmux_sockets",
         lambda: list(discovered),
     )
     monkeypatch.setattr(
@@ -84,7 +84,7 @@ def test_reap_kills_only_orphans(monkeypatch: pytest.MonkeyPatch) -> None:
 def test_reap_is_a_noop_when_nothing_discovered(monkeypatch: pytest.MonkeyPatch) -> None:
     killed: list[str] = []
 
-    monkeypatch.setattr("aegiscore.sandbox_kernel.base._list_decepticon_tmux_sockets", lambda: [])
+    monkeypatch.setattr("aegiscore.sandbox_kernel.base._list_aegiscore_tmux_sockets", lambda: [])
     monkeypatch.setattr(
         "aegiscore.sandbox_kernel.base._kill_tmux_socket",
         lambda s: killed.append(s),
@@ -97,7 +97,7 @@ def test_reap_is_a_noop_when_nothing_discovered(monkeypatch: pytest.MonkeyPatch)
 def test_reap_swallows_kill_failures(monkeypatch: pytest.MonkeyPatch) -> None:
     # One stuck socket must not block the rest from being reaped.
     monkeypatch.setattr(
-        "aegiscore.sandbox_kernel.base._list_decepticon_tmux_sockets",
+        "aegiscore.sandbox_kernel.base._list_aegiscore_tmux_sockets",
         lambda: ["dcptn_eng-abc_main", "dcptn_eng-abc_recon"],
     )
 

@@ -5,7 +5,7 @@ ASGI app via the ``http.app`` field. We use that hook to add endpoints
 that aren't part of the standard /threads | /assistants | /runs surface
 but still need to live inside the same process — currently:
 
-  - ``/_decepticon/bundles`` — runtime plugin bundle enable/disable, see
+  - ``/_aegiscore/bundles`` — runtime plugin bundle enable/disable, see
     :mod:`aegiscore.server.plugins_api`.
 
 Anything mounted here runs inside the same Python process as the agent

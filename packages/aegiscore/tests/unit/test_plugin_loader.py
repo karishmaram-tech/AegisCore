@@ -175,10 +175,10 @@ def test_load_subagents_filters_by_parent():
     ]
     eps = [_FakeEntryPoint(s.name, f"pkg.{s.name}:SUBAGENT_SPEC", s) for s in specs]
     with patch.object(plugin_loader, "entry_points", return_value=eps):
-        decepticon_specs = plugin_loader.load_subagents_for_parent("aegiscore")
+        aegiscore_specs = plugin_loader.load_subagents_for_parent("aegiscore")
         vulnresearch_specs = plugin_loader.load_subagents_for_parent("vulnresearch")
 
-    assert {s.name for s in decepticon_specs} == {"recon", "shared-tool"}
+    assert {s.name for s in aegiscore_specs} == {"recon", "shared-tool"}
     assert {s.name for s in vulnresearch_specs} == {"scanner", "shared-tool"}
 
 
@@ -282,7 +282,7 @@ def test_load_subagents_factory_is_lazy():
 
 # ---------------------------------------------------------------------------
 # Bundle activation — 4-tier hierarchy
-#   1 (highest) DECEPTICON_PLUGINS env var
+#   1 (highest) AEGISCORE_PLUGINS env var
 #   2           .aegiscore.toml [plugins].enabled
 #   3           pyproject.toml [tool.aegiscore.plugins].enabled
 #   4 (lowest)  hardcoded ``DEFAULT_BUNDLES``
@@ -327,7 +327,7 @@ def test_enabled_bundles_pyproject_used_when_no_env(monkeypatch, tmp_path):
     assert plugin_loader._enabled_bundles() == frozenset({"standard", "plugins"})
 
 
-def test_enabled_bundles_decepticon_toml_beats_pyproject(monkeypatch, tmp_path):
+def test_enabled_bundles_aegiscore_toml_beats_pyproject(monkeypatch, tmp_path):
     """``.aegiscore.toml`` is higher precedence than pyproject.toml."""
     monkeypatch.delenv(plugin_loader.PLUGINS_ENV_VAR, raising=False)
     (tmp_path / "pyproject.toml").write_text(
@@ -410,7 +410,7 @@ def test_is_bundle_enabled_wildcard_passes_everything(monkeypatch, tmp_path):
 
 
 def test_load_subagents_filters_by_default_bundle(monkeypatch, tmp_path):
-    """With default DECEPTICON_PLUGINS=standard, only standard specs returned."""
+    """With default AEGISCORE_PLUGINS=standard, only standard specs returned."""
     monkeypatch.delenv(plugin_loader.PLUGINS_ENV_VAR, raising=False)
     monkeypatch.chdir(tmp_path)
     specs = [

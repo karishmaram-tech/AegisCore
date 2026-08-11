@@ -100,14 +100,14 @@ These can be set in your `.env` file (configure with `aegiscore onboard`) or as 
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `DECEPTICON_MODEL_PROFILE` | `eco` | Tier preset: `eco` (per-agent), `max` (all HIGH), or `test` (all LOW) |
-| `DECEPTICON_AUTH_PRIORITY` | (built-in order; see [Models](models.md)) | Comma-separated AuthMethod priority — first method primary, rest are fallbacks. When unset, the factory's built-in `_DEFAULT_AUTH_PRIORITY` order applies. Methods whose credential isn't configured are skipped at runtime. |
-| `DECEPTICON_AUTH_CLAUDE_CODE` | `false` | Set `true` to route Anthropic models via Claude Code OAuth (`auth/claude-*` in LiteLLM) |
-| `DECEPTICON_AUTH_CHATGPT` | `false` | Set `true` to route OpenAI models via ChatGPT subscription OAuth (`auth/gpt-*`) |
-| `DECEPTICON_AUTH_GEMINI` | `false` | Set `true` to route Google models via Gemini Advanced OAuth (`gemini-sub/*`) |
-| `DECEPTICON_AUTH_COPILOT` | `false` | Set `true` for Microsoft Copilot Pro OAuth (`copilot/*`) |
-| `DECEPTICON_AUTH_GROK` | `false` | Set `true` for xAI SuperGrok OAuth (`grok-sub/*`) |
-| `DECEPTICON_AUTH_PERPLEXITY` | `false` | Set `true` for Perplexity Pro OAuth (`pplx-sub/*`) |
+| `AEGISCORE_MODEL_PROFILE` | `eco` | Tier preset: `eco` (per-agent), `max` (all HIGH), or `test` (all LOW) |
+| `AEGISCORE_AUTH_PRIORITY` | (built-in order; see [Models](models.md)) | Comma-separated AuthMethod priority — first method primary, rest are fallbacks. When unset, the factory's built-in `_DEFAULT_AUTH_PRIORITY` order applies. Methods whose credential isn't configured are skipped at runtime. |
+| `AEGISCORE_AUTH_CLAUDE_CODE` | `false` | Set `true` to route Anthropic models via Claude Code OAuth (`auth/claude-*` in LiteLLM) |
+| `AEGISCORE_AUTH_CHATGPT` | `false` | Set `true` to route OpenAI models via ChatGPT subscription OAuth (`auth/gpt-*`) |
+| `AEGISCORE_AUTH_GEMINI` | `false` | Set `true` to route Google models via Gemini Advanced OAuth (`gemini-sub/*`) |
+| `AEGISCORE_AUTH_COPILOT` | `false` | Set `true` for Microsoft Copilot Pro OAuth (`copilot/*`) |
+| `AEGISCORE_AUTH_GROK` | `false` | Set `true` for xAI SuperGrok OAuth (`grok-sub/*`) |
+| `AEGISCORE_AUTH_PERPLEXITY` | `false` | Set `true` for Perplexity Pro OAuth (`pplx-sub/*`) |
 | `OLLAMA_API_BASE` / `OLLAMA_MODEL` | unset | When set, registers `ollama_chat/<OLLAMA_MODEL>` and enables the `ollama_local` AuthMethod |
 
 See [Models](models.md) for the full Tier × AuthMethod matrix and chain examples.
@@ -155,4 +155,4 @@ Currently allowlisted workloads (the agent can call `ops_start("X")` for any of 
 
 | Variable | Description |
 |----------|-------------|
-| `DECEPTICON_DEBUG` | Set to `true` for verbose debug output |
+| `AEGISCORE_DEBUG` | Set to `true` for verbose debug output |

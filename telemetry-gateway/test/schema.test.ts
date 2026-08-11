@@ -5,7 +5,7 @@ const VALID = {
   schema_version: "1.0",
   tier: "A",
   install_id: "1e9a73a6-c8bd-4e1e-be02-78f4b11de4e1",
-  client: { decepticon_version: "1.1.13", os: "linux", arch: "x86_64", py: "3.13" },
+  client: { aegiscore_version: "1.1.13", os: "linux", arch: "x86_64", py: "3.13" },
   events: [
     { type: "tool.call", ts: 1718880000, tool: "nmap", status: "ok", duration_ms: 1200 },
     { type: "agent.turn", ts: 1718880001, agent: "recon", mitre_techniques: ["T1046"] },

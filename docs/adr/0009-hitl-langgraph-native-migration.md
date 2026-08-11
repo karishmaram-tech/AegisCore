@@ -27,7 +27,7 @@ blocks the agent thread inside `wait_for_decision` polling that file
 every 250ms.
 
 That shape works — it is currently in production behind
-`DECEPTICON_HITL__ENABLED=true` — but on detailed review against the
+`AEGISCORE_HITL__ENABLED=true` — but on detailed review against the
 official LangChain/LangGraph contracts and the threat model the
 approval gate exists to defend, four primitives are misaligned:
 
@@ -82,7 +82,7 @@ approval gate exists to defend, four primitives are misaligned:
    tool_name)` against the same rule list).
 
 Plus a fifth issue, exposed by PR #459 review: the
-`DECEPTICON_HITL__ENABLED` env flag silently disables the slot
+`AEGISCORE_HITL__ENABLED` env flag silently disables the slot
 (`middleware_slots.py:_make_hitl` returns `None`) so the role
 declares the slot but the gate isn't wired. Agent prompts that
 advertise *"this will pause for HITL approval"* are factually wrong on
@@ -302,7 +302,7 @@ The previous version's references to `requests.jsonl` /
 
 - **(M1) Keep the current custom middleware + regex policy; add
   startup warnings when `HITL_APPROVAL` slot is declared but
-  `DECEPTICON_HITL__ENABLED` is unset.** Rejected. Addresses the
+  `AEGISCORE_HITL__ENABLED` is unset.** Rejected. Addresses the
   fifth issue (advertising mismatch) but leaves the four
   architectural issues (regex, custom transport, no checkpointer,
   data-model coupling) intact. Also keeps Aegiscore out of the

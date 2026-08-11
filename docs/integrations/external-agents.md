@@ -24,19 +24,19 @@ persistence); the MCP layer translates tool calls into LangGraph runs
 
 | Tool | Purpose |
 |------|---------|
-| `decepticon_list_graphs` | Discover engagement graphs (aegiscore, recon, soundwave, …) |
-| `decepticon_list_engagements` | Browse / resume recent engagements |
-| `decepticon_start_engagement` | Launch a background engagement (targets + scope/RoE) |
-| `decepticon_send_message` | Steer / answer the coordinator / `/model` switch mid-run |
-| `decepticon_transcript` | Read the orchestrator narrative incrementally (watch) |
-| `decepticon_watch` | Tail the live sub-agent stream for a few seconds |
-| `decepticon_engagement_state` | Inspect OPPLAN / objectives / scope / phase |
-| `decepticon_engagement_status` | Latest run status + whether findings exist |
-| `decepticon_engagement_findings` | Findings summary / full SARIF v2.1.0 |
-| `decepticon_cancel_engagement` | Stop the active run |
+| `aegiscore_list_graphs` | Discover engagement graphs (aegiscore, recon, soundwave, …) |
+| `aegiscore_list_engagements` | Browse / resume recent engagements |
+| `aegiscore_start_engagement` | Launch a background engagement (targets + scope/RoE) |
+| `aegiscore_send_message` | Steer / answer the coordinator / `/model` switch mid-run |
+| `aegiscore_transcript` | Read the orchestrator narrative incrementally (watch) |
+| `aegiscore_watch` | Tail the live sub-agent stream for a few seconds |
+| `aegiscore_engagement_state` | Inspect OPPLAN / objectives / scope / phase |
+| `aegiscore_engagement_status` | Latest run status + whether findings exist |
+| `aegiscore_engagement_findings` | Findings summary / full SARIF v2.1.0 |
+| `aegiscore_cancel_engagement` | Stop the active run |
 
-Every tool is keyed by the `thread_id` returned from `decepticon_start_engagement`
-(or listed by `decepticon_list_engagements`) — no run-id juggling, just like the CLI.
+Every tool is keyed by the `thread_id` returned from `aegiscore_start_engagement`
+(or listed by `aegiscore_list_engagements`) — no run-id juggling, just like the CLI.
 
 ## 1. Install + run
 
@@ -49,10 +49,10 @@ langgraph dev                        # dev server on http://localhost:2024
 # or the Docker stack — see docs/deployment
 
 # Smoke-test the bridge over stdio (Ctrl-C to exit):
-DECEPTICON_SKIP_BOOT=1 aegiscore-mcp --transport stdio
+AEGISCORE_SKIP_BOOT=1 aegiscore-mcp --transport stdio
 ```
 
-> **`DECEPTICON_SKIP_BOOT=1`** — always set this for the bridge. It drives a
+> **`AEGISCORE_SKIP_BOOT=1`** — always set this for the bridge. It drives a
 > *separate* LangGraph server and never builds agents in-process, so the eager
 > framework boot is pure cold-start overhead. With it, the server starts in a
 > few seconds instead of ~30s; the wiring below sets it for you. It does **not**
@@ -60,7 +60,7 @@ DECEPTICON_SKIP_BOOT=1 aegiscore-mcp --transport stdio
 > bridge talks to, not in this process, so skipping the in-process boot leaves
 > scope enforcement untouched.
 
-The bridge connects to `DECEPTICON_API_URL` (default `http://localhost:2024`).
+The bridge connects to `AEGISCORE_API_URL` (default `http://localhost:2024`).
 Override with `--langgraph-url` or the env var.
 
 ## 2. OpenClaw
@@ -70,7 +70,7 @@ Override with `--langgraph-url` or the env var.
 openclaw mcp set aegiscore '{
   "command": "aegiscore-mcp",
   "args": ["--transport", "stdio"],
-  "env": { "DECEPTICON_API_URL": "http://localhost:2024", "DECEPTICON_SKIP_BOOT": "1" }
+  "env": { "AEGISCORE_API_URL": "http://localhost:2024", "AEGISCORE_SKIP_BOOT": "1" }
 }'
 
 # Install the agent skill (clone the repo first, then point at the skill dir)
@@ -81,8 +81,8 @@ openclaw gateway restart
 Now message your OpenClaw agent (dashboard or any connected channel, e.g.
 Telegram for phone): *"Start a Aegiscore recon engagement against
 `https://test.example.com` — scope only that host — then watch it and summarise
-findings."* The agent calls `decepticon_start_engagement`, polls
-`decepticon_transcript`, and reports findings.
+findings."* The agent calls `aegiscore_start_engagement`, polls
+`aegiscore_transcript`, and reports findings.
 
 ## 3. Hermes
 
@@ -93,8 +93,8 @@ mcp_servers:
     command: aegiscore-mcp
     args: ["--transport", "stdio"]
     env:
-      DECEPTICON_API_URL: "http://localhost:2024"
-      DECEPTICON_SKIP_BOOT: "1"
+      AEGISCORE_API_URL: "http://localhost:2024"
+      AEGISCORE_SKIP_BOOT: "1"
 ```
 
 ```bash
@@ -102,7 +102,7 @@ mcp_servers:
 cp -r ./Aegiscore/integrations/agent-skills/aegiscore ~/.hermes/skills/red-teaming/aegiscore
 ```
 
-Restart Hermes; the `aegiscore` skill and `decepticon_*` tools become available.
+Restart Hermes; the `aegiscore` skill and `aegiscore_*` tools become available.
 
 ### The bundled skill
 
@@ -122,16 +122,16 @@ auto-discovers it under the `red-teaming` category.
 
 ## 4. CLI-like workflow (what the agent does)
 
-1. `decepticon_start_engagement(targets=[...], instruction="In scope: …; Out of scope: …")`
+1. `aegiscore_start_engagement(targets=[...], instruction="In scope: …; Out of scope: …")`
    → keep the `thread_id`.
-2. `decepticon_transcript(thread_id, after_index=…)` — poll to narrate progress
+2. `aegiscore_transcript(thread_id, after_index=…)` — poll to narrate progress
    (operator prompts, coordinator replies, `task()` delegations to specialists).
-   `decepticon_watch(thread_id)` tails the live sub-agent feed for a few seconds.
-3. `decepticon_send_message(thread_id, "focus on the API, skip the marketing site")`
+   `aegiscore_watch(thread_id)` tails the live sub-agent feed for a few seconds.
+3. `aegiscore_send_message(thread_id, "focus on the API, skip the marketing site")`
    — steer mid-engagement, answer the coordinator, or `/model anthropic/claude-opus-4-8`.
-4. `decepticon_engagement_state(thread_id)` — check the OPPLAN / phase.
-5. `decepticon_engagement_findings(engagement_name, include_sarif=true)` — pull results.
-6. Later, `decepticon_list_engagements()` to resume any thread by `thread_id`.
+4. `aegiscore_engagement_state(thread_id)` — check the OPPLAN / phase.
+5. `aegiscore_engagement_findings(engagement_name, include_sarif=true)` — pull results.
+6. Later, `aegiscore_list_engagements()` to resume any thread by `thread_id`.
 
 ## 5. Remote / networked use (optional)
 
@@ -145,8 +145,8 @@ invalid `Authorization: Bearer` token gets a 401 before any tool runs).
 environment, never from argv:
 
 ```bash
-DECEPTICON_MCP_TOKEN=$(openssl rand -hex 32) \
-DECEPTICON_SKIP_BOOT=1 aegiscore-mcp --transport streamable-http \
+AEGISCORE_MCP_TOKEN=$(openssl rand -hex 32) \
+AEGISCORE_SKIP_BOOT=1 aegiscore-mcp --transport streamable-http \
   --host 0.0.0.0 --port 8765 --langgraph-url http://aegiscore-host:2024
 ```
 
@@ -158,7 +158,7 @@ bearer JWT's signature, `iss`, and `aud` against your identity provider's JWKS
 June-2025 spec prescribes for remote servers:
 
 ```bash
-DECEPTICON_SKIP_BOOT=1 aegiscore-mcp --transport streamable-http \
+AEGISCORE_SKIP_BOOT=1 aegiscore-mcp --transport streamable-http \
   --host 0.0.0.0 --port 8765 --langgraph-url http://aegiscore-host:2024 \
   --issuer https://issuer.example.com --audience aegiscore-mcp \
   --jwks-uri https://issuer.example.com/.well-known/jwks.json \
