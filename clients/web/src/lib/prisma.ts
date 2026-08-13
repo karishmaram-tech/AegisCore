@@ -10,10 +10,9 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createPrismaClient() {
-  const connectionString = process.env.DATABASE_URL;
-  if (!connectionString) {
-    throw new Error("DATABASE_URL environment variable is not set");
-  }
+  const connectionString =
+    process.env.DATABASE_URL ||
+    "postgresql://aegiscore:aegiscore_secret_password@localhost:5432/aegiscore";
   const adapter = new PrismaPg({ connectionString });
   return new PrismaClient({ adapter });
 }
